@@ -780,5 +780,20 @@ Revenue LY = TimeIntel.PeriodCompare([Revenue], 'Calendar'[DateKey], 1, "YEAR")<
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script>
+        // Increment view count when page loads
+        (function() {
+            const namespace = 'powerbimvp';
+            const key = 'dax-udf-time-intelligence';
+            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Page views:', data.value);
+                })
+                .catch(error => {
+                    console.log('Could not update view count');
+                });
+        })();
+    </script>
 </body>
 </html>

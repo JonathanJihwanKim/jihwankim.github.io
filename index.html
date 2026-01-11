@@ -333,11 +333,28 @@
         .post-preview {
             font-size: 0.8rem;
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .post-meta svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--text-secondary);
+            fill: none;
         }
 
         .post-date {
@@ -566,9 +583,13 @@
                     date: "January 11, 2026",
                     tags: ["dax", "power bi", "udf", "time intelligence"],
                     url: "posts/building-portable-time-intelligence-library-dax-udf.html",
-                    featuredImage: "images/blog/dax-udf/featured.png"
+                    featuredImage: "images/blog/dax-udf/featured.png",
+                    countKey: "dax-udf-time-intelligence"
                 }
             ];
+
+            // View count cache
+            const viewCounts = {};
 
             const postsContainer = document.getElementById('posts-container');
             const searchInput = document.getElementById('search-input');
@@ -607,6 +628,13 @@
                         <div class="post-content">
                             <h3 class="post-title">${post.title}</h3>
                             <p class="post-preview">${post.preview}</p>
+                            <div class="post-meta">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <span class="view-count" data-key="${post.countKey}">-- views</span>
+                            </div>
                         </div>
                     `;
 
@@ -689,8 +717,30 @@
                 searchTimeout = setTimeout(performSearch, 300);
             });
 
+            // Fetch view counts from CountAPI
+            async function fetchViewCounts() {
+                const namespace = 'powerbimvp';
+                for (const post of posts) {
+                    if (post.countKey) {
+                        try {
+                            const response = await fetch(`https://api.countapi.xyz/get/${namespace}/${post.countKey}`);
+                            const data = await response.json();
+                            const count = data.value || 0;
+                            viewCounts[post.countKey] = count;
+                            // Update all elements with this key
+                            document.querySelectorAll(`.view-count[data-key="${post.countKey}"]`).forEach(el => {
+                                el.textContent = `${count.toLocaleString()} views`;
+                            });
+                        } catch (error) {
+                            console.log('Could not fetch view count for', post.countKey);
+                        }
+                    }
+                }
+            }
+
             // Initial render
             renderPosts(posts);
+            fetchViewCounts();
         });
     </script>
 </body>
