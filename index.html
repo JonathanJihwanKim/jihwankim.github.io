@@ -3,30 +3,695 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jihwan Kim</title>
+    <meta name="description" content="Jihwan Kim - Microsoft MVP, Power BI & Fabric Community Super User, Senior Power BI & Fabric Architect at IKEA">
+    <meta name="keywords" content="Power BI, Microsoft Fabric, MVP, Data Analytics, IKEA">
+    <meta name="author" content="Jihwan Kim">
+    <meta property="og:title" content="Jihwan Kim | Power BI & Fabric Expert">
+    <meta property="og:description" content="I build enterprise-grade, AI-ready data solutions that delivers faster insights @IKEA">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://powerbimvp.com">
+    <title>Jihwan Kim | Microsoft MVP | Power BI & Fabric Architect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --ikea-blue: #0051BA;
+            --ikea-yellow: #FFDA1A;
+            --white: #FFFFFF;
+            --off-white: #FAFAFA;
+            --light-gray: #F5F5F5;
+            --medium-gray: #E0E0E0;
+            --dark-gray: #333333;
+            --text-secondary: #666666;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --sidebar-width: 320px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--off-white);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--white);
+            border-right: 1px solid var(--medium-gray);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        /* Badge Icons */
+        .badge-icons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .badge-icons img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Name */
+        .name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ikea-blue);
+            letter-spacing: 0.03em;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Title */
+        .title {
+            font-size: 0.8rem;
+            color: var(--ikea-blue);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .title a {
+            color: var(--ikea-blue);
+            text-decoration: none;
+        }
+
+        .title a:hover {
+            text-decoration: underline;
+        }
+
+        /* Bio */
+        .bio {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--dark-gray);
+            padding: 0.75rem;
+            background: var(--light-gray);
+            border-left: 4px solid var(--ikea-yellow);
+            margin-bottom: 1.25rem;
+        }
+
+        /* Links Section */
+        .links-header {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-bottom: 1.25rem;
+        }
+
+        .links a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .links a:hover {
+            background: var(--light-gray);
+            color: var(--ikea-blue);
+        }
+
+        .links a img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        /* Blog Description */
+        .blog-description {
+            margin-bottom: 1rem;
+        }
+
+        .blog-description h2 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            line-height: 1.4;
+        }
+
+        /* Search Box */
+        .search-container {
+            display: flex;
+            margin-bottom: 1.25rem;
+        }
+
+        .search-container input {
+            flex: 1;
+            padding: 0.6rem 0.75rem;
+            border: 2px solid var(--medium-gray);
+            border-right: none;
+            border-radius: 6px 0 0 6px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-container input:focus {
+            border-color: var(--ikea-blue);
+        }
+
+        .search-container input::placeholder {
+            color: #999;
+        }
+
+        .search-container button {
+            padding: 0.6rem 0.75rem;
+            background: var(--ikea-blue);
+            border: 2px solid var(--ikea-blue);
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+            transition: background-color 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #fafafa;
-            color: #333;
         }
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 300;
-            letter-spacing: 0.05em;
+
+        .search-container button:hover {
+            background: #003d8a;
+            border-color: #003d8a;
+        }
+
+        .search-container button svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--white);
+        }
+
+        /* Profile Photos */
+        .profile-photos {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: auto;
+            margin-bottom: 1rem;
+        }
+
+        .profile-photo {
+            width: calc(50% - 0.375rem);
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 3px solid var(--ikea-yellow);
+        }
+
+        /* Copyright */
+        .copyright {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-align: center;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        /* Main Content */
+        .content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Posts Grid */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Post Card */
+        .post-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 3px solid var(--ikea-yellow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .post-image {
+            width: 100%;
+            aspect-ratio: 16/10;
+            background: var(--ikea-blue);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .post-card:hover .post-image img {
+            transform: scale(1.05);
+        }
+
+        .post-content {
+            padding: 1rem;
+            background: var(--light-gray);
+        }
+
+        .post-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .post-preview {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .post-date {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 2rem 0;
+        }
+
+        .page-link {
+            padding: 0.5rem 0.75rem;
+            color: var(--ikea-blue);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .page-link:hover {
+            background: var(--ikea-blue);
+            color: var(--white);
+        }
+
+        .page-link.active {
+            background: var(--ikea-yellow);
+            color: var(--dark-gray);
+            font-weight: 700;
+        }
+
+        .page-separator {
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .posts-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            :root {
+                --sidebar-width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--medium-gray);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .badge-icons {
+                justify-content: center;
+            }
+
+            .name {
+                text-align: center;
+            }
+
+            .title {
+                text-align: center;
+            }
+
+            .bio {
+                text-align: center;
+                border-left: none;
+                border-top: 4px solid var(--ikea-yellow);
+            }
+
+            .links-header {
+                justify-content: center;
+            }
+
+            .links {
+                align-items: center;
+            }
+
+            .blog-description h2 {
+                text-align: center;
+            }
+
+            .profile-photos {
+                justify-content: center;
+                margin-top: 1.5rem;
+            }
+
+            .profile-photo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                padding: 1.25rem 1rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .name {
+                font-size: 1.25rem;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Jihwan Kim</h1>
+    <aside class="sidebar">
+        <!-- Badge Icons -->
+        <div class="badge-icons">
+            <img src="images/mvp-badge.png" alt="Microsoft MVP" title="Microsoft MVP">
+            <img src="images/powerbi-su.png" alt="Power BI Community Super User" title="Power BI Community Super User">
+            <img src="images/powerbi-icon.svg" alt="Power BI" title="Power BI">
+            <img src="images/fabric-icon.svg" alt="Microsoft Fabric" title="Microsoft Fabric">
+        </div>
+
+        <!-- Name -->
+        <h1 class="name">JIHWAN KIM</h1>
+
+        <!-- Title -->
+        <p class="title">
+            <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">Microsoft MVP</a> |
+            <a href="https://community.fabric.microsoft.com/t5/user/viewprofilepage/user-id/128806" target="_blank" rel="noopener">Power BI & Fabric Community Super User</a> |
+            Senior Power BI & Fabric Architect
+        </p>
+
+        <!-- Bio -->
+        <p class="bio">I build enterprise-grade, AI-ready data solutions that delivers faster insights @IKEA</p>
+
+        <!-- Links -->
+        <div class="links-header">
+            <img src="images/link-icon.png" alt="" style="width: 16px; height: 16px;">
+            Link
+        </div>
+        <div class="links">
+            <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">
+                <img src="images/mvp-icon.png" alt="MVP">
+                Microsoft MVP profile
+            </a>
+            <a href="https://www.linkedin.com/in/jihwankim1975/" target="_blank" rel="noopener">
+                <img src="images/linkedin-icon.png" alt="LinkedIn" style="width: 38px; height: 38px; margin-left: -5px;">
+                Linkedin profile
+            </a>
+        </div>
+
+        <!-- Blog Description -->
+        <div class="blog-description">
+            <h2>Insights on Power BI, Microsoft Fabric, and enterprise data solutions</h2>
+        </div>
+
+        <!-- Search -->
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search blog by keywords" aria-label="Search blog posts">
+            <button id="search-btn" aria-label="Search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" fill="none" stroke="white"/>
+                    <path d="M21 21l-4.35-4.35" stroke="white"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Profile Photos -->
+        <div class="profile-photos">
+            <img src="images/profile-1.jpg" alt="Jihwan Kim" class="profile-photo">
+            <img src="images/profile-2.png" alt="Jihwan Kim" class="profile-photo">
+        </div>
+
+        <!-- Copyright -->
+        <footer class="copyright">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> powerbimvp.com | Jihwan Kim</p>
+        </footer>
+    </aside>
+
+    <main class="content">
+        <div class="posts-grid" id="posts-container">
+            <!-- Posts will be rendered by JavaScript -->
+        </div>
+
+        <nav class="pagination" id="pagination" aria-label="Blog posts pagination">
+            <!-- Pagination will be rendered by JavaScript -->
+        </nav>
+
+        <div id="no-results" class="no-results" style="display: none;">
+            <p>No posts found matching your search.</p>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Blog posts data
+            const posts = [
+                {
+                    id: 1,
+                    title: "Understanding DAX Context Transition",
+                    preview: "Learn how context transition works in DAX and why it's crucial for advanced calculations in Power BI. We'll explore CALCULATE, row context, and filter context.",
+                    date: "January 5, 2026",
+                    tags: ["dax", "power bi", "calculations"]
+                },
+                {
+                    id: 2,
+                    title: "Getting Started with Microsoft Fabric",
+                    preview: "A comprehensive guide to setting up your first Microsoft Fabric workspace. Learn about lakehouses, warehouses, and the unified analytics platform.",
+                    date: "December 28, 2025",
+                    tags: ["fabric", "microsoft", "data platform"]
+                },
+                {
+                    id: 3,
+                    title: "Power BI Performance Optimization Tips",
+                    preview: "10 proven strategies to make your Power BI reports load faster. From data modeling to DAX optimization and visual best practices.",
+                    date: "December 15, 2025",
+                    tags: ["power bi", "performance", "optimization"]
+                },
+                {
+                    id: 4,
+                    title: "Building AI-Ready Data Solutions at Enterprise Scale",
+                    preview: "How to architect your data infrastructure to be ready for AI and machine learning workloads. Real-world patterns from enterprise implementations.",
+                    date: "December 1, 2025",
+                    tags: ["ai", "data architecture", "enterprise"]
+                },
+                {
+                    id: 5,
+                    title: "Row-Level Security in Power BI: Complete Guide",
+                    preview: "Implementing effective row-level security to protect sensitive data. Dynamic RLS, testing strategies, and common pitfalls to avoid.",
+                    date: "November 20, 2025",
+                    tags: ["power bi", "security", "rls"]
+                },
+                {
+                    id: 6,
+                    title: "Fabric Lakehouse vs Warehouse: When to Use Each",
+                    preview: "Understanding the architectural differences between Lakehouse and Warehouse in Microsoft Fabric, and how to choose the right one for your scenario.",
+                    date: "November 10, 2025",
+                    tags: ["fabric", "lakehouse", "warehouse"]
+                }
+            ];
+
+            const postsContainer = document.getElementById('posts-container');
+            const searchInput = document.getElementById('search-input');
+            const searchBtn = document.getElementById('search-btn');
+            const noResults = document.getElementById('no-results');
+            const paginationContainer = document.getElementById('pagination');
+            const postsPerPage = 6;
+            let currentPage = 1;
+
+            function renderPosts(filteredPosts) {
+                postsContainer.innerHTML = '';
+
+                if (filteredPosts.length === 0) {
+                    noResults.style.display = 'block';
+                    paginationContainer.innerHTML = '';
+                    return;
+                }
+
+                noResults.style.display = 'none';
+
+                const startIndex = (currentPage - 1) * postsPerPage;
+                const paginatedPosts = filteredPosts.slice(startIndex, startIndex + postsPerPage);
+
+                paginatedPosts.forEach(post => {
+                    const card = document.createElement('article');
+                    card.className = 'post-card';
+
+                    card.innerHTML = `
+                        <div class="post-image">
+                            Featured image
+                        </div>
+                        <div class="post-content">
+                            <h3 class="post-title">${post.title}</h3>
+                            <p class="post-preview">${post.preview}</p>
+                        </div>
+                    `;
+
+                    postsContainer.appendChild(card);
+                });
+
+                renderPagination(filteredPosts.length);
+            }
+
+            function renderPagination(totalPosts) {
+                const totalPages = Math.ceil(totalPosts / postsPerPage);
+                paginationContainer.innerHTML = '';
+
+                if (totalPages <= 1) return;
+
+                for (let i = 1; i <= Math.min(totalPages, 7); i++) {
+                    if (i > 1) {
+                        const separator = document.createElement('span');
+                        separator.className = 'page-separator';
+                        separator.textContent = '|';
+                        paginationContainer.appendChild(separator);
+                    }
+
+                    const link = document.createElement('a');
+                    link.href = '#';
+                    link.className = `page-link ${i === currentPage ? 'active' : ''}`;
+                    link.textContent = i;
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        currentPage = i;
+                        renderPosts(getFilteredPosts());
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+
+                    paginationContainer.appendChild(link);
+                }
+            }
+
+            function getFilteredPosts() {
+                const query = searchInput.value.toLowerCase().trim();
+
+                if (!query) {
+                    return posts;
+                }
+
+                return posts.filter(post => {
+                    const titleMatch = post.title.toLowerCase().includes(query);
+                    const previewMatch = post.preview.toLowerCase().includes(query);
+                    const tagMatch = post.tags.some(tag => tag.includes(query));
+                    return titleMatch || previewMatch || tagMatch;
+                });
+            }
+
+            function performSearch() {
+                currentPage = 1;
+                renderPosts(getFilteredPosts());
+            }
+
+            searchBtn.addEventListener('click', performSearch);
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            let searchTimeout;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(performSearch, 300);
+            });
+
+            // Initial render
+            renderPosts(posts);
+        });
+    </script>
 </body>
 </html>
