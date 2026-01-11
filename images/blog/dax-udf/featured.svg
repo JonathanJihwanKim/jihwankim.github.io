@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <!-- Rembrandt-style gradients: deep shadows to golden highlights -->
+    <radialGradient id="coreLight" cx="50%" cy="45%" r="60%" fx="50%" fy="40%">
+      <stop offset="0%" stop-color="#f4d03f" stop-opacity="0.9"/>
+      <stop offset="25%" stop-color="#d4a017" stop-opacity="0.7"/>
+      <stop offset="50%" stop-color="#8b6914" stop-opacity="0.5"/>
+      <stop offset="75%" stop-color="#3d2914" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#1a0f0a" stop-opacity="1"/>
+    </radialGradient>
+    
+    <radialGradient id="glowCenter" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff8dc" stop-opacity="0.95"/>
+      <stop offset="40%" stop-color="#f4d03f" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#d4a017" stop-opacity="0"/>
+    </radialGradient>
+    
+    <linearGradient id="blockGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f7dc6f"/>
+      <stop offset="50%" stop-color="#d4a017"/>
+      <stop offset="100%" stop-color="#8b6914"/>
+    </linearGradient>
+    
+    <linearGradient id="blockShadow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5d4e37"/>
+      <stop offset="100%" stop-color="#2c1810"/>
+    </linearGradient>
+    
+    <linearGradient id="timeRing" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8b6914" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#f4d03f" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#8b6914" stop-opacity="0.3"/>
+    </linearGradient>
+    
+    <!-- Texture filter for painterly effect -->
+    <filter id="painterly" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Clock marks pattern -->
+    <pattern id="clockMarks" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+      <circle cx="50" cy="5" r="2" fill="#f4d03f" opacity="0.6"/>
+      <circle cx="95" cy="50" r="2" fill="#f4d03f" opacity="0.6"/>
+      <circle cx="50" cy="95" r="2" fill="#f4d03f" opacity="0.6"/>
+      <circle cx="5" cy="50" r="2" fill="#f4d03f" opacity="0.6"/>
+    </pattern>
+  </defs>
+  
+  <!-- Deep background - Rembrandt's characteristic dark -->
+  <rect width="1200" height="630" fill="#0d0806"/>
+  
+  <!-- Atmospheric depth layers -->
+  <ellipse cx="600" cy="350" rx="700" ry="400" fill="url(#coreLight)" filter="url(#painterly)"/>
+  
+  <!-- Secondary ambient glow -->
+  <ellipse cx="580" cy="300" rx="350" ry="280" fill="url(#glowCenter)" opacity="0.4"/>
+  
+  <!-- Time rings - representing time intelligence, orbiting the central concept -->
+  <g opacity="0.5" filter="url(#softGlow)">
+    <ellipse cx="600" cy="315" rx="380" ry="120" fill="none" stroke="url(#timeRing)" stroke-width="1.5" transform="rotate(-8 600 315)"/>
+    <ellipse cx="600" cy="315" rx="320" ry="100" fill="none" stroke="url(#timeRing)" stroke-width="1" transform="rotate(5 600 315)"/>
+    <ellipse cx="600" cy="315" rx="450" ry="140" fill="none" stroke="url(#timeRing)" stroke-width="0.8" transform="rotate(-3 600 315)" stroke-dasharray="8 12"/>
+  </g>
+  
+  <!-- Floating modular blocks - representing portable UDF components -->
+  <!-- These emerge from shadow into light, Rembrandt style -->
+  
+  <!-- Back layer blocks (in shadow) -->
+  <g opacity="0.4" filter="url(#painterly)">
+    <rect x="180" y="200" width="70" height="70" rx="4" fill="url(#blockShadow)" transform="rotate(-15 215 235)"/>
+    <rect x="920" y="180" width="60" height="60" rx="4" fill="url(#blockShadow)" transform="rotate(20 950 210)"/>
+    <rect x="150" y="380" width="55" height="55" rx="4" fill="url(#blockShadow)" transform="rotate(-8 177 407)"/>
+    <rect x="980" y="350" width="50" height="50" rx="4" fill="url(#blockShadow)" transform="rotate(12 1005 375)"/>
+  </g>
+  
+  <!-- Mid layer blocks (transitioning) -->
+  <g opacity="0.65" filter="url(#painterly)">
+    <rect x="280" y="150" width="75" height="75" rx="5" fill="#5d4e37" transform="rotate(-10 317 187)"/>
+    <rect x="850" y="140" width="70" height="70" rx="5" fill="#6b5b45" transform="rotate(15 885 175)"/>
+    <rect x="250" y="420" width="65" height="65" rx="4" fill="#5d4e37" transform="rotate(-5 282 452)"/>
+    <rect x="880" y="400" width="60" height="60" rx="4" fill="#6b5b45" transform="rotate(8 910 430)"/>
+  </g>
+  
+  <!-- Central illuminated blocks - the core UDF library -->
+  <g filter="url(#glow)">
+    <!-- Main central block cluster -->
+    <rect x="520" y="240" width="90" height="90" rx="6" fill="url(#blockGold)" transform="rotate(-5 565 285)">
+      <animate attributeName="opacity" values="0.9;1;0.9" dur="4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="590" y="280" width="85" height="85" rx="6" fill="url(#blockGold)" transform="rotate(8 632 322)">
+      <animate attributeName="opacity" values="1;0.85;1" dur="3.5s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="545" y="340" width="80" height="80" rx="5" fill="url(#blockGold)" transform="rotate(-3 585 380)">
+      <animate attributeName="opacity" values="0.85;1;0.85" dur="4.5s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- Supporting bright blocks -->
+    <rect x="420" y="280" width="70" height="70" rx="5" fill="#c9a227" transform="rotate(-12 455 315)"/>
+    <rect x="670" y="260" width="75" height="75" rx="5" fill="#c9a227" transform="rotate(10 707 297)"/>
+    <rect x="480" y="380" width="60" height="60" rx="4" fill="#b8960f" transform="rotate(-8 510 410)"/>
+    <rect x="640" y="370" width="65" height="65" rx="4" fill="#b8960f" transform="rotate(6 672 402)"/>
+  </g>
+  
+  <!-- Connection lines between blocks - representing function composition -->
+  <g stroke="#f4d03f" stroke-width="1.5" opacity="0.5" filter="url(#softGlow)">
+    <line x1="455" y1="315" x2="520" y2="285"/>
+    <line x1="610" y1="285" x2="632" y2="280"/>
+    <line x1="565" y1="330" x2="585" y2="340"/>
+    <line x1="625" y1="365" x2="640" y2="370"/>
+    <line x1="540" y1="380" x2="545" y2="380"/>
+    <line x1="675" y1="297" x2="707" y2="297"/>
+  </g>
+  
+  <!-- Small floating particles - like dust in Rembrandt's light -->
+  <g fill="#f4d03f" opacity="0.7">
+    <circle cx="500" cy="200" r="2"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite"/></circle>
+    <circle cx="700" cy="180" r="1.5"><animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/></circle>
+    <circle cx="450" cy="450" r="2"><animate attributeName="opacity" values="0.4;0.9;0.4" dur="3.5s" repeatCount="indefinite"/></circle>
+    <circle cx="750" cy="420" r="1.8"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="2.8s" repeatCount="indefinite"/></circle>
+    <circle cx="380" cy="300" r="1.5"><animate attributeName="opacity" values="0.5;0.9;0.5" dur="3.2s" repeatCount="indefinite"/></circle>
+    <circle cx="820" cy="320" r="2"><animate attributeName="opacity" values="0.4;0.8;0.4" dur="2.7s" repeatCount="indefinite"/></circle>
+    <circle cx="550" cy="180" r="1.2"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.2s" repeatCount="indefinite"/></circle>
+    <circle cx="650" cy="450" r="1.5"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="3.8s" repeatCount="indefinite"/></circle>
+  </g>
+  
+  <!-- Time indicator elements integrated subtly -->
+  <g opacity="0.35" filter="url(#softGlow)">
+    <!-- Abstract clock hands suggestion in the glow -->
+    <line x1="600" y1="315" x2="600" y2="240" stroke="#f4d03f" stroke-width="2" stroke-linecap="round"/>
+    <line x1="600" y1="315" x2="660" y2="350" stroke="#d4a017" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Code/function symbols abstracted -->
+  <g font-family="monospace" fill="#f4d03f" opacity="0.25" font-size="14">
+    <text x="340" y="220" transform="rotate(-10 340 220)">( )</text>
+    <text x="820" y="230" transform="rotate(8 820 230)">=></text>
+    <text x="300" y="450" transform="rotate(-5 300 450)">fn</text>
+    <text x="850" y="440" transform="rotate(5 850 440)">{ }</text>
+  </g>
+  
+  <!-- Subtle vignette overlay for depth -->
+  <rect width="1200" height="630" fill="url(#coreLight)" opacity="0.3" style="mix-blend-mode: multiply"/>
+  
+  <!-- Edge darkening - characteristic of Rembrandt compositions -->
+  <rect width="1200" height="630" fill="none" stroke="#0d0806" stroke-width="200" opacity="0.6"/>
+</svg>

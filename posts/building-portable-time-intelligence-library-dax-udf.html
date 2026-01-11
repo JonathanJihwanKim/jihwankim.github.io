@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn how to create reusable, model-independent DAX functions that work across any semantic model. Covers UDF design patterns, TMDL integration, and sharing through DAX Lib.">
+    <meta name="keywords" content="DAX, User-Defined Functions, UDF, Power BI, Time Intelligence, TMDL, Microsoft Fabric">
+    <meta name="author" content="Jihwan Kim">
+    <meta property="og:title" content="Building a Portable Time Intelligence Library with DAX User-Defined Functions | Jihwan Kim">
+    <meta property="og:description" content="Learn how to create reusable, model-independent DAX functions that work across any semantic model.">
+    <meta property="og:type" content="article">
+    <title>Building a Portable Time Intelligence Library with DAX User-Defined Functions | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --ikea-blue: #0051BA;
+            --ikea-yellow: #FFDA1A;
+            --white: #FFFFFF;
+            --off-white: #FAFAFA;
+            --light-gray: #F5F5F5;
+            --medium-gray: #E0E0E0;
+            --dark-gray: #333333;
+            --text-secondary: #666666;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --sidebar-width: 320px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--off-white);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--white);
+            border-right: 1px solid var(--medium-gray);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        /* Badge Icons */
+        .badge-icons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .badge-icons img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Name */
+        .name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ikea-blue);
+            letter-spacing: 0.03em;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Title */
+        .title {
+            font-size: 0.8rem;
+            color: var(--ikea-blue);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .title a {
+            color: var(--ikea-blue);
+            text-decoration: none;
+        }
+
+        .title a:hover {
+            text-decoration: underline;
+        }
+
+        /* Bio */
+        .bio {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--dark-gray);
+            padding: 0.75rem;
+            background: var(--light-gray);
+            border-left: 4px solid var(--ikea-yellow);
+            margin-bottom: 1.25rem;
+        }
+
+        /* Links Section */
+        .links-header {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-bottom: 1.25rem;
+        }
+
+        .links a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.25rem 0;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .links a:hover {
+            background: var(--light-gray);
+            color: var(--ikea-blue);
+        }
+
+        .links a .icon-wrapper {
+            width: 36px;
+            min-width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .links a img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .links a .icon-wrapper img.linkedin-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        /* Blog Description */
+        .blog-description {
+            margin-bottom: 1rem;
+        }
+
+        .blog-description h2 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            line-height: 1.4;
+        }
+
+        /* Profile Photos */
+        .profile-photos {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: auto;
+            margin-bottom: 1rem;
+        }
+
+        .profile-photo {
+            width: calc(50% - 0.375rem);
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 3px solid var(--ikea-yellow);
+        }
+
+        /* Copyright */
+        .copyright {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-align: center;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        /* Main Content */
+        .content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--ikea-blue);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Featured Image */
+        .featured-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 3px solid var(--ikea-yellow);
+            background: var(--white);
+        }
+
+        /* Article Header */
+        .article-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid var(--ikea-yellow);
+        }
+
+        .article-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-gray);
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Article Content */
+        .article-content {
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .article-content h2 {
+            font-size: 1.5rem;
+            color: var(--ikea-blue);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--ikea-yellow);
+        }
+
+        .article-content h3 {
+            font-size: 1.25rem;
+            color: var(--dark-gray);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-content p {
+            margin-bottom: 1.25rem;
+        }
+
+        .article-content a {
+            color: var(--ikea-blue);
+            text-decoration: underline;
+        }
+
+        .article-content a:hover {
+            text-decoration: none;
+        }
+
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border: 3px solid var(--ikea-yellow);
+        }
+
+        .article-content pre {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--ikea-yellow);
+        }
+
+        .article-content pre code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: #ccc;
+        }
+
+        .article-content code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            background: var(--light-gray);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .article-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .article-content blockquote {
+            border-left: 4px solid var(--ikea-yellow);
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: var(--text-secondary);
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .article-content ul, .article-content ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .article-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .article-content em {
+            font-style: italic;
+        }
+
+        .article-content strong {
+            font-weight: 600;
+        }
+
+        /* Tags */
+        .article-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .tag {
+            background: var(--ikea-yellow);
+            color: var(--dark-gray);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            :root {
+                --sidebar-width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--medium-gray);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .badge-icons {
+                justify-content: center;
+            }
+
+            .name {
+                text-align: center;
+            }
+
+            .title {
+                text-align: center;
+            }
+
+            .bio {
+                text-align: center;
+                border-left: none;
+                border-top: 4px solid var(--ikea-yellow);
+            }
+
+            .links-header {
+                justify-content: center;
+            }
+
+            .links {
+                align-items: center;
+            }
+
+            .blog-description h2 {
+                text-align: center;
+            }
+
+            .profile-photos {
+                justify-content: center;
+                margin-top: 1.5rem;
+            }
+
+            .profile-photo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .article-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                padding: 1.25rem 1rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .name {
+                font-size: 1.25rem;
+            }
+
+            .article-title {
+                font-size: 1.25rem;
+            }
+
+            .article-content h2 {
+                font-size: 1.25rem;
+            }
+
+            .article-content pre {
+                padding: 0.75rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <!-- Badge Icons -->
+        <div class="badge-icons">
+            <img src="../images/mvp-badge.png" alt="Microsoft MVP" title="Microsoft MVP">
+            <img src="../images/powerbi-su.png" alt="Power BI Community Super User" title="Power BI Community Super User">
+            <img src="../images/powerbi-icon.svg" alt="Power BI" title="Power BI">
+            <img src="../images/fabric-icon.svg" alt="Microsoft Fabric" title="Microsoft Fabric">
+        </div>
+
+        <!-- Name -->
+        <h1 class="name">JIHWAN KIM</h1>
+
+        <!-- Title -->
+        <p class="title">
+            <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">Microsoft MVP</a> |
+            <a href="https://community.fabric.microsoft.com/t5/user/viewprofilepage/user-id/128806" target="_blank" rel="noopener">Power BI & Fabric Community Super User</a> |
+            Senior Power BI & Fabric Architect
+        </p>
+
+        <!-- Bio -->
+        <p class="bio">I build enterprise-grade, AI-ready data solutions that delivers faster insights @IKEA</p>
+
+        <!-- Links -->
+        <div class="links-header">
+            <img src="../images/link-icon.png" alt="" style="width: 16px; height: 16px;">
+            Link
+        </div>
+        <div class="links">
+            <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">
+                <span class="icon-wrapper"><img src="../images/mvp-icon.png" alt="MVP"></span>
+                Microsoft MVP profile
+            </a>
+            <a href="https://www.linkedin.com/in/jihwankim1975/" target="_blank" rel="noopener">
+                <span class="icon-wrapper"><img src="../images/linkedin-icon.png" alt="LinkedIn" class="linkedin-icon" style="margin-left: -4px;"></span>
+                Linkedin profile
+            </a>
+        </div>
+
+        <!-- Blog Description -->
+        <div class="blog-description">
+            <h2>Insights on Power BI, Microsoft Fabric, and enterprise data solutions</h2>
+        </div>
+
+        <!-- Profile Photos -->
+        <div class="profile-photos">
+            <img src="../images/profile-1.jpg" alt="Jihwan Kim" class="profile-photo">
+            <img src="../images/profile-2.png" alt="Jihwan Kim" class="profile-photo">
+        </div>
+
+        <!-- Copyright -->
+        <footer class="copyright">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> powerbimvp.com | Jihwan Kim</p>
+        </footer>
+    </aside>
+
+    <main class="content">
+        <article class="article-container">
+            <a href="../index.html" class="back-link">
+                &larr; Back to all posts
+            </a>
+
+            <!-- Featured Image -->
+            <img src="../images/blog/dax-udf/featured.svg" alt="Building a Portable Time Intelligence Library with DAX User-Defined Functions" class="featured-image">
+
+            <header class="article-header">
+                <h1 class="article-title">Building a Portable Time Intelligence Library with DAX User-Defined Functions</h1>
+                <div class="article-meta">
+                    <span>January 11, 2026</span>
+                    <span>10 min read</span>
+                </div>
+            </header>
+
+            <div class="article-content">
+                <p>In this writing, I share how I started to learn DAX UDF (User Defined Functions). My journey started right after reading Marco Russo's post on <a href="https://www.sqlbi.com/blog/marco/2025/04/04/dax-and-semantic-models-announcements-at-the-fabric-conference-2025/" target="_blank" rel="noopener">DAX and semantic models announcements at the Fabric Conference 2025</a>. The phrase that caught my attention was this: <em>"I expect that we will look at DAX code without functions like we look at DAX code without variables today."</em> That was enough to make me drop what I was doing and start experimenting after DAX UDF became public preview.</p>
+
+                <p>I've written variations of <code>Sales LY</code>, <code>Sales YTD</code>, and <code>Sales vs PY %</code> measures across dozens of semantic models over the years. Every time, I copy-paste from a previous project, then manually replace the table names, column references, and measure names to fit the new model. It works, but it's tedious and error-prone. When I realized that DAX UDFs could eliminate this repetitive work entirely, I knew I had to build something reusable.</p>
+
+                <p>In this blog post, I want to share how I designed a portable Time Intelligence UDF library that works across any semantic model, how the TMDL format makes this shareable in Git, and why this changes everything for enterprise DAX development.</p>
+
+                <h2>What Are DAX User-Defined Functions?</h2>
+
+                <p>DAX UDFs, <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-user-defined-functions-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">introduced in the September 2025 release of Power BI Desktop</a>, let me package parameterized DAX logic into reusable functions. As the <a href="https://learn.microsoft.com/en-us/dax/best-practices/dax-user-defined-functions?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Microsoft documentation explains</a>, these are first-class model objects that live alongside my measures, tables, and relationships.</p>
+
+                <p>The syntax resembles M more than traditional DAX. I define parameters with type hints, then provide an expression after the <code>=&gt;</code> rocket operator. Here's the simplest possible example:</p>
+
+<pre><code class="language-sql">FUNCTION AddTax = (amount: NUMERIC) =&gt; amount * 1.1</code></pre>
+
+                <p>What makes this powerful isn't the syntax&mdash;it's the parameter passing modes. As <a href="https://www.sqlbi.com/articles/introducing-user-defined-functions-in-dax/" target="_blank" rel="noopener">SQLBI's detailed article explains</a>, there are two modes that fundamentally change how my function behaves. <strong>VAL</strong> (value) parameters are evaluated before the function call, like DAX variables. <strong>EXPR</strong> (expression) parameters pass an unevaluated expression that the function evaluates in its own context&mdash;this is what enables filter context manipulation inside CALCULATE.</p>
+
+                <p>Understanding this distinction is critical. If I want my function to work with measures that need context transition, I must use EXPR parameters. This was my first <em>aha</em> moment.</p>
+
+                <h2>The Portability Problem</h2>
+
+                <p>Before I started coding, I needed to solve the core design challenge: how do I write a time intelligence function that works in any model?</p>
+
+                <p>The typical <code>Sales LY</code> measure looks like this:</p>
+
+<pre><code class="language-sql">Sales LY = CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date]))</code></pre>
+
+                <p>This is tightly coupled to a specific model. It references <code>[Total Sales]</code> and <code>'Date'[Date]</code> directly. If I copy this to another model that uses <code>'Calendar'[DateKey]</code> and <code>[Revenue]</code>, I have to manually edit everything.</p>
+
+                <p>The insight from <a href="https://www.sqlbi.com/articles/model-dependent-and-model-independent-user-defined-functions-in-dax/" target="_blank" rel="noopener">SQLBI's article on model-dependent versus model-independent functions</a> clarified the solution. A <strong>model-independent function</strong> has no references to specific tables, columns, or measures&mdash;everything comes through parameters. This makes the function portable to any semantic model that can provide the required inputs.</p>
+
+                <p>So instead of hardcoding, I needed to accept the measure and date column as parameters. The consumer would pass in their model-specific references, and the function would handle the calculation logic.</p>
+
+                <h2>Designing TimeIntel.PeriodCompare</h2>
+
+                <p>My first function needed to replace the common pattern of DATEADD-based period comparisons. I wanted a single function that could handle year, quarter, month, or day shifts&mdash;not four separate functions.</p>
+
+                <p>Here's the challenge: DATEADD requires a literal keyword (YEAR, QUARTER, MONTH, DAY) for its granularity parameter. I can't pass a variable. This means I had to use a SWITCH pattern to route to the appropriate DATEADD call based on a string parameter.</p>
+
+                <p>After several iterations, I arrived at this design:</p>
+
+<pre><code class="language-sql">DEFINE
+    /// Returns a measure value shifted by a specified number of periods
+    /// @param metricExpr: The measure or expression to evaluate
+    /// @param dateColumn: Date column from a marked date table
+    /// @param periodsBack: Number of periods to shift (positive = past)
+    /// @param granularity: "YEAR", "QUARTER", "MONTH", or "DAY"
+    FUNCTION TimeIntel.PeriodCompare = (
+        metricExpr: EXPR,
+        dateColumn: ANYREF,
+        periodsBack: INT64,
+        granularity: STRING
+    ) =&gt;
+        VAR _granularity = UPPER(granularity)
+        RETURN
+        IF(metricExpr &lt;&gt; BLANK(),
+            SWITCH(
+                _granularity,
+                "YEAR", CALCULATE(metricExpr, DATEADD(dateColumn, -periodsBack, YEAR)),
+                "QUARTER", CALCULATE(metricExpr, DATEADD(dateColumn, -periodsBack, QUARTER)),
+                "MONTH", CALCULATE(metricExpr, DATEADD(dateColumn, -periodsBack, MONTH)),
+                "DAY", CALCULATE(metricExpr, DATEADD(dateColumn, -periodsBack, DAY)),
+                BLANK()  // Invalid granularity returns BLANK
+            )
+        )</code></pre>
+
+                <p>Several design decisions are worth noting. The <code>metricExpr: EXPR</code> type hint ensures the measure expression is passed unevaluated, so CALCULATE can apply context transition properly. The <code>dateColumn: ANYREF</code> accepts any column reference, giving flexibility for models with different date table structures. The <code>UPPER()</code> normalization lets consumers pass "Year", "year", or "YEAR" without breaking. And the BLANK check prevents calculations when there's no data in the current context&mdash;keeping visuals clean.</p>
+
+                <p>Now any model can use this:</p>
+
+<pre><code class="language-sql">// In a Contoso model
+Sales LY = TimeIntel.PeriodCompare([Total Sales], 'date'[Date], 1, "YEAR")
+
+// In a different model with different naming
+Revenue LY = TimeIntel.PeriodCompare([Revenue], 'Calendar'[DateKey], 1, "YEAR")</code></pre>
+
+                <p>Same function, any model. This is the leverage I was looking for.</p>
+
+                <h2>Building TimeIntel.PeriodVariance</h2>
+
+                <p>With the comparison function working, I wanted to add a variance function that could return either absolute difference or percentage change. Rather than duplicating the DATEADD logic, I called the first function from within the second&mdash;demonstrating UDF composition.</p>
+
+<pre><code class="language-sql">DEFINE
+    /// Returns variance between current and prior period values
+    /// @param metricExpr: The measure or expression to evaluate
+    /// @param dateColumn: Date column from a marked date table
+    /// @param periodsBack: Number of periods to shift (positive = past)
+    /// @param granularity: "YEAR", "QUARTER", "MONTH", or "DAY"
+    /// @param varianceType: "ABSOLUTE" for difference, "PERCENT" for percentage change
+    FUNCTION TimeIntel.PeriodVariance = (
+        metricExpr: EXPR,
+        dateColumn: ANYREF,
+        periodsBack: INT64,
+        granularity: STRING,
+        varianceType: STRING
+    ) =&gt;
+        VAR _varianceType = UPPER(varianceType)
+        VAR _currentValue = CALCULATE(metricExpr)
+        VAR _priorValue = TimeIntel.PeriodCompare(metricExpr, dateColumn, periodsBack, granularity)
+        VAR _absoluteVariance = IF(_currentValue &lt;&gt; BLANK() &amp;&amp; _priorValue &lt;&gt; BLANK(), _currentValue - _priorValue)
+        VAR _percentVariance = IF(_currentValue &lt;&gt; BLANK() &amp;&amp; _priorValue &lt;&gt; BLANK(), DIVIDE(_absoluteVariance, _priorValue) )
+        RETURN
+            SWITCH(
+                _varianceType,
+                "ABSOLUTE", _absoluteVariance,
+                "PERCENT", _percentVariance,
+                BLANK()
+            )</code></pre>
+
+                <p>This composition pattern is significant. When I improve <code>TimeIntel.PeriodCompare</code>&mdash;adding error handling, supporting new granularities, or optimizing performance&mdash;every function that calls it inherits those improvements automatically. This is how professional codebases work, and now DAX can work this way too.</p>
+
+                <img src="../images/blog/dax-udf/image.png" alt="DAX UDF code in Power BI">
+
+                <h2>TMDL and the DevOps Connection</h2>
+
+                <p>From a DevOps standpoint, the real magic happens in the TMDL format. When I save a Power BI project (PBIP), my UDFs appear in <code>functions.tmdl</code> within the definition folder:</p>
+
+<pre><code>ContosoRetailSales.SemanticModel/
+├── definition/
+│   ├── model.tmdl
+│   ├── tables/
+│   │   ├── sales.tmdl
+│   │   ├── date.tmdl
+│   │   └── ...
+│   ├── relationships.tmdl
+│   └── functions.tmdl        ← UDFs live here
+├── .platform
+└── definition.pbism</code></pre>
+
+                <img src="../images/blog/dax-udf/image-1.png" alt="TMDL folder structure in Visual Studio Code">
+
+                <p>The <code>functions.tmdl</code> file is plain text&mdash;which means standard Git workflows apply. I can diff UDF changes in pull requests, see exactly who modified a business calculation and when, roll back broken functions to a previous commit, and branch experimental UDFs without affecting production.</p>
+
+                <p>Here's what the TMDL content looks like:</p>
+
+<pre><code class="language-sql">createOrReplace
+    /// Author: Jihwan Kim
+    /// Version: 1.0.0
+    /// Returns a measure value shifted by a specified number of periods
+    /// @param metricExpr: The measure or expression to evaluate
+    /// @param dateColumn: Date column from a marked date table
+    /// @param periodsBack: Number of periods to shift (positive = past)
+    /// @param granularity: "YEAR", "QUARTER", "MONTH", or "DAY"
+    function 'TimeIntel.PeriodCompare' =
+            (
+                    metricExpr: EXPR,
+                    dateColumn: ANYREF,
+                    periodsBack: INT64,
+                    granularity: STRING
+                ) =&gt;
+                    VAR _granularity = UPPER(granularity)
+                    RETURN
+                    IF(metricExpr &lt;&gt; BLANK(),
+                        SWITCH(
+                            _granularity,
+                            "YEAR", CALCULATE(metricExpr, DATEADD(dateColumn, -periodsBack, YEAR)),
+                            "QUARTER", CALCULATE(metricExpr, DATEADD(dateColumn, -periodsBack, QUARTER)),
+                            "MONTH", CALCULATE(metricExpr, DATEADD(dateColumn, -periodsBack, MONTH)),
+                            "DAY", CALCULATE(metricExpr, DATEADD(dateColumn, -periodsBack, DAY)),
+                            BLANK()  // Invalid granularity returns BLANK
+                        )
+                    )
+
+    /// Author: Jihwan Kim
+    /// Version: 1.0.0
+    /// Returns variance between current and prior period values
+    /// @param metricExpr: The measure or expression to evaluate
+    /// @param dateColumn: Date column from a marked date table
+    /// @param periodsBack: Number of periods to shift (positive = past)
+    /// @param granularity: "YEAR", "QUARTER", "MONTH", or "DAY"
+    /// @param varianceType: "ABSOLUTE" for difference, "PERCENT" for percentage change
+    function 'TimeIntel.PeriodVariance' =
+            (
+                    metricExpr: EXPR,
+                    dateColumn: ANYREF,
+                    periodsBack: INT64,
+                    granularity: STRING,
+                    varianceType: STRING
+                ) =&gt;
+                    VAR _varianceType = UPPER(varianceType)
+                    VAR _currentValue = CALCULATE(metricExpr)
+                    VAR _priorValue = TimeIntel.PeriodCompare(metricExpr, dateColumn, periodsBack, granularity)
+                    VAR _absoluteVariance = IF(_currentValue &lt;&gt; BLANK() &amp;&amp; _priorValue &lt;&gt; BLANK(), _currentValue - _priorValue)
+                    VAR _percentVariance = IF(_currentValue &lt;&gt; BLANK() &amp;&amp; _priorValue &lt;&gt; BLANK(), DIVIDE(_absoluteVariance, _priorValue) )
+                    RETURN
+                        SWITCH(
+                            _varianceType,
+                            "ABSOLUTE", _absoluteVariance,
+                            "PERCENT", _percentVariance,
+                            BLANK()
+                        )</code></pre>
+
+                <p>For teams maintaining multiple semantic models, I could store my UDF library in a shared repository and import the <code>functions.tmdl</code> content into each model's definition folder during CI. The library becomes a versioned dependency&mdash;update once, deploy everywhere.</p>
+
+                <h2>DAX Lib: Sharing with the Community</h2>
+
+                <p>As Marco Russo announced in his <a href="https://www.sqlbi.com/blog/marco/2025/12/12/introducing-dax-lib-the-app-store-for-dax-user-defined-functions/" target="_blank" rel="noopener">introduction to DAX Lib</a>, SQLBI has created an open-source repository at <a href="https://daxlib.org" target="_blank" rel="noopener">daxlib.org</a> where the community can share model-independent functions. The site already hosts over 30 libraries covering SVG visuals, formatting, conversions, and common calculation patterns.</p>
+
+                <p>Using DAX Lib is straightforward: copy the TMDL script from the library page, paste it into your model's TMDL view in Power BI Desktop, and apply. Submitting your own library follows a similar process&mdash;you contribute well-documented, model-independent functions that any developer can import and use immediately.</p>
+
+                <p>The naming convention matters here. Model-independent functions intended for DAX Lib should use a library prefix (like <code>TimeIntel.</code>) to avoid conflicts when multiple libraries are imported into the same model. <a href="https://www.sqlbi.com/articles/model-dependent-and-model-independent-user-defined-functions-in-dax/" target="_blank" rel="noopener">SQLBI's naming conventions documentation</a> recommends reserving <code>Local.</code> prefix for model-dependent functions that won't be shared.</p>
+
+                <h2>Reflections</h2>
+
+                <p>Building this library changed how I think about DAX development. The era of copy-paste-modify across models is ending. With UDFs, I can invest time once in a well-designed, thoroughly tested function, then reuse it everywhere without modification.</p>
+
+                <p>The combination of UDFs, TMDL, and Git integration creates something genuinely new: a proper software engineering workflow for semantic model development. Functions are versioned, diffable, testable, and shareable. This is what enterprise-scale DAX development should look like.</p>
+
+                <p>I hope this inspires you to find the patterns in your own models that deserve to become portable functions&mdash;and perhaps contribute them back to the community through DAX Lib.</p>
+            </div>
+
+            <div class="article-tags">
+                <span class="tag">DAX</span>
+                <span class="tag">Power BI</span>
+                <span class="tag">UDF</span>
+                <span class="tag">Time Intelligence</span>
+                <span class="tag">TMDL</span>
+            </div>
+        </article>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+</body>
+</html>

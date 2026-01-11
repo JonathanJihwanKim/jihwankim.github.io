@@ -282,6 +282,12 @@
             cursor: pointer;
         }
 
+        .post-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
         .post-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
@@ -555,45 +561,12 @@
             const posts = [
                 {
                     id: 1,
-                    title: "Understanding DAX Context Transition",
-                    preview: "Learn how context transition works in DAX and why it's crucial for advanced calculations in Power BI. We'll explore CALCULATE, row context, and filter context.",
-                    date: "January 5, 2026",
-                    tags: ["dax", "power bi", "calculations"]
-                },
-                {
-                    id: 2,
-                    title: "Getting Started with Microsoft Fabric",
-                    preview: "A comprehensive guide to setting up your first Microsoft Fabric workspace. Learn about lakehouses, warehouses, and the unified analytics platform.",
-                    date: "December 28, 2025",
-                    tags: ["fabric", "microsoft", "data platform"]
-                },
-                {
-                    id: 3,
-                    title: "Power BI Performance Optimization Tips",
-                    preview: "10 proven strategies to make your Power BI reports load faster. From data modeling to DAX optimization and visual best practices.",
-                    date: "December 15, 2025",
-                    tags: ["power bi", "performance", "optimization"]
-                },
-                {
-                    id: 4,
-                    title: "Building AI-Ready Data Solutions at Enterprise Scale",
-                    preview: "How to architect your data infrastructure to be ready for AI and machine learning workloads. Real-world patterns from enterprise implementations.",
-                    date: "December 1, 2025",
-                    tags: ["ai", "data architecture", "enterprise"]
-                },
-                {
-                    id: 5,
-                    title: "Row-Level Security in Power BI: Complete Guide",
-                    preview: "Implementing effective row-level security to protect sensitive data. Dynamic RLS, testing strategies, and common pitfalls to avoid.",
-                    date: "November 20, 2025",
-                    tags: ["power bi", "security", "rls"]
-                },
-                {
-                    id: 6,
-                    title: "Fabric Lakehouse vs Warehouse: When to Use Each",
-                    preview: "Understanding the architectural differences between Lakehouse and Warehouse in Microsoft Fabric, and how to choose the right one for your scenario.",
-                    date: "November 10, 2025",
-                    tags: ["fabric", "lakehouse", "warehouse"]
+                    title: "Building a Portable Time Intelligence Library with DAX User-Defined Functions",
+                    preview: "Learn how to create reusable, model-independent DAX functions that work across any semantic model. Covers UDF design patterns, TMDL integration, and sharing through DAX Lib.",
+                    date: "January 11, 2026",
+                    tags: ["dax", "power bi", "udf", "time intelligence"],
+                    url: "posts/building-portable-time-intelligence-library-dax-udf.html",
+                    featuredImage: "images/blog/dax-udf/featured.svg"
                 }
             ];
 
@@ -623,15 +596,29 @@
                     const card = document.createElement('article');
                     card.className = 'post-card';
 
-                    card.innerHTML = `
+                    const imageContent = post.featuredImage
+                        ? `<img src="${post.featuredImage}" alt="${post.title}">`
+                        : 'Featured image';
+
+                    const cardContent = `
                         <div class="post-image">
-                            Featured image
+                            ${imageContent}
                         </div>
                         <div class="post-content">
                             <h3 class="post-title">${post.title}</h3>
                             <p class="post-preview">${post.preview}</p>
                         </div>
                     `;
+
+                    if (post.url) {
+                        const link = document.createElement('a');
+                        link.href = post.url;
+                        link.className = 'post-card-link';
+                        link.innerHTML = cardContent;
+                        card.appendChild(link);
+                    } else {
+                        card.innerHTML = cardContent;
+                    }
 
                     postsContainer.appendChild(card);
                 });
