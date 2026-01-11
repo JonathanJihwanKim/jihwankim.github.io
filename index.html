@@ -141,7 +141,7 @@
             color: var(--dark-gray);
             text-decoration: none;
             font-size: 0.85rem;
-            padding: 0.25rem 0.5rem;
+            padding: 0.25rem 0;
             border-radius: 6px;
             transition: background-color 0.2s ease;
         }
@@ -151,10 +151,23 @@
             color: var(--ikea-blue);
         }
 
+        .links a .icon-wrapper {
+            width: 36px;
+            min-width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
         .links a img {
             width: 28px;
             height: 28px;
             object-fit: contain;
+        }
+
+        .links a .icon-wrapper img.linkedin-icon {
+            width: 36px;
+            height: 36px;
         }
 
         /* Blog Description */
@@ -485,11 +498,11 @@
         </div>
         <div class="links">
             <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">
-                <img src="images/mvp-icon.png" alt="MVP">
+                <span class="icon-wrapper"><img src="images/mvp-icon.png" alt="MVP"></span>
                 Microsoft MVP profile
             </a>
             <a href="https://www.linkedin.com/in/jihwankim1975/" target="_blank" rel="noopener">
-                <img src="images/linkedin-icon.png" alt="LinkedIn" style="width: 38px; height: 38px; margin-left: -5px;">
+                <span class="icon-wrapper"><img src="images/linkedin-icon.png" alt="LinkedIn" class="linkedin-icon" style="margin-left: -4px;"></span>
                 Linkedin profile
             </a>
         </div>
