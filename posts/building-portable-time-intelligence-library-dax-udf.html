@@ -783,12 +783,11 @@ Revenue LY = TimeIntel.PeriodCompare([Revenue], 'Calendar'[DateKey], 1, "YEAR")<
     <script>
         // Increment view count when page loads
         (function() {
-            const namespace = 'powerbimvp';
             const key = 'dax-udf-time-intelligence';
-            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+            fetch(`https://api.counterapi.dev/v1/powerbimvp/${key}/up`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Page views:', data.value);
+                    console.log('Page views:', data.count);
                 })
                 .catch(error => {
                     console.log('Could not update view count');
