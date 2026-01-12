@@ -6,6 +6,9 @@
     <meta name="description" content="Learn how to create reusable, model-independent DAX functions that work across any semantic model. Covers UDF design patterns, TMDL integration, and sharing through DAX Lib.">
     <meta name="keywords" content="DAX, User-Defined Functions, UDF, Power BI, Time Intelligence, TMDL, Microsoft Fabric">
     <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:title" content="Building a Portable Time Intelligence Library with DAX User-Defined Functions | Jihwan Kim">
     <meta property="og:description" content="Learn how to create reusable, model-independent DAX functions that work across any semantic model.">
     <meta property="og:type" content="article">
@@ -18,7 +21,7 @@
     <title>Building a Portable Time Intelligence Library with DAX User-Defined Functions | Jihwan Kim</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         :root {
             --ikea-blue: #0051BA;
@@ -778,21 +781,7 @@ Revenue LY = TimeIntel.PeriodCompare([Revenue], 'Calendar'[DateKey], 1, "YEAR")<
         </article>
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
-    <script>
-        // Increment view count when page loads
-        (function() {
-            const key = 'dax-udf-time-intelligence';
-            fetch(`https://api.counterapi.dev/v1/powerbimvp/${key}/up`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Page views:', data.count);
-                })
-                .catch(error => {
-                    console.log('Could not update view count');
-                });
-        })();
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" integrity="sha512-vd4TWJLQCNcrCNvZ6K2wsE2iWcDUoHqVQvSmzgBcSu0vU0a6wPRY9DzRywwcW4xmwmrMTX0W9WRVL6ggz+stfQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 </html>
