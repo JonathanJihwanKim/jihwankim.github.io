@@ -13,26 +13,153 @@
     <meta property="og:description" content="I build enterprise-grade, AI-ready data solutions that delivers faster insights @IKEA">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://powerbimvp.com">
+    <meta name="color-scheme" content="light dark">
     <title>Jihwan Kim | Microsoft MVP | Power BI & Fabric Architect</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* ============================================
+           CSS Custom Properties - Light Theme (Default)
+           ============================================ */
         :root {
-            --ikea-blue: #0051BA;
-            --ikea-yellow: #FFDA1A;
-            --white: #FFFFFF;
-            --off-white: #FAFAFA;
-            --light-gray: #F5F5F5;
-            --medium-gray: #E0E0E0;
-            --dark-gray: #333333;
-            --text-secondary: #666666;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            /* Primary Colors - Modern Indigo/Purple palette */
+            --primary-600: #4f46e5;
+            --primary-500: #6366f1;
+            --primary-400: #818cf8;
+            --primary-300: #a5b4fc;
+            --primary-200: #c7d2fe;
+            --primary-100: #e0e7ff;
+
+            /* Accent Colors - Vibrant teal for energy */
+            --accent-500: #14b8a6;
+            --accent-400: #2dd4bf;
+            --accent-300: #5eead4;
+
+            /* Neutral Colors */
+            --gray-900: #111827;
+            --gray-800: #1f2937;
+            --gray-700: #374151;
+            --gray-600: #4b5563;
+            --gray-500: #6b7280;
+            --gray-400: #9ca3af;
+            --gray-300: #d1d5db;
+            --gray-200: #e5e7eb;
+            --gray-100: #f3f4f6;
+            --gray-50: #f9fafb;
+
+            /* Semantic Colors */
+            --background: #ffffff;
+            --background-alt: var(--gray-50);
+            --surface: #ffffff;
+            --surface-elevated: #ffffff;
+            --text-primary: var(--gray-900);
+            --text-secondary: var(--gray-600);
+            --text-tertiary: var(--gray-500);
+            --border: var(--gray-200);
+            --border-light: var(--gray-100);
+
+            /* Glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+
+            /* Layout */
             --sidebar-width: 320px;
+            --content-max-width: 1200px;
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 24px;
+
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        * {
+        /* ============================================
+           Dark Theme
+           ============================================ */
+        [data-theme="dark"] {
+            --background: #0f0f14;
+            --background-alt: #16161d;
+            --surface: #1a1a24;
+            --surface-elevated: #22222e;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-tertiary: #6b7280;
+            --border: #2d2d3a;
+            --border-light: #23232e;
+
+            --glass-bg: rgba(26, 26, 36, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* ============================================
+           Animations
+           ============================================ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* ============================================
+           Base Styles
+           ============================================ */
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -40,36 +167,184 @@
 
         html {
             scroll-behavior: smooth;
+            font-size: 16px;
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--off-white);
-            color: var(--dark-gray);
+            background-color: var(--background-alt);
+            color: var(--text-primary);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color var(--transition-base), color var(--transition-base);
+            overflow-x: hidden;
         }
 
-        /* Sidebar */
+        /* Skip Link for Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-600);
+            color: white;
+            padding: 0.5rem 1rem;
+            z-index: 1000;
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 0 0 var(--border-radius-sm) 0;
+            transition: top var(--transition-fast);
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* ============================================
+           Mobile Menu Toggle
+           ============================================ */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 200;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--border-radius-md);
+            border: 1px solid var(--border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            cursor: pointer;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 12px;
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: all var(--transition-fast);
+        }
+
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Mobile Overlay */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+        }
+
+        /* ============================================
+           Sidebar Styles
+           ============================================ */
         .sidebar {
             position: fixed;
             left: 0;
             top: 0;
             width: var(--sidebar-width);
             height: 100vh;
-            background: var(--white);
-            border-right: 1px solid var(--medium-gray);
-            padding: 1.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border);
+            padding: 2rem 1.5rem;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
             z-index: 100;
+            transition: transform var(--transition-base), background var(--transition-base), border-color var(--transition-base);
         }
+
+        .sidebar-content {
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-100);
+            border-color: var(--primary-300);
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: var(--shadow-glow);
+        }
+
+        [data-theme="dark"] .theme-toggle:hover {
+            background: var(--primary-600);
+            border-color: var(--primary-500);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+        }
+
+        .theme-toggle:hover svg {
+            color: var(--primary-600);
+        }
+
+        [data-theme="dark"] .theme-toggle:hover svg {
+            color: var(--primary-200);
+        }
+
+        .sun-icon { display: none; }
+        .moon-icon { display: block; }
+        [data-theme="dark"] .sun-icon { display: block; }
+        [data-theme="dark"] .moon-icon { display: none; }
 
         /* Badge Icons */
         .badge-icons {
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.25rem;
+            gap: 0.625rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
             align-items: center;
         }
@@ -78,160 +353,274 @@
             height: 36px;
             width: auto;
             object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .badge-icons img:hover {
+            transform: translateY(-3px) scale(1.1);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
         }
 
         /* Name */
         .name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--ikea-blue);
-            letter-spacing: 0.03em;
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
             margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .name::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+            transition: width var(--transition-base);
+        }
+
+        .name:hover::after {
+            width: 100%;
         }
 
         /* Title */
         .title {
             font-size: 0.8rem;
-            color: var(--ikea-blue);
-            margin-bottom: 1rem;
-            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
         }
 
         .title a {
-            color: var(--ikea-blue);
+            color: var(--primary-500);
             text-decoration: none;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .title a::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary-400);
+            transition: width var(--transition-fast);
+        }
+
+        .title a:hover::after {
+            width: 100%;
         }
 
         .title a:hover {
-            text-decoration: underline;
+            color: var(--primary-400);
         }
 
         /* Bio */
         .bio {
-            font-size: 0.85rem;
-            font-style: italic;
-            color: var(--dark-gray);
-            padding: 0.75rem;
-            background: var(--light-gray);
-            border-left: 4px solid var(--ikea-yellow);
-            margin-bottom: 1.25rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-100), var(--accent-300));
+            border-radius: var(--border-radius-md);
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .bio:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        [data-theme="dark"] .bio {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(20, 184, 166, 0.15));
+        }
+
+        .bio::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary-500), var(--accent-500));
+            border-radius: 4px 0 0 4px;
         }
 
         /* Links Section */
         .links-header {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            color: var(--text-secondary);
+            color: var(--text-tertiary);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+
+        .links-header svg {
+            width: 14px;
+            height: 14px;
+            color: var(--text-tertiary);
         }
 
         .links {
             display: flex;
             flex-direction: column;
-            gap: 0;
-            margin-bottom: 1.25rem;
+            gap: 0.25rem;
+            margin-bottom: 1.5rem;
         }
 
         .links a {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            color: var(--dark-gray);
+            gap: 0.75rem;
+            color: var(--text-primary);
             text-decoration: none;
-            font-size: 0.85rem;
-            padding: 0.25rem 0;
-            border-radius: 6px;
-            transition: background-color 0.2s ease;
+            font-size: 0.875rem;
+            padding: 0.625rem 0.75rem;
+            border-radius: var(--border-radius-sm);
+            transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .links a::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--primary-100), transparent);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        [data-theme="dark"] .links a::before {
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.15), transparent);
+        }
+
+        .links a:hover::before {
+            opacity: 1;
         }
 
         .links a:hover {
-            background: var(--light-gray);
-            color: var(--ikea-blue);
+            color: var(--primary-600);
+            transform: translateX(4px);
+        }
+
+        [data-theme="dark"] .links a:hover {
+            color: var(--primary-400);
         }
 
         .links a .icon-wrapper {
-            width: 36px;
-            min-width: 36px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
+            background: var(--surface);
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            z-index: 1;
+            transition: all var(--transition-fast);
+        }
+
+        .links a:hover .icon-wrapper {
+            box-shadow: var(--shadow-md);
+            transform: scale(1.05);
         }
 
         .links a img {
-            width: 28px;
-            height: 28px;
+            width: 20px;
+            height: 20px;
             object-fit: contain;
-        }
-
-        .links a .icon-wrapper img.linkedin-icon {
-            width: 36px;
-            height: 36px;
         }
 
         /* Blog Description */
         .blog-description {
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
 
         .blog-description h2 {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            color: var(--dark-gray);
-            line-height: 1.4;
+            color: var(--text-primary);
+            line-height: 1.5;
         }
 
         /* Search Box */
         .search-container {
             display: flex;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
+            position: relative;
         }
 
         .search-container input {
             flex: 1;
-            padding: 0.6rem 0.75rem;
-            border: 2px solid var(--medium-gray);
-            border-right: none;
-            border-radius: 6px 0 0 6px;
-            font-size: 0.85rem;
+            padding: 0.75rem 1rem;
+            padding-right: 3rem;
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-md);
+            font-size: 0.875rem;
             font-family: inherit;
+            background: var(--surface);
+            color: var(--text-primary);
             outline: none;
-            transition: border-color 0.2s;
+            transition: all var(--transition-fast);
         }
 
         .search-container input:focus {
-            border-color: var(--ikea-blue);
+            border-color: var(--primary-400);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15), var(--shadow-md);
         }
 
         .search-container input::placeholder {
-            color: #999;
+            color: var(--text-tertiary);
         }
 
         .search-container button {
-            padding: 0.6rem 0.75rem;
-            background: var(--ikea-blue);
-            border: 2px solid var(--ikea-blue);
-            border-radius: 0 6px 6px 0;
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
+            border: none;
+            border-radius: var(--border-radius-sm);
             cursor: pointer;
-            transition: background-color 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all var(--transition-fast);
         }
 
         .search-container button:hover {
-            background: #003d8a;
-            border-color: #003d8a;
+            transform: translateY(-50%) scale(1.08);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .search-container button:active {
+            transform: translateY(-50%) scale(0.95);
         }
 
         .search-container button svg {
             width: 18px;
             height: 18px;
-            fill: var(--white);
+            color: white;
         }
 
         /* Profile Photos */
@@ -239,34 +628,82 @@
             display: flex;
             gap: 0.75rem;
             margin-top: auto;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
 
         .profile-photo {
             width: calc(50% - 0.375rem);
             aspect-ratio: 1;
             object-fit: cover;
-            border-radius: 8px;
-            border: 3px solid var(--ikea-yellow);
+            border-radius: var(--border-radius-md);
+            border: 3px solid transparent;
+            background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                        linear-gradient(135deg, var(--primary-400), var(--accent-400)) border-box;
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .profile-photo:nth-child(2):hover {
+            transform: scale(1.05) rotate(-2deg);
         }
 
         /* Copyright */
         .copyright {
             font-size: 0.7rem;
-            color: var(--text-secondary);
+            color: var(--text-tertiary);
             text-align: center;
-            padding-top: 0.75rem;
-            border-top: 1px solid var(--medium-gray);
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
         }
 
-        /* Main Content */
+        /* ============================================
+           Main Content
+           ============================================ */
         .content {
             margin-left: var(--sidebar-width);
-            padding: 2rem;
+            padding: 2.5rem;
             min-height: 100vh;
         }
 
-        /* Posts Grid */
+        /* Section Header */
+        .section-header {
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+            border-radius: 3px;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 0.75rem;
+        }
+
+        /* Posts Grid - Bento-inspired layout */
         .posts-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -274,16 +711,27 @@
             margin-bottom: 2rem;
         }
 
-        /* Post Card */
+        /* Post Card - Glassmorphism style with enhanced interactions */
         .post-card {
-            background: var(--white);
-            border-radius: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            border: 3px solid var(--ikea-yellow);
-            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-base);
             cursor: pointer;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
         }
+
+        .post-card:nth-child(1) { animation-delay: 0.1s; }
+        .post-card:nth-child(2) { animation-delay: 0.2s; }
+        .post-card:nth-child(3) { animation-delay: 0.3s; }
+        .post-card:nth-child(4) { animation-delay: 0.4s; }
+        .post-card:nth-child(5) { animation-delay: 0.5s; }
+        .post-card:nth-child(6) { animation-delay: 0.6s; }
 
         .post-card-link {
             text-decoration: none;
@@ -292,77 +740,161 @@
         }
 
         .post-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: var(--shadow-xl), var(--shadow-glow);
+            border-color: var(--primary-300);
+        }
+
+        [data-theme="dark"] .post-card:hover {
+            border-color: var(--primary-500);
         }
 
         .post-image {
             width: 100%;
             aspect-ratio: 16/10;
-            background: var(--ikea-blue);
+            background: linear-gradient(135deg, var(--primary-600), var(--accent-500));
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 0.9rem;
-            font-style: italic;
+            position: relative;
+        }
+
+        .post-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.3));
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+
+        .post-card:hover .post-image::after {
+            opacity: 1;
         }
 
         .post-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            transition: transform var(--transition-slow);
         }
 
         .post-card:hover .post-image img {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
         .post-content {
-            padding: 1rem;
-            background: var(--light-gray);
+            padding: 1.25rem;
         }
 
         .post-title {
             font-size: 1rem;
             font-weight: 600;
-            color: var(--dark-gray);
-            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.625rem;
             line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: color var(--transition-fast);
+        }
+
+        .post-card:hover .post-title {
+            color: var(--primary-600);
+        }
+
+        [data-theme="dark"] .post-card:hover .post-title {
+            color: var(--primary-400);
         }
 
         .post-preview {
-            font-size: 0.8rem;
+            font-size: 0.875rem;
             color: var(--text-secondary);
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            line-height: 1.6;
         }
 
         .post-meta {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            padding-top: 0.5rem;
-            border-top: 1px solid var(--medium-gray);
-        }
-
-        .post-meta svg {
-            width: 14px;
-            height: 14px;
-            stroke: var(--text-secondary);
-            fill: none;
+            justify-content: space-between;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
         }
 
         .post-date {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .post-date svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .post-tags {
+            display: flex;
+            gap: 0.375rem;
+        }
+
+        .post-tag {
+            font-size: 0.625rem;
+            font-weight: 500;
+            color: var(--primary-600);
+            background: var(--primary-100);
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            transition: all var(--transition-fast);
+        }
+
+        .post-card:hover .post-tag {
+            background: var(--primary-200);
+        }
+
+        [data-theme="dark"] .post-tag {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary-300);
+        }
+
+        [data-theme="dark"] .post-card:hover .post-tag {
+            background: rgba(99, 102, 241, 0.3);
+        }
+
+        /* Read More Indicator */
+        .read-more {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--primary-500);
+            margin-top: 0.75rem;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all var(--transition-fast);
+        }
+
+        .read-more svg {
+            width: 14px;
+            height: 14px;
+            transition: transform var(--transition-fast);
+        }
+
+        .post-card:hover .read-more {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .post-card:hover .read-more svg {
+            transform: translateX(4px);
         }
 
         /* Pagination */
@@ -370,34 +902,45 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 0.25rem;
+            gap: 0.5rem;
             padding: 2rem 0;
         }
 
         .page-link {
-            padding: 0.5rem 0.75rem;
-            color: var(--ikea-blue);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
-            font-size: 0.9rem;
-            border-radius: 4px;
-            transition: all 0.2s;
+            font-size: 0.875rem;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            transition: all var(--transition-fast);
         }
 
         .page-link:hover {
-            background: var(--ikea-blue);
-            color: var(--white);
+            background: var(--primary-100);
+            border-color: var(--primary-300);
+            color: var(--primary-600);
+            transform: translateY(-2px);
+        }
+
+        [data-theme="dark"] .page-link:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--primary-500);
+            color: var(--primary-300);
         }
 
         .page-link.active {
-            background: var(--ikea-yellow);
-            color: var(--dark-gray);
-            font-weight: 700;
-        }
-
-        .page-separator {
-            color: var(--medium-gray);
-            font-size: 0.9rem;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
+            border-color: transparent;
+            color: white;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
         }
 
         /* No Results */
@@ -405,10 +948,24 @@
             text-align: center;
             padding: 4rem 2rem;
             color: var(--text-secondary);
-            font-size: 1rem;
+            animation: fadeIn 0.5s ease-out;
         }
 
-        /* Responsive Design */
+        .no-results svg {
+            width: 64px;
+            height: 64px;
+            color: var(--text-tertiary);
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .no-results p {
+            font-size: 1.125rem;
+        }
+
+        /* ============================================
+           Responsive Design
+           ============================================ */
         @media (max-width: 1200px) {
             .posts-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -422,16 +979,32 @@
         }
 
         @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .mobile-overlay {
+                display: block;
+            }
+
             .sidebar {
-                position: relative;
-                width: 100%;
-                height: auto;
-                border-right: none;
-                border-bottom: 1px solid var(--medium-gray);
+                transform: translateX(-100%);
+                width: 85%;
+                max-width: 320px;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .theme-toggle {
+                top: 1.5rem;
+                right: 1.5rem;
             }
 
             .content {
                 margin-left: 0;
+                padding: 4.5rem 1.5rem 1.5rem;
             }
 
             .badge-icons {
@@ -442,14 +1015,27 @@
                 text-align: center;
             }
 
+            .name::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
             .title {
                 text-align: center;
             }
 
             .bio {
                 text-align: center;
-                border-left: none;
-                border-top: 4px solid var(--ikea-yellow);
+            }
+
+            .bio::before {
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: auto;
+                width: 100%;
+                height: 4px;
+                border-radius: 4px 4px 0 0;
             }
 
             .links-header {
@@ -458,6 +1044,14 @@
 
             .links {
                 align-items: center;
+            }
+
+            .links a {
+                width: fit-content;
+            }
+
+            .links a:hover {
+                transform: translateX(0) scale(1.02);
             }
 
             .blog-description h2 {
@@ -477,91 +1071,169 @@
             .posts-grid {
                 grid-template-columns: 1fr;
             }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
-            .sidebar {
-                padding: 1.25rem 1rem;
-            }
-
             .content {
-                padding: 1rem;
+                padding: 4rem 1rem 1rem;
             }
 
             .name {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
                 font-size: 1.25rem;
+            }
+
+            .mobile-menu-toggle {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .post-card {
+                opacity: 1;
+            }
+        }
+
+        /* Focus styles for keyboard navigation */
+        :focus-visible {
+            outline: 2px solid var(--primary-500);
+            outline-offset: 2px;
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) {
+            .post-card:hover {
+                transform: none;
+            }
+
+            .post-card:active {
+                transform: scale(0.98);
+            }
+
+            .read-more {
+                opacity: 1;
+                transform: translateX(0);
             }
         }
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <!-- Badge Icons -->
-        <div class="badge-icons">
-            <img src="images/mvp-badge.png" alt="Microsoft MVP" title="Microsoft MVP">
-            <img src="images/powerbi-su.png" alt="Power BI Community Super User" title="Power BI Community Super User">
-            <img src="images/powerbi-icon.svg" alt="Power BI" title="Power BI">
-            <img src="images/fabric-icon.svg" alt="Microsoft Fabric" title="Microsoft Fabric">
-        </div>
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-        <!-- Name -->
-        <h1 class="name">JIHWAN KIM</h1>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
-        <!-- Title -->
-        <p class="title">
-            <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">Microsoft MVP</a> |
-            <a href="https://community.fabric.microsoft.com/t5/user/viewprofilepage/user-id/128806" target="_blank" rel="noopener">Power BI & Fabric Community Super User</a> |
-            Senior Power BI & Fabric Architect
-        </p>
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
 
-        <!-- Bio -->
-        <p class="bio">I build enterprise-grade, AI-ready data solutions that delivers faster insights @IKEA</p>
-
-        <!-- Links -->
-        <div class="links-header">
-            <img src="images/link-icon.png" alt="" style="width: 16px; height: 16px;">
-            Link
-        </div>
-        <div class="links">
-            <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">
-                <span class="icon-wrapper"><img src="images/mvp-icon.png" alt="MVP"></span>
-                Microsoft MVP profile
-            </a>
-            <a href="https://www.linkedin.com/in/jihwankim1975/" target="_blank" rel="noopener">
-                <span class="icon-wrapper"><img src="images/linkedin-icon.png" alt="LinkedIn" class="linkedin-icon" style="margin-left: -4px;"></span>
-                Linkedin profile
-            </a>
-        </div>
-
-        <!-- Blog Description -->
-        <div class="blog-description">
-            <h2>Insights on Power BI, Microsoft Fabric, and enterprise data solutions</h2>
-        </div>
-
-        <!-- Search -->
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Search blog by keywords" aria-label="Search blog posts">
-            <button id="search-btn" aria-label="Search">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8" fill="none" stroke="white"/>
-                    <path d="M21 21l-4.35-4.35" stroke="white"/>
+    <aside class="sidebar" id="sidebar" role="complementary">
+        <div class="sidebar-content">
+            <!-- Theme Toggle -->
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                 </svg>
             </button>
-        </div>
 
-        <!-- Profile Photos -->
-        <div class="profile-photos">
-            <img src="images/profile-1.jpg" alt="Jihwan Kim" class="profile-photo">
-            <img src="images/profile-2.png" alt="Jihwan Kim" class="profile-photo">
-        </div>
+            <!-- Badge Icons -->
+            <div class="badge-icons">
+                <img src="images/mvp-badge.png" alt="Microsoft MVP" title="Microsoft MVP">
+                <img src="images/powerbi-su.png" alt="Power BI Community Super User" title="Power BI Community Super User">
+                <img src="images/powerbi-icon.svg" alt="Power BI" title="Power BI">
+                <img src="images/fabric-icon.svg" alt="Microsoft Fabric" title="Microsoft Fabric">
+            </div>
 
-        <!-- Copyright -->
-        <footer class="copyright">
-            <p>&copy; <script>document.write(new Date().getFullYear())</script> powerbimvp.com | Jihwan Kim</p>
-        </footer>
+            <!-- Name -->
+            <h1 class="name">JIHWAN KIM</h1>
+
+            <!-- Title -->
+            <p class="title">
+                <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">Microsoft MVP</a> |
+                <a href="https://community.fabric.microsoft.com/t5/user/viewprofilepage/user-id/128806" target="_blank" rel="noopener">Power BI & Fabric Community Super User</a> |
+                Senior Power BI & Fabric Architect
+            </p>
+
+            <!-- Bio -->
+            <p class="bio">I build enterprise-grade, AI-ready data solutions that delivers faster insights @IKEA</p>
+
+            <!-- Links -->
+            <div class="links-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                </svg>
+                Links
+            </div>
+            <div class="links">
+                <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">
+                    <span class="icon-wrapper"><img src="images/mvp-icon.png" alt="MVP"></span>
+                    Microsoft MVP profile
+                </a>
+                <a href="https://www.linkedin.com/in/jihwankim1975/" target="_blank" rel="noopener">
+                    <span class="icon-wrapper"><img src="images/linkedin-icon.png" alt="LinkedIn"></span>
+                    LinkedIn profile
+                </a>
+            </div>
+
+            <!-- Blog Description -->
+            <div class="blog-description">
+                <h2>Insights on Power BI, Microsoft Fabric, and enterprise data solutions</h2>
+            </div>
+
+            <!-- Search -->
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search posts..." aria-label="Search blog posts">
+                <button id="search-btn" aria-label="Search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Profile Photos -->
+            <div class="profile-photos">
+                <img src="images/profile-1.jpg" alt="Jihwan Kim" class="profile-photo">
+                <img src="images/profile-2.png" alt="Jihwan Kim" class="profile-photo">
+            </div>
+
+            <!-- Copyright -->
+            <footer class="copyright">
+                <p>&copy; <script>document.write(new Date().getFullYear())</script> powerbimvp.com | Jihwan Kim</p>
+            </footer>
+        </div>
     </aside>
 
-    <main class="content">
+    <main class="content" id="main-content">
+        <header class="section-header">
+            <h2 class="section-title">Latest Posts</h2>
+            <p class="section-subtitle">Deep dives into data solutions, DAX patterns, and enterprise analytics</p>
+        </header>
+
         <div class="posts-grid" id="posts-container">
             <!-- Posts will be rendered by JavaScript -->
         </div>
@@ -571,11 +1243,89 @@
         </nav>
 
         <div id="no-results" class="no-results" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35"/>
+                <path d="M8 8l6 6M14 8l-6 6"/>
+            </svg>
             <p>No posts found matching your search.</p>
         </div>
     </main>
 
     <script>
+        // Mobile Menu Functionality
+        (function() {
+            const mobileToggle = document.getElementById('mobile-menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+
+            function toggleMenu() {
+                const isActive = sidebar.classList.toggle('active');
+                mobileToggle.classList.toggle('active');
+                overlay.classList.toggle('active');
+                mobileToggle.setAttribute('aria-expanded', isActive);
+                document.body.style.overflow = isActive ? 'hidden' : '';
+            }
+
+            function closeMenu() {
+                sidebar.classList.remove('active');
+                mobileToggle.classList.remove('active');
+                overlay.classList.remove('active');
+                mobileToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+
+            mobileToggle.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', closeMenu);
+
+            // Close menu on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                    closeMenu();
+                }
+            });
+
+            // Close menu on window resize to desktop
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768) {
+                    closeMenu();
+                }
+            });
+        })();
+
+        // Theme toggle functionality
+        (function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            }
+
+            function getPreferredTheme() {
+                const stored = localStorage.getItem('theme');
+                if (stored) return stored;
+                return prefersDark.matches ? 'dark' : 'light';
+            }
+
+            // Initialize theme
+            setTheme(getPreferredTheme());
+
+            // Toggle theme on button click
+            themeToggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                setTheme(current === 'dark' ? 'light' : 'dark');
+            });
+
+            // Listen for system theme changes
+            prefersDark.addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        })();
+
         document.addEventListener('DOMContentLoaded', function() {
             // Blog posts data
             const posts = [
@@ -584,7 +1334,7 @@
                     title: "Building a Portable Time Intelligence Library with DAX User-Defined Functions",
                     preview: "Learn how to create reusable, model-independent DAX functions that work across any semantic model. Covers UDF design patterns, TMDL integration, and sharing through DAX Lib.",
                     date: "January 11, 2026",
-                    tags: ["dax", "power bi", "udf", "time intelligence"],
+                    tags: ["DAX", "Power BI", "UDF"],
                     url: "posts/building-portable-time-intelligence-library-dax-udf.html",
                     featuredImage: "images/blog/dax-udf/featured.png"
                 }
@@ -612,13 +1362,18 @@
                 const startIndex = (currentPage - 1) * postsPerPage;
                 const paginatedPosts = filteredPosts.slice(startIndex, startIndex + postsPerPage);
 
-                paginatedPosts.forEach(post => {
+                paginatedPosts.forEach((post, index) => {
                     const card = document.createElement('article');
                     card.className = 'post-card';
+                    card.style.animationDelay = `${(index + 1) * 0.1}s`;
 
                     const imageContent = post.featuredImage
-                        ? `<img src="${post.featuredImage}" alt="${post.title}">`
-                        : 'Featured image';
+                        ? `<img src="${post.featuredImage}" alt="${post.title}" loading="lazy">`
+                        : '';
+
+                    const tagsHtml = post.tags.slice(0, 2).map(tag =>
+                        `<span class="post-tag">${tag}</span>`
+                    ).join('');
 
                     const cardContent = `
                         <div class="post-image">
@@ -628,7 +1383,22 @@
                             <h3 class="post-title">${post.title}</h3>
                             <p class="post-preview">${post.preview}</p>
                             <div class="post-meta">
-                                <span class="post-date">${post.date}</span>
+                                <span class="post-date">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                    ${post.date}
+                                </span>
+                                <div class="post-tags">${tagsHtml}</div>
+                            </div>
+                            <div class="read-more">
+                                Read article
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
                             </div>
                         </div>
                     `;
@@ -656,13 +1426,6 @@
                 if (totalPages <= 1) return;
 
                 for (let i = 1; i <= Math.min(totalPages, 7); i++) {
-                    if (i > 1) {
-                        const separator = document.createElement('span');
-                        separator.className = 'page-separator';
-                        separator.textContent = '|';
-                        paginationContainer.appendChild(separator);
-                    }
-
                     const link = document.createElement('a');
                     link.href = '#';
                     link.className = `page-link ${i === currentPage ? 'active' : ''}`;
@@ -688,7 +1451,7 @@
                 return posts.filter(post => {
                     const titleMatch = post.title.toLowerCase().includes(query);
                     const previewMatch = post.preview.toLowerCase().includes(query);
-                    const tagMatch = post.tags.some(tag => tag.includes(query));
+                    const tagMatch = post.tags.some(tag => tag.toLowerCase().includes(query));
                     return titleMatch || previewMatch || tagMatch;
                 });
             }
