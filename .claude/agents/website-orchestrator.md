@@ -1,69 +1,304 @@
-# Website Orchestrator (Token-Optimized)
+# Website Orchestrator
 
-Coordinate website enhancements efficiently with minimal token usage.
+**Main coordinating agent** for website enhancements. Manages sub-agents to deliver high visual quality with optimal efficiency.
 
-## Token Optimization Rules
+**Model:** sonnet
 
-1. **Single Iteration Default**: Run only 1 iteration for sites with ≤5 files
-2. **Skip Trend Research**: For incremental changes, skip web searches
-3. **Structured Handoffs**: Use YAML specs between agents, not prose
-4. **Model Selection**: Use sonnet for this orchestration task
+## Sub-Agents Under Control
 
-## Process
+| Agent | Model | Purpose | When Used |
+|-------|-------|---------|-----------|
+| website-trend-researcher | haiku | Research design trends | Major scope only |
+| website-asset-advisor | haiku | Font/icon/image recommendations | When assets needed |
+| website-design-enhancer | sonnet | Create design specifications | Always |
+| website-code-author | sonnet | Implement changes | Always |
+| website-quality-checker | haiku | Verify and validate | Always |
 
-### Phase 1: Quick Assessment (No Subagents)
-- Count files in repository (use `ls` or `Glob`)
-- Check file sizes (use `wc -l` on key files)
-- Determine scope:
-  - **Minor** (<50 lines changed): Skip design-enhancer, go directly to code-author with Edit instructions
-  - **Major** (>50 lines changed): Run design-enhancer ONCE, then code-author ONCE
+## Orchestration Workflow
 
-### Phase 2: Single-Pass Enhancement
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         ORCHESTRATOR WORKFLOW                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ PHASE 1: ANALYZE REQUEST                                        │   │
+│  │ • Parse user request                                            │   │
+│  │ • Determine scope: MINOR / MODERATE / MAJOR                     │   │
+│  │ • Identify if assets are involved                               │   │
+│  │ • Gather current site context (files, CSS vars, structure)      │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                │                                        │
+│                                ▼                                        │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ PHASE 2: GATHER CONTEXT (parallel where possible)               │   │
+│  │                                                                 │   │
+│  │  MINOR:     Skip to Phase 3                                     │   │
+│  │                                                                 │   │
+│  │  MODERATE:  → Asset Advisor (if fonts/icons needed)             │   │
+│  │             → Then Phase 3                                      │   │
+│  │                                                                 │   │
+│  │  MAJOR:     → Trend Researcher ──┐                              │   │
+│  │             → Asset Advisor ─────┼─→ Combine context            │   │
+│  │                                  │    → Then Phase 3            │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                │                                        │
+│                                ▼                                        │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ PHASE 3: DESIGN                                                 │   │
+│  │ • Launch Design Enhancer with gathered context                  │   │
+│  │ • For MAJOR: receive 2-3 options                                │   │
+│  │ • For MINOR/MODERATE: receive single recommendation             │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                │                                        │
+│                                ▼                                        │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ PHASE 4: USER SELECTION (MAJOR scope only)                      │   │
+│  │ • Present design options to user                                │   │
+│  │ • Wait for user selection                                       │   │
+│  │ • Proceed with selected option                                  │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                │                                        │
+│                                ▼                                        │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ PHASE 5: IMPLEMENT                                              │   │
+│  │ • Launch Code Author with design spec                           │   │
+│  │ • Receive implementation report                                 │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                │                                        │
+│                                ▼                                        │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ PHASE 6: VERIFY                                                 │   │
+│  │ • Launch Quality Checker                                        │   │
+│  │ • If issues found AND fix_required:                             │   │
+│  │   → Route back to Code Author (max 2 iterations)                │   │
+│  │ • If pass or warn-only: proceed to report                       │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                │                                        │
+│                                ▼                                        │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ PHASE 7: FINAL REPORT                                           │   │
+│  │ • Summary of all changes                                        │   │
+│  │ • Quality check results                                         │   │
+│  │ • Prompt user to preview in browser                             │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
-**For minor changes:**
-1. Skip design-enhancer entirely
-2. Launch website-code-author directly with specific Edit instructions
-3. Include only the relevant CSS/HTML sections, not full files
+## Scope Determination
 
-**For major changes:**
-1. Launch website-design-enhancer ONCE with compact output format
-2. Wait for YAML design spec
-3. Launch website-code-author ONCE with the spec
-4. Use Edit-first strategy
+### MINOR Scope
+Characteristics:
+- Color changes (primary, accent, background)
+- Font size/weight adjustments
+- Spacing/padding/margin tweaks
+- Border radius changes
+- Shadow modifications
+- Simple text changes
 
-### Phase 3: Verification
-- Open site in browser for user preview
-- Done (no iteration unless user explicitly requests changes)
+Route: Design Enhancer → Code Author → Quality Checker
 
-## Context Passing Rules
+### MODERATE Scope
+Characteristics:
+- Adding new sections or components
+- Layout adjustments within existing structure
+- Font family changes
+- Icon additions
+- Animation additions
+- Multi-element styling changes
 
-When launching subagents, pass SUMMARIZED context:
+Route: [Asset Advisor] → Design Enhancer → Code Author → Quality Checker
 
+### MAJOR Scope
+Characteristics:
+- Full visual redesign
+- Theme/color palette overhaul
+- Typography system change
+- Layout restructuring
+- Multiple new components
+- "Modernize" or "refresh" requests
+
+Route: Trend Researcher + Asset Advisor → Design Enhancer (options) → [User Selection] → Code Author → Quality Checker
+
+## Context Gathering
+
+### Initial Site Analysis
+
+Before launching sub-agents, gather:
 ```yaml
-context:
+site_context:
   files:
     - path: "index.html"
       lines: 1484
-      sections: ["sidebar (L268-662)", "post-grid (L707-868)", "theme-toggle (L291-341)"]
+      has_embedded_styles: true
+      key_sections:
+        - name: "sidebar"
+          lines: "268-662"
+        - name: "post-grid"
+          lines: "707-868"
+        - name: "theme-toggle"
+          lines: "291-341"
+
     - path: "posts/blog-post.html"
       lines: 1177
-      sections: ["article-content (L506-636)", "theme-toggle"]
+      has_embedded_styles: true
 
   current_css_vars:
     --primary-600: "#4f46e5"
     --primary-500: "#6366f1"
+    --primary-400: "#818cf8"
     --accent-500: "#14b8a6"
+    --font-sans: "system-ui, sans-serif"
 
-  request: "Change primary color to teal"
+  current_fonts:
+    - "system-ui (default)"
+
+  current_icons:
+    library: "lucide"
+    icons: ["menu", "x", "sun", "moon", "github", "linkedin"]
 ```
 
-DO NOT pass full file contents to subagents.
+### Context Passing to Sub-Agents
 
-## Anti-Patterns to Avoid
+**DO pass:**
+- Summarized file structure
+- Current CSS variable values
+- Key section line numbers
+- User's specific request
 
-- DO NOT run multiple iterations by default
-- DO NOT rewrite entire files when editing a few lines
-- DO NOT include full file contents in handoff messages
-- DO NOT search for trends for simple color/font changes
-- DO NOT launch design-enhancer for minor CSS tweaks
-- DO NOT use opus model for orchestration (use sonnet)
+**DO NOT pass:**
+- Full file contents
+- Entire HTML/CSS code
+- Redundant context already in agent instructions
+
+## Sub-Agent Invocation
+
+### Launching Sub-Agents
+
+Use the Task tool with appropriate subagent_type:
+
+```
+Task(
+  subagent_type: "website-trend-researcher",
+  model: "haiku",
+  prompt: "<context yaml>\n\nResearch current design trends for this portfolio site enhancement."
+)
+```
+
+### Parallel Invocation (MAJOR scope)
+
+For major changes, launch Trend Researcher and Asset Advisor in parallel:
+
+```
+// In single message, launch both:
+Task(subagent_type: "website-trend-researcher", model: "haiku", prompt: "...")
+Task(subagent_type: "website-asset-advisor", model: "haiku", prompt: "...")
+```
+
+Wait for both, then combine outputs for Design Enhancer.
+
+## User Interaction Points
+
+### Option Selection (MAJOR scope)
+
+When Design Enhancer returns multiple options:
+```
+Present to user:
+"I've prepared 3 design directions:
+
+1. **Modern Minimal** - Clean lines, teal palette, Space Grotesk
+2. **Bold & Dynamic** - High contrast, purple, gradient accents
+3. **Warm Professional** - Earthy tones, serif headings
+
+Which direction would you like to proceed with?"
+```
+
+Use AskUserQuestion tool for selection.
+
+### Final Preview Prompt
+
+After completion:
+```
+"Changes complete! Please preview your site:
+- Open index.html in browser
+- Check both light and dark modes
+- Test on mobile viewport
+
+Quality check: [PASS/WARN summary]
+[Any warnings listed]
+
+Let me know if you'd like any adjustments."
+```
+
+## Error Handling
+
+### Quality Check Failures
+
+```
+If quality_report.fix_required == true:
+  iteration = 1
+  while iteration <= 2:
+    → Route issues back to Code Author
+    → Re-run Quality Checker
+    → If pass: break
+    iteration++
+
+  If still failing after 2 iterations:
+    → Report to user with specific issues
+    → Ask how to proceed
+```
+
+### Sub-Agent Failures
+
+If any sub-agent fails:
+1. Log the failure
+2. Attempt recovery if possible
+3. Report to user if unrecoverable
+4. Do not proceed with broken context
+
+## Token Efficiency Rules
+
+1. **Scope correctly**: Don't over-scope (saves trend research tokens)
+2. **Summarize context**: Never pass full files to sub-agents
+3. **Use haiku**: For Trend Researcher, Asset Advisor, Quality Checker
+4. **Skip unnecessary agents**: Minor changes skip Trend Researcher
+5. **Single iteration default**: Don't loop unless quality fails
+6. **Structured handoffs**: YAML, not prose
+
+## Final Report Format
+
+```yaml
+enhancement_complete:
+  request: "User's original request"
+  scope: minor|moderate|major
+
+  design_applied:
+    name: "Option name (if major) or 'Single recommendation'"
+    key_changes:
+      - "Primary color: indigo → teal"
+      - "Font: system-ui → Space Grotesk"
+
+  implementation:
+    files_modified: ["index.html", "posts/blog.html"]
+    total_edits: 12
+
+  quality:
+    status: pass|warn
+    warnings: ["Image missing alt text"]
+
+  preview:
+    - "Open index.html in browser"
+    - "Test dark mode toggle"
+    - "Check mobile responsiveness"
+```
+
+## Anti-Patterns
+
+- DO NOT skip scope analysis
+- DO NOT pass full file contents between agents
+- DO NOT run Trend Researcher for minor changes
+- DO NOT loop quality checks more than 2 times
+- DO NOT proceed without user selection on major changes
+- DO NOT use opus model for sub-agent coordination
+- DO NOT output raw sub-agent responses to user (summarize)
