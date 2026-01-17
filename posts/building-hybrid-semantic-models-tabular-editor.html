@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore the hybrid semantic model pattern combining Direct Lake and Import mode tables. Learn the workflow, gateway configuration, and TMDL structure for enterprise deployments.">
+    <meta name="keywords" content="Power BI, Fabric, Direct Lake, Import Mode, Hybrid Models, Tabular Editor, TMDL, Semantic Models">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="Building Hybrid Semantic Models with Tabular Editor: Combining Direct Lake and Import Mode | Jihwan Kim">
+    <meta property="og:description" content="Explore the hybrid semantic model pattern combining Direct Lake and Import mode tables. Learn the workflow, gateway configuration, and TMDL structure for enterprise deployments.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/building-hybrid-semantic-models-tabular-editor.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/hybrid-semantic-models/featured.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/hybrid-semantic-models/featured.png">
+    <meta name="color-scheme" content="light dark">
+    <title>Building Hybrid Semantic Models with Tabular Editor: Combining Direct Lake and Import Mode | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* ============================================
+           CSS Custom Properties - Light Theme (Default)
+           ============================================ */
+        :root {
+            /* Primary Colors - Modern Indigo/Purple palette */
+            --primary-600: #4f46e5;
+            --primary-500: #6366f1;
+            --primary-400: #818cf8;
+            --primary-300: #a5b4fc;
+            --primary-200: #c7d2fe;
+            --primary-100: #e0e7ff;
+
+            /* Accent Colors - Vibrant teal for energy */
+            --accent-500: #14b8a6;
+            --accent-400: #2dd4bf;
+            --accent-300: #5eead4;
+
+            /* Neutral Colors */
+            --gray-900: #111827;
+            --gray-800: #1f2937;
+            --gray-700: #374151;
+            --gray-600: #4b5563;
+            --gray-500: #6b7280;
+            --gray-400: #9ca3af;
+            --gray-300: #d1d5db;
+            --gray-200: #e5e7eb;
+            --gray-100: #f3f4f6;
+            --gray-50: #f9fafb;
+
+            /* Semantic Colors */
+            --background: #ffffff;
+            --background-alt: var(--gray-50);
+            --surface: #ffffff;
+            --surface-elevated: #ffffff;
+            --text-primary: var(--gray-900);
+            --text-secondary: var(--gray-600);
+            --text-tertiary: var(--gray-500);
+            --border: var(--gray-200);
+            --border-light: var(--gray-100);
+
+            /* Glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+
+            /* Layout */
+            --sidebar-width: 320px;
+            --content-max-width: 1200px;
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 24px;
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-base: 250ms ease;
+            --transition-slow: 350ms ease;
+        }
+
+        /* ============================================
+           Dark Theme
+           ============================================ */
+        [data-theme="dark"] {
+            --background: #0f0f14;
+            --background-alt: #16161d;
+            --surface: #1a1a24;
+            --surface-elevated: #22222e;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-tertiary: #6b7280;
+            --border: #2d2d3a;
+            --border-light: #23232e;
+
+            --glass-bg: rgba(26, 26, 36, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ============================================
+           Base Styles
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background-alt);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color var(--transition-base), color var(--transition-base);
+        }
+
+        /* ============================================
+           Sidebar Styles
+           ============================================ */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 100;
+            transition: background var(--transition-base), border-color var(--transition-base);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-100);
+            border-color: var(--primary-300);
+            transform: scale(1.05);
+        }
+
+        [data-theme="dark"] .theme-toggle:hover {
+            background: var(--primary-600);
+            border-color: var(--primary-500);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            color: var(--text-secondary);
+            transition: color var(--transition-fast);
+        }
+
+        .theme-toggle:hover svg {
+            color: var(--primary-600);
+        }
+
+        [data-theme="dark"] .theme-toggle:hover svg {
+            color: var(--primary-200);
+        }
+
+        .sun-icon { display: none; }
+        .moon-icon { display: block; }
+        [data-theme="dark"] .sun-icon { display: block; }
+        [data-theme="dark"] .moon-icon { display: none; }
+
+        /* Badge Icons */
+        .badge-icons {
+            display: flex;
+            gap: 0.625rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .badge-icons img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+            transition: transform var(--transition-fast);
+        }
+
+        .badge-icons img:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Name */
+        .name {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Title */
+        .title {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .title a {
+            color: var(--primary-500);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        .title a:hover {
+            color: var(--primary-400);
+            text-decoration: underline;
+        }
+
+        /* Bio */
+        .bio {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-100), var(--accent-300));
+            border-radius: var(--border-radius-md);
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .bio {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(20, 184, 166, 0.15));
+        }
+
+        .bio::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary-500), var(--accent-500));
+            border-radius: 4px 0 0 4px;
+        }
+
+        /* Links Section */
+        .links-header {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .links-header svg {
+            width: 14px;
+            height: 14px;
+            color: var(--text-tertiary);
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .links a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 0.625rem 0.75rem;
+            border-radius: var(--border-radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .links a:hover {
+            background: var(--primary-100);
+            color: var(--primary-600);
+            transform: translateX(4px);
+        }
+
+        [data-theme="dark"] .links a:hover {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-400);
+        }
+
+        .links a .icon-wrapper {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .links a img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        /* Blog Description */
+        .blog-description {
+            margin-bottom: 1.25rem;
+        }
+
+        .blog-description h2 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* Profile Photos */
+        .profile-photos {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: auto;
+            margin-bottom: 1.25rem;
+        }
+
+        .profile-photo {
+            width: calc(50% - 0.375rem);
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: var(--border-radius-md);
+            border: 3px solid transparent;
+            background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                        linear-gradient(135deg, var(--primary-400), var(--accent-400)) border-box;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Copyright */
+        .copyright {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ============================================
+           Main Content
+           ============================================ */
+        .content {
+            margin-left: var(--sidebar-width);
+            padding: 2.5rem;
+            min-height: 100vh;
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-500);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .back-link:hover {
+            background: var(--primary-100);
+            color: var(--primary-600);
+            transform: translateX(-4px);
+        }
+
+        [data-theme="dark"] .back-link:hover {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-400);
+        }
+
+        .back-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Featured Image */
+        .featured-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 2rem;
+            border: 3px solid transparent;
+            background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                        linear-gradient(135deg, var(--primary-400), var(--accent-400)) border-box;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Article Header */
+        .article-header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            position: relative;
+        }
+
+        .article-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+        }
+
+        .article-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.25;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .article-meta svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-tertiary);
+        }
+
+        /* Article Content */
+        .article-content {
+            font-size: 1.0625rem;
+            line-height: 1.8;
+        }
+
+        .article-content h2 {
+            font-size: 1.625rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 3rem 0 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+            position: relative;
+            letter-spacing: -0.01em;
+        }
+
+        .article-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+        }
+
+        .article-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-content p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .article-content a {
+            color: var(--primary-500);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            transition: color var(--transition-fast);
+        }
+
+        .article-content a:hover {
+            color: var(--primary-400);
+        }
+
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius-md);
+            margin: 2rem 0;
+            border: 3px solid transparent;
+            background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                        linear-gradient(135deg, var(--primary-400), var(--accent-400)) border-box;
+            box-shadow: var(--shadow-md);
+        }
+
+        .article-content pre {
+            background: #1e1e2e;
+            border-radius: var(--border-radius-md);
+            padding: 1.25rem;
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-left: 4px solid var(--primary-500);
+            box-shadow: var(--shadow-md);
+        }
+
+        .article-content pre code {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #cdd6f4;
+        }
+
+        .article-content code {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+            font-size: 0.875em;
+            background: var(--primary-100);
+            color: var(--primary-600);
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+        }
+
+        [data-theme="dark"] .article-content code {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary-300);
+        }
+
+        .article-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #cdd6f4;
+        }
+
+        .article-content blockquote {
+            border-left: 4px solid var(--primary-500);
+            padding: 1.25rem 1.5rem;
+            margin: 2rem 0;
+            background: var(--primary-100);
+            border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        [data-theme="dark"] .article-content blockquote {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .article-content ul, .article-content ol {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .article-content li {
+            margin-bottom: 0.625rem;
+        }
+
+        .article-content em {
+            font-style: italic;
+            color: var(--text-primary);
+        }
+
+        .article-content strong {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Tags */
+        .article-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--primary-600);
+            background: var(--primary-100);
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            transition: all var(--transition-fast);
+        }
+
+        .tag:hover {
+            background: var(--primary-200);
+            transform: translateY(-1px);
+        }
+
+        [data-theme="dark"] .tag {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary-300);
+        }
+
+        [data-theme="dark"] .tag:hover {
+            background: rgba(99, 102, 241, 0.3);
+        }
+
+        /* ============================================
+           Responsive Design
+           ============================================ */
+        @media (max-width: 1024px) {
+            :root {
+                --sidebar-width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 1.5rem;
+            }
+
+            .theme-toggle {
+                top: 1.5rem;
+                right: 1.5rem;
+            }
+
+            .content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .badge-icons {
+                justify-content: center;
+            }
+
+            .name {
+                text-align: center;
+            }
+
+            .title {
+                text-align: center;
+            }
+
+            .bio {
+                text-align: center;
+            }
+
+            .bio::before {
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: auto;
+                width: 100%;
+                height: 4px;
+                border-radius: 4px 4px 0 0;
+            }
+
+            .links-header {
+                justify-content: center;
+            }
+
+            .links {
+                align-items: center;
+            }
+
+            .links a {
+                width: fit-content;
+            }
+
+            .links a:hover {
+                transform: translateX(0) scale(1.02);
+            }
+
+            .blog-description h2 {
+                text-align: center;
+            }
+
+            .profile-photos {
+                justify-content: center;
+                margin-top: 1.5rem;
+            }
+
+            .profile-photo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .article-title {
+                font-size: 1.75rem;
+            }
+
+            .article-content h2 {
+                font-size: 1.375rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                padding: 1.25rem 1rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .name {
+                font-size: 1.5rem;
+            }
+
+            .article-title {
+                font-size: 1.5rem;
+            }
+
+            .article-content {
+                font-size: 1rem;
+            }
+
+            .article-content h2 {
+                font-size: 1.25rem;
+            }
+
+            .article-content pre {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles for keyboard navigation */
+        :focus-visible {
+            outline: 2px solid var(--primary-500);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <!-- Theme Toggle -->
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"/>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </button>
+
+        <!-- Badge Icons -->
+        <div class="badge-icons">
+            <img src="../images/mvp-badge.png" alt="Microsoft MVP" title="Microsoft MVP">
+            <img src="../images/powerbi-su.png" alt="Power BI Community Super User" title="Power BI Community Super User">
+            <img src="../images/powerbi-icon.svg" alt="Power BI" title="Power BI">
+            <img src="../images/fabric-icon.svg" alt="Microsoft Fabric" title="Microsoft Fabric">
+        </div>
+
+        <!-- Name -->
+        <h1 class="name">JIHWAN KIM</h1>
+
+        <!-- Title -->
+        <p class="title">
+            <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">Microsoft MVP</a> |
+            <a href="https://community.fabric.microsoft.com/t5/user/viewprofilepage/user-id/128806" target="_blank" rel="noopener">Power BI & Fabric Community Super User</a> |
+            Senior Power BI & Fabric Architect
+        </p>
+
+        <!-- Bio -->
+        <p class="bio">I build enterprise-grade, AI-ready data solutions that delivers faster insights @IKEA</p>
+
+        <!-- Links -->
+        <div class="links-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            Links
+        </div>
+        <div class="links">
+            <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">
+                <span class="icon-wrapper"><img src="../images/mvp-icon.png" alt="MVP"></span>
+                Microsoft MVP profile
+            </a>
+            <a href="https://www.linkedin.com/in/jihwankim1975/" target="_blank" rel="noopener">
+                <span class="icon-wrapper"><img src="../images/linkedin-icon.png" alt="LinkedIn"></span>
+                LinkedIn profile
+            </a>
+        </div>
+
+        <!-- Blog Description -->
+        <div class="blog-description">
+            <h2>Insights on Power BI, Microsoft Fabric, and enterprise data solutions</h2>
+        </div>
+
+        <!-- Profile Photos -->
+        <div class="profile-photos">
+            <img src="../images/profile-1.jpg" alt="Jihwan Kim" class="profile-photo">
+            <img src="../images/profile-2.png" alt="Jihwan Kim" class="profile-photo">
+        </div>
+
+        <!-- Copyright -->
+        <footer class="copyright">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> powerbimvp.com | Jihwan Kim</p>
+        </footer>
+    </aside>
+
+    <main class="content">
+        <article class="article-container">
+            <a href="../index.html" class="back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to all posts
+            </a>
+
+            <!-- Featured Image -->
+            <img src="../images/blog/hybrid-semantic-models/featured.png" alt="Building Hybrid Semantic Models with Tabular Editor: Combining Direct Lake and Import Mode" class="featured-image">
+
+            <header class="article-header">
+                <h1 class="article-title">Building Hybrid Semantic Models with Tabular Editor: Combining Direct Lake and Import Mode</h1>
+                <div class="article-meta">
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        January 17, 2026
+                    </span>
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        10 min read
+                    </span>
+                </div>
+            </header>
+
+            <div class="article-content">
+                <p>In this writing, I want to share my journey exploring <strong>hybrid semantic models</strong>&mdash;the new composite model pattern that combines Direct Lake and Import mode tables inside a single semantic model. This feature was described in mid or late 2025 <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-composite-models?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use composite models in Power BI</a>, and after experimenting with it hands-on, I discovered both its power and its hidden friction points.</p>
+
+                <p>If you've been following the Direct Lake story, you know the promise: near-Import performance without the refresh overhead for massive fact tables. But you also know the limitations&mdash;no calculated columns, no user hierarchies for Excel consumption, no Power Query transformations inside the model. The hybrid pattern finally lets us split the model sensibly: big facts stay in Direct Lake, nimble dimensions come in as Import tables with full modeling flexibility. No more choosing between performance and features.</p>
+
+                <p>What I didn't expect was the gateway configuration step that blocked my first deployment. That's the story I want to share.</p>
+
+                <h2>1. The Step-by-Step Workflow I Followed</h2>
+
+                <p>Here's the exact workflow I used to create my first hybrid semantic model:</p>
+
+                <ol>
+                    <li>I started with an existing <strong>Import mode semantic model</strong> containing both fact and dimension tables.</li>
+                    <li>I created a new <strong>Direct Lake mode semantic model</strong> in my Fabric workspace, selecting only the fact table from my Lakehouse.</li>
+                    <li>I connected to this Direct Lake model via <strong>Tabular Editor 3</strong>.</li>
+                    <li>I opened my original Import mode semantic model in a second instance of Tabular Editor 3.</li>
+                    <li>I copied everything from the Import model&mdash;dimension tables, expressions, measures, relationships, DAX UDFs&mdash;except the fact table, and pasted them into the Direct Lake model.</li>
+                    <li>Now I had a hybrid semantic model: fact table in Direct Lake, dimension tables in Import mode.</li>
+                </ol>
+
+                <img src="../images/blog/hybrid-semantic-models/image-5.png" alt="Direct Lake tables in model view">
+
+                <p>The screenshot above shows the sales table with <strong>Storage mode: Direct Lake</strong>, while the dimension tables (customer, product, date, store) are in Import mode. Notice the tooltip confirming the Direct Lake configuration: Data source type is Lakehouse, Server name is Lakehouse_Contoso.</p>
+
+                <img src="../images/blog/hybrid-semantic-models/image-4.png" alt="Import tables showing storage mode">
+
+                <p>In Power BI Desktop's live editing mode, I can see the mixed storage modes clearly. The product table shows <strong>Storage mode: Import</strong>, and at the bottom right, the status bar confirms <strong>Storage Mode: Mixed</strong>&mdash;proof that this is now a true hybrid model.</p>
+
+                <p>This workflow works. But the next step is where I got stuck.</p>
+
+                <h2>2. The Gateway Credential Gotcha</h2>
+
+                <p>Before refreshing this hybrid model in the Power BI Service, I discovered that <strong>gateway settings for the imported tables have to be configured separately</strong>&mdash;and the error message says like below.</p>
+
+                <img src="../images/blog/hybrid-semantic-models/image-7.png" alt="Error message about gateway credentials">
+
+                <p>The error reads: <em>"We cannot refresh this semantic model because this semantic model uses a default data connection without explicit connection credentials. Please replace the default data connection in the semantic model settings with an explicit cloud or gateway data connection."</em></p>
+
+                <p>Here's what happens: Direct Lake tables authenticate via my Fabric workspace identity. No gateway needed; the model reads directly from OneLake. But Import tables still need a data source connection configured in the Power BI Service. When I paste Import tables into a Direct Lake model via Tabular Editor, the service has no idea how to refresh those tables. The refresh simply fails.</p>
+
+                <p>The fix is to navigate to <strong>"Manage connections and gateways"</strong> in the Power BI Service and manually create or map a connection for the data source my Import tables reference.</p>
+
+                <img src="../images/blog/hybrid-semantic-models/image-12.png" alt="Gateway configuration screen">
+
+                <p>In the Gateway and cloud connections settings, I see two data sources: the AzureDataLakeStorage connection for the Direct Lake tables (which works automatically), and the SqlServer connection for the Import tables (which needs explicit mapping). Select the dropdown for the SQL Server connection and either choose an existing connection or create a new one.</p>
+
+                <img src="../images/blog/hybrid-semantic-models/image-2.png" alt="New connection creation dialog">
+
+                <p>When creating a new connection, configure OAuth 2.0 authentication and click "Edit credentials" to authenticate. Only after this binding is complete will the refresh succeed.</p>
+
+                <p><em>This was the key aha moment</em>: the hybrid model pattern shifts credential management from "invisible" (pure Direct Lake) to "explicit configuration required" (Import tables need connection binding). The <a href="https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Microsoft documentation</a> mentions that Import tables can be added, but it doesn't explain this credential flow clearly. <a href="https://www.sqlbi.com/blog/marco/2025/05/13/direct-lake-vs-import-vs-direct-lakeimport-fabric-semantic-models-may-2025/" target="_blank" rel="noopener">Marco Russo's video</a> shows how to solve this.</p>
+
+                <h2>3. Proving There's No Model Boundary Tax</h2>
+
+                <p>Once the credentials were configured and the refresh succeeded, I wanted to verify that the hybrid model actually behaves as a single unified model&mdash;not two models stitched together with limited relationships.</p>
+
+                <p>The proof is in DAX Studio's <strong>Server Timings</strong>. I ran a simple query that crosses from the Direct Lake fact table (sales) to an Import dimension table (product):</p>
+
+                <img src="../images/blog/hybrid-semantic-models/image-6.png" alt="DAX Studio SE Queries result">
+
+                <p>The query <code>SUMMARIZECOLUMNS('product'[ProductName], "Total Sales", [Total Sales])</code> joins data across storage modes. The critical number is <strong>SE Queries: 1</strong>. A single Storage Engine query means VertiPaq treated both tables as part of the same "continent"&mdash;no filter lists being passed between separate models, no multiple round trips.</p>
+
+                <p>If this were the old composite model pattern with limited relationships, I'd see multiple SE queries and significantly worse performance. The single SE query confirms there's no model boundary tax.</p>
+
+                <p>From a DevOps standpoint, this is foundational. A single semantic model means a single deployment artifact, and a single Git repository. No more coordinating deployments across two models with cross-model dependencies.</p>
+
+                <h2>4. How Hybrid Models Look in TMDL</h2>
+
+                <p>When I store a hybrid model in Git using the PBIP format, the TMDL structure reveals how different Import and Direct Lake partitions are under the hood.</p>
+
+                <p>A <strong>Direct Lake partition</strong> references an entity in OneLake:</p>
+
+<pre><code>partition sales = entity
+    mode: directLake
+    source
+        entityName: sales
+        schemaName: dbo
+        expressionSource: 'DirectLake - Lakehouse_Contoso'</code></pre>
+
+                <img src="../images/blog/hybrid-semantic-models/image-8.png" alt="Direct Lake partition TMDL">
+
+                <p>An <strong>Import partition</strong> contains an M expression and references a data source:</p>
+
+<pre><code class="language-sql">partition customer = m
+    mode: import
+    source =
+        let
+            Source = Sql.Database("77oajh3wezeejnmdlu54fth3om-fauoi4qioy3exagkarwjglds2y.datawarehouse.fabric.microsoft.com", "Lakehouse_Contoso"),
+            dbo_customer = Source{[Schema="dbo",Item="customer"]}[Data]
+        in
+            dbo_customer</code></pre>
+
+                <img src="../images/blog/hybrid-semantic-models/image-9.png" alt="Import partition TMDL">
+
+                <p>When I look at the TMDL files in my Git repository, Direct Lake and Import partitions store fundamentally different things.</p>
+
+                <p>A Direct Lake partition is essentially a pointer. It says: "Go to OneLake, find this entity named sales in the dbo schema, and read the data directly from the Delta files." That's it. There's no transformation logic, no filtering, no column renaming&mdash;just a reference. The actual data processing happened upstream in my Lakehouse, managed by the data engineering pipeline.</p>
+
+                <p>An Import partition is different. It contains the complete Power Query (M) expression&mdash;every step of the data transformation journey. It might say: "Connect to this SQL Server, authenticate with these credentials, navigate to this database, select this table, filter rows where Status equals 'Active', rename the CustomerID column to CustomerKey, change this column's data type, and then load the result." All of that logic lives inside the TMDL file.</p>
+
+                <p>This distinction has real consequences for version control and code reviews.</p>
+
+                <p>When someone modifies a Direct Lake table&mdash;say, adding a new column&mdash;the Git diff is minimal and easy to review. I'll see a few lines added for the new column definition: its name, data type, maybe a description. The change is self-contained and obvious.</p>
+
+                <img src="../images/blog/hybrid-semantic-models/image-10.png" alt="sales.tmdl file structure">
+
+                <p>When someone modifies an Import table, the Git diff shows M expression changes. These can be complex: nested let statements, multiple transformation steps, function calls. Reviewing a PR that modifies Import table logic requires understanding Power Query, not just reading metadata. It's a different level of cognitive load.</p>
+
+                <p>For hybrid models, this means my PR reviews will have two flavors: simple schema diffs for Direct Lake tables, and logic diffs for Import tables. Knowing which is which&mdash;by organizing my folder structure or using clear naming conventions&mdash;helps reviewers understand what they're looking at.</p>
+
+                <h2>5. Git Folder Structure for Multi-Source Hybrid Models</h2>
+
+                <p>When Import tables come from a different source than the Lakehouse, I recommend organizing the PBIP folder structure to make the separation explicit. Here's the pattern I've adopted:</p>
+
+<pre><code>/HybridModel.SemanticModel/
+├── definition/
+│   ├── database.tmdl
+│   ├── model.tmdl
+│   ├── relationships.tmdl
+│   ├── tables/
+│   │   ├── _direct-lake/
+│   │   │   ├── FactSales.tmdl
+│   │   │   ├── FactInventory.tmdl
+│   │   │   └── FactPurchases.tmdl
+│   │   ├── _import/
+│   │   │   ├── DimCustomer.tmdl
+│   │   │   ├── DimProduct.tmdl
+│   │   │   ├── DimDate.tmdl
+│   │   │   └── DimStore.tmdl
+│   │   └── _calculated/
+│   │       └── DateTable.tmdl
+│   ├── expressions/
+│   │   └── DataSources.tmdl
+│   └── roles/
+│       └── Security.tmdl
+├── diagramLayout.json
+└── .platform</code></pre>
+
+                <p>The <code>_direct-lake</code>, <code>_import</code>, and <code>_calculated</code> subfolders aren't required by the PBIP spec&mdash;TMDL doesn't care about folder hierarchy within <code>tables/</code>. But for human readability and PR reviews, this separation makes it immediately clear which tables have which storage mode. When a teammate modifies an Import table's M expression, the diff appears under <code>_import/</code>, and reviewers know to check for credential implications.</p>
+
+                <img src="../images/blog/hybrid-semantic-models/image-11.png" alt="Tables folder structure">
+
+                <h2>Closing Thoughts</h2>
+
+                <p>The hybrid semantic model pattern is the pragmatic middle ground I've been waiting for. Big facts stay in Direct Lake with zero refresh overhead; dimensions come in as Import tables with full modeling flexibility. The "model boundary tax" of the old composite pattern is gone.</p>
+
+                <p>But the tooling isn't fully baked yet. GUI support is limited&mdash;I still need Tabular Editor or Semantic Link Labs to add Import tables. And the documentation doesn't clearly explain the authentication difference between Direct Lake and Import tables. If you know where I can find better documentation on this, please let me know!</p>
+
+                <p>I hope this helps having fun in exploring hybrid semantic models and embracing this new era of flexible, enterprise-ready Fabric architectures!</p>
+            </div>
+
+            <div class="article-tags">
+                <span class="tag">Power BI</span>
+                <span class="tag">Fabric</span>
+                <span class="tag">Direct Lake</span>
+                <span class="tag">Tabular Editor</span>
+                <span class="tag">Hybrid Models</span>
+            </div>
+        </article>
+    </main>
+
+    <script>
+        // Theme toggle functionality
+        (function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            }
+
+            function getPreferredTheme() {
+                const stored = localStorage.getItem('theme');
+                if (stored) return stored;
+                return prefersDark.matches ? 'dark' : 'light';
+            }
+
+            // Initialize theme
+            setTheme(getPreferredTheme());
+
+            // Toggle theme on button click
+            themeToggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                setTheme(current === 'dark' ? 'light' : 'dark');
+            });
+
+            // Listen for system theme changes
+            prefersDark.addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        })();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" integrity="sha512-vd4TWJLQCNcrCNvZ6K2wsE2iWcDUoHqVQvSmzgBcSu0vU0a6wPRY9DzRywwcW4xmwmrMTX0W9WRVL6ggz+stfQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>
