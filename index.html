@@ -13,63 +13,71 @@
     <meta property="og:description" content="I build enterprise-grade, AI-ready data solutions that delivers faster insights @IKEA">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://powerbimvp.com">
-    <meta name="color-scheme" content="light dark">
     <title>Jihwan Kim | Microsoft MVP | Power BI & Fabric Architect</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <style>
         /* ============================================
-           CSS Custom Properties - Light Theme (Default)
+           CSS Custom Properties - Van Gogh Inspired
            ============================================ */
         :root {
-            /* Primary Colors - Modern Indigo/Purple palette */
-            --primary-600: #4f46e5;
-            --primary-500: #6366f1;
-            --primary-400: #818cf8;
-            --primary-300: #a5b4fc;
-            --primary-200: #c7d2fe;
-            --primary-100: #e0e7ff;
+            /* Primary Colors - Starry Night blues */
+            --primary-600: #1a3a5c;
+            --primary-500: #1e4d7b;
+            --primary-400: #2d6da3;
+            --primary-300: #5a9bc7;
+            --primary-200: #8ebfdd;
+            --primary-100: #d0e4f0;
 
-            /* Accent Colors - Vibrant teal for energy */
-            --accent-500: #14b8a6;
-            --accent-400: #2dd4bf;
-            --accent-300: #5eead4;
+            /* Accent Colors - Sunflower gold */
+            --accent-500: #d4a017;
+            --accent-400: #e8b830;
+            --accent-300: #f0d060;
 
-            /* Neutral Colors */
-            --gray-900: #111827;
-            --gray-800: #1f2937;
-            --gray-700: #374151;
-            --gray-600: #4b5563;
-            --gray-500: #6b7280;
-            --gray-400: #9ca3af;
-            --gray-300: #d1d5db;
-            --gray-200: #e5e7eb;
-            --gray-100: #f3f4f6;
-            --gray-50: #f9fafb;
+            /* Secondary Colors - Cafe Terrace orange */
+            --secondary-500: #c4622d;
+            --secondary-400: #d4793f;
+
+            /* Tertiary Colors - Olive Trees green */
+            --tertiary-500: #3d6b3d;
+            --tertiary-400: #5a8a4f;
+
+            /* Neutral Colors - Warm-tinted */
+            --gray-900: #1c1a17;
+            --gray-800: #2c2923;
+            --gray-700: #3d3930;
+            --gray-600: #5c5548;
+            --gray-500: #7a7265;
+            --gray-400: #a09888;
+            --gray-300: #c9c1b3;
+            --gray-200: #e2dcd0;
+            --gray-100: #f0ece4;
+            --gray-50: #f7f5f0;
 
             /* Semantic Colors */
-            --background: #ffffff;
-            --background-alt: var(--gray-50);
+            --background: #f7f5f0;
+            --background-alt: #f0ece4;
             --surface: #ffffff;
             --surface-elevated: #ffffff;
-            --text-primary: var(--gray-900);
-            --text-secondary: var(--gray-600);
-            --text-tertiary: var(--gray-500);
-            --border: var(--gray-200);
-            --border-light: var(--gray-100);
+            --text-primary: #1c1a17;
+            --text-secondary: #5c5548;
+            --text-tertiary: #7a7265;
+            --border: #e2dcd0;
+            --border-light: #f0ece4;
 
-            /* Glassmorphism */
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            /* Glassmorphism - warm tinted */
+            --glass-bg: rgba(247, 245, 240, 0.85);
+            --glass-border: rgba(212, 160, 23, 0.15);
+            --glass-shadow: 0 8px 32px rgba(28, 26, 23, 0.08);
 
-            /* Shadows */
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+            /* Shadows - warm-tinted */
+            --shadow-sm: 0 1px 2px rgba(28, 26, 23, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(28, 26, 23, 0.08), 0 2px 4px -2px rgba(28, 26, 23, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(28, 26, 23, 0.10), 0 4px 6px -4px rgba(28, 26, 23, 0.06);
+            --shadow-xl: 0 20px 25px -5px rgba(28, 26, 23, 0.12), 0 8px 10px -6px rgba(28, 26, 23, 0.06);
+            --shadow-glow: 0 0 20px rgba(212, 160, 23, 0.25);
 
             /* Layout */
             --sidebar-width: 320px;
@@ -84,31 +92,6 @@
             --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
             --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
             --transition-bounce: 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        /* ============================================
-           Dark Theme
-           ============================================ */
-        [data-theme="dark"] {
-            --background: #0f0f14;
-            --background-alt: #16161d;
-            --surface: #1a1a24;
-            --surface-elevated: #22222e;
-            --text-primary: #f9fafb;
-            --text-secondary: #9ca3af;
-            --text-tertiary: #6b7280;
-            --border: #2d2d3a;
-            --border-light: #23232e;
-
-            --glass-bg: rgba(26, 26, 36, 0.8);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
-            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.4);
         }
 
         /* ============================================
@@ -156,6 +139,13 @@
             50% { transform: translateY(-5px); }
         }
 
+        @keyframes swirlFloat {
+            0%, 100% { transform: rotate(0deg) translate(0, 0); }
+            25% { transform: rotate(2deg) translate(10px, -5px); }
+            50% { transform: rotate(-1deg) translate(-5px, 10px); }
+            75% { transform: rotate(1.5deg) translate(5px, 5px); }
+        }
+
         /* ============================================
            Base Styles
            ============================================ */
@@ -173,12 +163,20 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--background-alt);
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(30, 77, 123, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(212, 160, 23, 0.04) 0%, transparent 50%);
             color: var(--text-primary);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            transition: background-color var(--transition-base), color var(--transition-base);
             overflow-x: hidden;
+        }
+
+        /* Material Symbols sizing */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
         }
 
         /* Skip Link for Accessibility */
@@ -250,7 +248,7 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(28, 26, 23, 0.5);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             z-index: 90;
@@ -280,94 +278,18 @@
             flex-direction: column;
             overflow-y: auto;
             z-index: 100;
-            transition: transform var(--transition-base), background var(--transition-base), border-color var(--transition-base);
+            transition: transform var(--transition-base);
         }
 
         .sidebar-content {
             animation: slideInLeft 0.5s ease-out;
         }
 
-        /* Theme Toggle */
-        .theme-toggle {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all var(--transition-fast);
-        }
-
-        .theme-toggle:hover {
-            background: var(--primary-100);
-            border-color: var(--primary-300);
-            transform: scale(1.1) rotate(15deg);
-            box-shadow: var(--shadow-glow);
-        }
-
-        [data-theme="dark"] .theme-toggle:hover {
-            background: var(--primary-600);
-            border-color: var(--primary-500);
-        }
-
-        .theme-toggle:active {
-            transform: scale(0.95);
-        }
-
-        .theme-toggle svg {
-            width: 20px;
-            height: 20px;
-            color: var(--text-secondary);
-            transition: all var(--transition-fast);
-        }
-
-        .theme-toggle:hover svg {
-            color: var(--primary-600);
-        }
-
-        [data-theme="dark"] .theme-toggle:hover svg {
-            color: var(--primary-200);
-        }
-
-        .sun-icon { display: none; }
-        .moon-icon { display: block; }
-        [data-theme="dark"] .sun-icon { display: block; }
-        [data-theme="dark"] .moon-icon { display: none; }
-
-        /* Badge Icons */
-        .badge-icons {
-            display: flex;
-            gap: 0.625rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .badge-icons img {
-            height: 36px;
-            width: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-            transition: all var(--transition-fast);
-            cursor: pointer;
-        }
-
-        .badge-icons img:hover {
-            transform: translateY(-3px) scale(1.1);
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
-        }
-
         /* Name */
         .name {
             font-size: 1.75rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-600), var(--primary-400));
+            background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -443,10 +365,6 @@
             box-shadow: var(--shadow-md);
         }
 
-        [data-theme="dark"] .bio {
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(20, 184, 166, 0.15));
-        }
-
         .bio::before {
             content: '';
             position: absolute;
@@ -471,9 +389,8 @@
             gap: 0.5rem;
         }
 
-        .links-header svg {
-            width: 14px;
-            height: 14px;
+        .links-header .material-symbols-outlined {
+            font-size: 16px;
             color: var(--text-tertiary);
         }
 
@@ -507,10 +424,6 @@
             transition: opacity var(--transition-fast);
         }
 
-        [data-theme="dark"] .links a::before {
-            background: linear-gradient(90deg, rgba(99, 102, 241, 0.15), transparent);
-        }
-
         .links a:hover::before {
             opacity: 1;
         }
@@ -518,10 +431,6 @@
         .links a:hover {
             color: var(--primary-600);
             transform: translateX(4px);
-        }
-
-        [data-theme="dark"] .links a:hover {
-            color: var(--primary-400);
         }
 
         .links a .icon-wrapper {
@@ -580,7 +489,7 @@
 
         .search-container input:focus {
             border-color: var(--primary-400);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15), var(--shadow-md);
+            box-shadow: 0 0 0 3px rgba(30, 77, 123, 0.15), var(--shadow-md);
         }
 
         .search-container input::placeholder {
@@ -606,16 +515,15 @@
 
         .search-container button:hover {
             transform: translateY(-50%) scale(1.08);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 12px rgba(30, 77, 123, 0.4);
         }
 
         .search-container button:active {
             transform: translateY(-50%) scale(0.95);
         }
 
-        .search-container button svg {
-            width: 18px;
-            height: 18px;
+        .search-container button .material-symbols-outlined {
+            font-size: 20px;
             color: white;
         }
 
@@ -666,10 +574,137 @@
             min-height: 100vh;
         }
 
+        /* ============================================
+           Hero Section - Van Gogh Inspired
+           ============================================ */
+        .hero-section {
+            position: relative;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-400));
+            border-radius: var(--border-radius-xl);
+            padding: 3rem;
+            margin-bottom: 2.5rem;
+            overflow: hidden;
+            color: #ffffff;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(ellipse 80px 120px at 20% 30%, rgba(212, 160, 23, 0.15) 0%, transparent 70%),
+                radial-gradient(ellipse 100px 80px at 70% 20%, rgba(240, 208, 96, 0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 60px 90px at 50% 70%, rgba(61, 107, 61, 0.10) 0%, transparent 70%),
+                radial-gradient(ellipse 90px 70px at 80% 60%, rgba(196, 98, 45, 0.08) 0%, transparent 70%);
+            animation: swirlFloat 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: var(--background-alt);
+            clip-path: polygon(
+                0% 60%, 5% 55%, 10% 50%, 15% 48%, 20% 52%, 25% 58%,
+                30% 55%, 35% 48%, 40% 45%, 45% 50%, 50% 55%,
+                55% 52%, 60% 48%, 65% 45%, 70% 50%, 75% 55%,
+                80% 52%, 85% 48%, 90% 52%, 95% 58%, 100% 55%,
+                100% 100%, 0% 100%
+            );
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .hero-badges {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .hero-badge-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: var(--border-radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all var(--transition-fast);
+        }
+
+        .hero-badge-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        a.hero-badge-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .hero-badge-item img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .hero-badge-item img.badge-landscape {
+            object-fit: cover;
+            object-position: left center;
+        }
+
+        .hero-badge-info {
+            min-width: 0;
+        }
+
+        .hero-badge-info strong {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .hero-badge-info span {
+            display: block;
+            font-size: 0.6875rem;
+            opacity: 0.8;
+            line-height: 1.3;
+        }
+
         /* Section Header */
         .section-header {
             margin-bottom: 2rem;
-            animation: fadeInUp 0.6s ease-out;
+            animation: fadeInUp 0.6s ease-out 0.1s both;
         }
 
         .section-title {
@@ -689,7 +724,7 @@
             left: 0;
             width: 60px;
             height: 3px;
-            background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+            background: linear-gradient(90deg, var(--primary-500), var(--accent-500), var(--secondary-400));
             border-radius: 3px;
         }
 
@@ -699,27 +734,40 @@
             margin-top: 0.75rem;
         }
 
-        /* Posts Grid - Bento-inspired layout */
+        /* ============================================
+           Posts Grid - 2-column layout
+           ============================================ */
         .posts-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
             margin-bottom: 2rem;
         }
 
-        /* Post Card - Glassmorphism style with enhanced interactions */
+        /* Post Card - Painterly border with Van Gogh colors */
         .post-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: var(--surface);
             border-radius: var(--border-radius-lg);
             overflow: hidden;
-            border: 1px solid var(--glass-border);
+            border: 2px solid transparent;
+            background-clip: padding-box;
             box-shadow: var(--shadow-md);
             transition: all var(--transition-base);
             cursor: pointer;
             opacity: 0;
             animation: fadeInUp 0.6s ease-out forwards;
+            position: relative;
+        }
+
+        .post-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: calc(var(--border-radius-lg) + 2px);
+            background: linear-gradient(135deg, var(--primary-300), var(--accent-400), var(--tertiary-400), var(--secondary-400));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity var(--transition-base);
         }
 
         .post-card:nth-child(1) { animation-delay: 0.1s; }
@@ -738,11 +786,10 @@
         .post-card:hover {
             transform: translateY(-8px) scale(1.01);
             box-shadow: var(--shadow-xl), var(--shadow-glow);
-            border-color: var(--primary-300);
         }
 
-        [data-theme="dark"] .post-card:hover {
-            border-color: var(--primary-500);
+        .post-card:hover::before {
+            opacity: 1;
         }
 
         .post-image {
@@ -757,7 +804,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.3));
+            background: linear-gradient(180deg, transparent 60%, rgba(28, 26, 23, 0.3));
             opacity: 0;
             transition: opacity var(--transition-base);
         }
@@ -778,17 +825,17 @@
         }
 
         .post-content {
-            padding: 1.25rem;
+            padding: 1.5rem;
         }
 
         .post-title {
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 1.125rem;
+            font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 0.625rem;
             line-height: 1.4;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
             transition: color var(--transition-fast);
@@ -798,16 +845,12 @@
             color: var(--primary-600);
         }
 
-        [data-theme="dark"] .post-card:hover .post-title {
-            color: var(--primary-400);
-        }
-
         .post-preview {
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
             margin-bottom: 1rem;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 4;
             -webkit-box-orient: vertical;
             overflow: hidden;
             line-height: 1.6;
@@ -829,9 +872,8 @@
             gap: 0.375rem;
         }
 
-        .post-date svg {
-            width: 14px;
-            height: 14px;
+        .post-date .material-symbols-outlined {
+            font-size: 16px;
         }
 
         .post-tags {
@@ -855,41 +897,28 @@
             background: var(--primary-200);
         }
 
-        [data-theme="dark"] .post-tag {
-            background: rgba(99, 102, 241, 0.2);
-            color: var(--primary-300);
-        }
-
-        [data-theme="dark"] .post-card:hover .post-tag {
-            background: rgba(99, 102, 241, 0.3);
-        }
-
-        /* Read More Indicator */
+        /* Read More Indicator - always visible */
         .read-more {
             display: flex;
             align-items: center;
             gap: 0.375rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--primary-500);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--accent-500);
             margin-top: 0.75rem;
-            opacity: 0;
-            transform: translateX(-10px);
             transition: all var(--transition-fast);
         }
 
-        .read-more svg {
-            width: 14px;
-            height: 14px;
+        .read-more .material-symbols-outlined {
+            font-size: 18px;
             transition: transform var(--transition-fast);
         }
 
         .post-card:hover .read-more {
-            opacity: 1;
-            transform: translateX(0);
+            color: var(--primary-500);
         }
 
-        .post-card:hover .read-more svg {
+        .post-card:hover .read-more .material-symbols-outlined {
             transform: translateX(4px);
         }
 
@@ -925,12 +954,6 @@
             transform: translateY(-2px);
         }
 
-        [data-theme="dark"] .page-link:hover {
-            background: rgba(99, 102, 241, 0.15);
-            border-color: var(--primary-500);
-            color: var(--primary-300);
-        }
-
         .page-link.active {
             background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
             border-color: transparent;
@@ -947,12 +970,12 @@
             animation: fadeIn 0.5s ease-out;
         }
 
-        .no-results svg {
-            width: 64px;
-            height: 64px;
+        .no-results .material-symbols-outlined {
+            font-size: 64px;
             color: var(--text-tertiary);
             margin-bottom: 1rem;
             animation: float 3s ease-in-out infinite;
+            display: block;
         }
 
         .no-results p {
@@ -963,7 +986,7 @@
            Responsive Design
            ============================================ */
         @media (max-width: 1200px) {
-            .posts-grid {
+            .hero-badges {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
@@ -993,18 +1016,9 @@
                 transform: translateX(0);
             }
 
-            .theme-toggle {
-                top: 1.5rem;
-                right: 1.5rem;
-            }
-
             .content {
                 margin-left: 0;
                 padding: 4.5rem 1.5rem 1.5rem;
-            }
-
-            .badge-icons {
-                justify-content: center;
             }
 
             .name {
@@ -1071,6 +1085,19 @@
             .section-title {
                 font-size: 1.5rem;
             }
+
+            .hero-section {
+                padding: 2rem 1.5rem;
+                padding-bottom: 3.5rem;
+            }
+
+            .hero-badges {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 1.375rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1120,11 +1147,6 @@
             .post-card:active {
                 transform: scale(0.98);
             }
-
-            .read-more {
-                opacity: 1;
-                transform: translateX(0);
-            }
         }
     </style>
 </head>
@@ -1144,32 +1166,13 @@
 
     <aside class="sidebar" id="sidebar" role="complementary">
         <div class="sidebar-content">
-            <!-- Theme Toggle -->
-            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="5"/>
-                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                </svg>
-                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                </svg>
-            </button>
-
-            <!-- Badge Icons -->
-            <div class="badge-icons">
-                <img src="images/mvp-badge.png" alt="Microsoft MVP" title="Microsoft MVP">
-                <img src="images/powerbi-su.png" alt="Power BI Community Super User" title="Power BI Community Super User">
-                <img src="images/powerbi-icon.svg" alt="Power BI" title="Power BI">
-                <img src="images/fabric-icon.svg" alt="Microsoft Fabric" title="Microsoft Fabric">
-            </div>
-
             <!-- Name -->
             <h1 class="name">JIHWAN KIM</h1>
 
             <!-- Title -->
             <p class="title">
                 <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener">Microsoft MVP</a> |
-                <a href="https://community.fabric.microsoft.com/t5/user/viewprofilepage/user-id/128806" target="_blank" rel="noopener">Power BI & Fabric Community Super User</a> |
+                <a href="https://community.fabric.microsoft.com/t5/user/viewprofilepage/user-id/291628" target="_blank" rel="noopener">Power BI & Fabric Community Super User</a> |
                 Senior Power BI & Fabric Architect
             </p>
 
@@ -1178,10 +1181,7 @@
 
             <!-- Links -->
             <div class="links-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-                </svg>
+                <span class="material-symbols-outlined">link</span>
                 Links
             </div>
             <div class="links">
@@ -1204,10 +1204,7 @@
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="Search posts..." aria-label="Search blog posts">
                 <button id="search-btn" aria-label="Search">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <circle cx="11" cy="11" r="8"/>
-                        <path d="M21 21l-4.35-4.35"/>
-                    </svg>
+                    <span class="material-symbols-outlined">search</span>
                 </button>
             </div>
 
@@ -1225,6 +1222,49 @@
     </aside>
 
     <main class="content" id="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h2 class="hero-title">Power BI & Fabric Expert</h2>
+                <p class="hero-subtitle">Building enterprise-grade, AI-ready data solutions at IKEA</p>
+
+                <div class="hero-badges">
+                    <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener" class="hero-badge-link">
+                        <div class="hero-badge-item">
+                            <img src="images/mvp-badge.png" alt="Microsoft MVP Badge" class="badge-landscape">
+                            <div class="hero-badge-info">
+                                <strong>Microsoft MVP</strong>
+                                <span>Most Valuable Professional</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://community.fabric.microsoft.com/t5/user/viewprofilepage/user-id/291628" target="_blank" rel="noopener" class="hero-badge-link">
+                        <div class="hero-badge-item">
+                            <img src="images/powerbi-su.png" alt="Community Super User Badge">
+                            <div class="hero-badge-info">
+                                <strong>Community Super User</strong>
+                                <span>Power BI & Fabric Community</span>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="hero-badge-item">
+                        <img src="images/powerbi-icon.svg" alt="Power BI">
+                        <div class="hero-badge-info">
+                            <strong>Power BI</strong>
+                            <span>Enterprise Architecture</span>
+                        </div>
+                    </div>
+                    <div class="hero-badge-item">
+                        <img src="images/fabric-icon.svg" alt="Microsoft Fabric">
+                        <div class="hero-badge-info">
+                            <strong>Microsoft Fabric</strong>
+                            <span>Data Platform Solutions</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <header class="section-header">
             <h2 class="section-title">Latest Posts</h2>
             <p class="section-subtitle">Deep dives into data solutions, DAX patterns, and enterprise analytics</p>
@@ -1239,11 +1279,7 @@
         </nav>
 
         <div id="no-results" class="no-results" style="display: none;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="M21 21l-4.35-4.35"/>
-                <path d="M8 8l6 6M14 8l-6 6"/>
-            </svg>
+            <span class="material-symbols-outlined">search_off</span>
             <p>No posts found matching your search.</p>
         </div>
     </main>
@@ -1285,39 +1321,6 @@
             window.addEventListener('resize', () => {
                 if (window.innerWidth > 768) {
                     closeMenu();
-                }
-            });
-        })();
-
-        // Theme toggle functionality
-        (function() {
-            const themeToggle = document.getElementById('theme-toggle');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-
-            function setTheme(theme) {
-                document.documentElement.setAttribute('data-theme', theme);
-                localStorage.setItem('theme', theme);
-            }
-
-            function getPreferredTheme() {
-                const stored = localStorage.getItem('theme');
-                if (stored) return stored;
-                return prefersDark.matches ? 'dark' : 'light';
-            }
-
-            // Initialize theme
-            setTheme(getPreferredTheme());
-
-            // Toggle theme on button click
-            themeToggle.addEventListener('click', () => {
-                const current = document.documentElement.getAttribute('data-theme');
-                setTheme(current === 'dark' ? 'light' : 'dark');
-            });
-
-            // Listen for system theme changes
-            prefersDark.addEventListener('change', (e) => {
-                if (!localStorage.getItem('theme')) {
-                    setTheme(e.matches ? 'dark' : 'light');
                 }
             });
         })();
@@ -1407,21 +1410,14 @@
                             <p class="post-preview">${post.preview}</p>
                             <div class="post-meta">
                                 <span class="post-date">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                        <line x1="16" y1="2" x2="16" y2="6"/>
-                                        <line x1="8" y1="2" x2="8" y2="6"/>
-                                        <line x1="3" y1="10" x2="21" y2="10"/>
-                                    </svg>
+                                    <span class="material-symbols-outlined">calendar_month</span>
                                     ${post.date}
                                 </span>
                                 <div class="post-tags">${tagsHtml}</div>
                             </div>
                             <div class="read-more">
                                 Read article
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                                </svg>
+                                <span class="material-symbols-outlined">arrow_forward</span>
                             </div>
                         </div>
                     `;
