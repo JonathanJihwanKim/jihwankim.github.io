@@ -13,7 +13,7 @@ Personal portfolio and blog for Jihwan Kim (powerbimvp.com), a Microsoft MVP and
 ### File Layout
 
 - `index.html` (~1500 lines) - Homepage with embedded CSS, HTML, and JS in a single file
-- `posts/*.html` (4 files, ~1100-1250 lines each) - Blog posts, each fully self-contained
+- `posts/*.html` (4 files, ~1150-1250 lines each) - Blog posts, each fully self-contained
 - `images/` - Profile images, badges, icons (SVG/PNG)
 - `images/blog/<post-slug>/` - Per-post images (featured images, screenshots)
 - `.claude/agents/website-orchestrator.md` - Agent config for coordinated site redesigns
@@ -29,9 +29,13 @@ Every HTML file (index.html + each blog post) contains its **own complete copy**
 
 ### Page Structure Differences
 
-**index.html**: Sidebar (name, title, bio, links, search, photos) + main content with hero section (credential badges) + 2-column blog post grid with JS-powered search/pagination. Blog post data is defined in a JS array that drives rendering.
+**index.html**: Sidebar (name, title, bio, links, search, photos) + main content with hero section (credential badges) + 2-column blog post grid. Blog cards are rendered by JS from a `posts` array (~line 1330) with fields: `id`, `title`, `preview`, `date`, `tags`, `url`, `featuredImage`. Search and pagination are JS-driven.
 
-**Blog posts**: Same sidebar structure but with badge-icons. Main content area has an article container with header, metadata, prose content, code blocks (Prism.js syntax highlighting), and inline images with lightbox functionality.
+**Blog posts**: Same sidebar structure but with badge-icons in the sidebar. Main content has article header, metadata, prose, code blocks (Prism.js with `prism-tomorrow` theme), and inline images with lightbox overlay. Each post includes full OG/Twitter Card meta tags for social sharing.
+
+### Content-Security-Policy
+
+Both index.html and blog posts have a CSP meta tag. **They differ**: blog posts allow `cdnjs.cloudflare.com` in `script-src` and `style-src` for Prism.js; index.html does not. When adding new external resources, update the CSP in the relevant files.
 
 ### Design System (Van Gogh-inspired)
 
@@ -47,7 +51,7 @@ CSS custom properties defined in `:root` of every file:
 ### External Dependencies (CDN only)
 
 - Google Fonts (Inter, Material Symbols Outlined)
-- Prism.js 1.29.0 for syntax highlighting (blog posts only) - includes JSON and Bash language components
+- Prism.js 1.29.0 with `prism-tomorrow` theme for syntax highlighting (blog posts only) - includes JSON and Bash language components
 
 ## Deployment
 
@@ -71,7 +75,8 @@ python -m http.server 8000
 1. Create `posts/<slug>.html` - copy an existing post as template (includes all CSS, JS, lightbox, Prism.js)
 2. Add post images to `images/blog/<slug>/`
 3. Add the post entry to the `posts` array in `index.html`'s `<script>` section (~line 1330) with `id`, `title`, `preview`, `date`, `tags`, `url`, and `featuredImage`
-4. Update Content-Security-Policy meta tag if loading new external resources
+4. Set OG/Twitter meta tags in the new post's `<head>` (og:title, og:description, og:image, twitter:card, etc.)
+5. Update the Content-Security-Policy meta tag if loading new external resources
 
 ## Working with This Codebase
 
