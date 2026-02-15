@@ -139,7 +139,7 @@
             flex-direction: column;
             overflow-y: auto;
             z-index: 100;
-            transition: background var(--transition-base), border-color var(--transition-base);
+            transition: transform var(--transition-base);
         }
 
         /* Badge Icons */
@@ -167,12 +167,28 @@
         .name {
             font-size: 1.75rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-600), var(--primary-400));
+            background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.02em;
             margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .name::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+            transition: width var(--transition-base);
+        }
+
+        .name:hover::after {
+            width: 100%;
         }
 
         /* Title */
@@ -186,12 +202,27 @@
         .title a {
             color: var(--primary-500);
             text-decoration: none;
-            transition: color var(--transition-fast);
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .title a::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary-400);
+            transition: width var(--transition-fast);
+        }
+
+        .title a:hover::after {
+            width: 100%;
         }
 
         .title a:hover {
             color: var(--primary-400);
-            text-decoration: underline;
         }
 
         /* Bio */
@@ -203,6 +234,13 @@
             border-radius: var(--border-radius-md);
             margin-bottom: 1.5rem;
             position: relative;
+            overflow: hidden;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .bio:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .bio::before {
@@ -257,23 +295,41 @@
             padding: 0.625rem 0.75rem;
             border-radius: var(--border-radius-sm);
             transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .links a::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--primary-100), transparent);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .links a:hover::before {
+            opacity: 1;
         }
 
         .links a:hover {
-            background: var(--primary-100);
             color: var(--primary-600);
             transform: translateX(4px);
         }
 
         .links a .icon-wrapper {
-            width: 32px;
-            height: 32px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--surface);
-            border-radius: var(--border-radius-sm);
-            box-shadow: var(--shadow-sm);
+            position: relative;
+            z-index: 1;
+            transition: all var(--transition-fast);
+        }
+
+        .links a:hover .icon-wrapper {
+            transform: scale(1.05);
         }
 
         .links a img {
@@ -310,12 +366,17 @@
             border: 3px solid transparent;
             background: linear-gradient(var(--surface), var(--surface)) padding-box,
                         linear-gradient(135deg, var(--primary-400), var(--accent-400)) border-box;
-            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+            transition: all var(--transition-base);
+            cursor: pointer;
         }
 
         .profile-photo:hover {
-            transform: scale(1.02);
-            box-shadow: var(--shadow-lg);
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .profile-photo:nth-child(2):hover {
+            transform: scale(1.05) rotate(-2deg);
         }
 
         /* Copyright */
