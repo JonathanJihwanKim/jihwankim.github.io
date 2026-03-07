@@ -20,13 +20,14 @@ Personal portfolio and blog for Jihwan Kim (powerbimvp.com), a Microsoft MVP and
 
 ### Critical: No Shared CSS/JS
 
-Every HTML file (index.html + each blog post) contains its **own complete copy** of all CSS and JavaScript. There are no shared stylesheets or script files. When changing design tokens, layout rules, or shared styles, the same change must be applied to **all 6 files**:
+Every HTML file (index.html + each blog post) contains its **own complete copy** of all CSS and JavaScript. There are no shared stylesheets or script files. When changing design tokens, layout rules, or shared styles, the same change must be applied to **all 7 files**:
 1. `index.html`
 2. `posts/building-portable-time-intelligence-library-dax-udf.html`
 3. `posts/building-hybrid-semantic-models-tabular-editor.html`
 4. `posts/pbir-filter-layer-order.html`
 5. `posts/pbir-edit-interactions.html`
 6. `posts/pbir-visual-json-field-parameters.html`
+7. `posts/pbir-json-hidden-gaps-field-parameters.html`
 
 ### Page Structure Differences
 
