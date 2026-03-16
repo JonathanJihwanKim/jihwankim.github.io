@@ -1,0 +1,651 @@
+/* ============================================
+   components.css — Cards, Tags, Badges, Buttons,
+   Search, Pagination, Tag Filters
+   "Editorial Blueprint" theme
+   ============================================ */
+
+/* ============================================
+   Blog Intro / Hero Section
+   ============================================ */
+.blog-intro {
+    max-width: var(--content-max);
+    margin: 0 auto var(--space-10);
+    padding: 0 var(--space-6);
+}
+
+.blog-tagline {
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
+    max-width: 36rem;
+}
+
+/* Accent word highlight */
+.blog-tagline .accent {
+    color: var(--accent-500);
+    font-style: italic;
+}
+
+.blog-author-line {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.blog-author-line strong {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* ============================================
+   Tag Filter Bar
+   ============================================ */
+.tag-filter-bar {
+    max-width: var(--content-max);
+    margin: 0 auto var(--space-8);
+    padding: 0 var(--space-6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+}
+
+.tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out);
+    white-space: nowrap;
+    letter-spacing: var(--tracking-wide);
+}
+
+.tag-pill:hover {
+    border-color: var(--stone-400);
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+}
+
+.tag-pill.active {
+    background: var(--stone-900);
+    color: var(--text-inverse);
+    border-color: var(--stone-900);
+    font-weight: 600;
+}
+
+.tag-pill .count {
+    font-size: var(--text-xs);
+    opacity: 0.6;
+    margin-left: var(--space-1);
+}
+
+/* ============================================
+   Post Cards
+   ============================================ */
+
+/* Posts grid container */
+.posts-grid {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+}
+
+/* Base card */
+.post-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--duration-base) var(--ease-out);
+    text-decoration: none;
+    color: inherit;
+}
+
+.post-card:hover {
+    border-color: var(--stone-300);
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+    color: inherit;
+}
+
+/* Orange accent top border on hover */
+.post-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent-500);
+    transform: scaleX(0);
+    transition: transform var(--duration-base) var(--ease-out);
+}
+
+.post-card {
+    position: relative;
+}
+
+.post-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* Card image */
+.post-card-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Card body */
+.post-card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: var(--space-5);
+    gap: var(--space-3);
+}
+
+/* Card meta top row */
+.post-card-meta-top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+/* Card title */
+.post-card-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 400;
+    line-height: var(--leading-snug);
+    color: var(--text-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Card preview text */
+.post-card-preview {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+}
+
+/* Card footer */
+.post-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border-light);
+    margin-top: auto;
+}
+
+.post-card-date {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+    font-variant-numeric: tabular-nums;
+}
+
+.post-card-read-more {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--accent-500);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    transition: gap var(--duration-fast);
+}
+
+.post-card:hover .post-card-read-more {
+    gap: var(--space-2);
+}
+
+.post-card-read-more .material-symbols-outlined {
+    font-size: 16px;
+}
+
+/* --- Featured Post Card --- */
+.post-card--featured {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    border-left: 4px solid var(--accent-500);
+}
+
+.post-card--featured::before {
+    display: none;
+}
+
+.post-card--featured .post-card-image {
+    width: 45%;
+    aspect-ratio: auto;
+    min-height: 280px;
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.post-card--featured .post-card-body {
+    padding: var(--space-6) var(--space-8);
+    gap: var(--space-4);
+    justify-content: center;
+}
+
+.post-card--featured .post-card-title {
+    font-size: var(--text-3xl);
+    -webkit-line-clamp: 2;
+}
+
+.post-card--featured .post-card-preview {
+    font-size: var(--text-base);
+    -webkit-line-clamp: 4;
+}
+
+/* ============================================
+   Tags (inline in cards and articles)
+   ============================================ */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: opacity var(--duration-fast);
+    white-space: nowrap;
+}
+
+.tag:hover {
+    opacity: 0.8;
+}
+
+/* Tag color variants */
+.tag[data-tag="Power BI"],
+.tag--powerbi {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.tag[data-tag="PBIR"],
+.tag--pbir {
+    background: var(--accent-50);
+    color: var(--accent-700);
+}
+
+.tag[data-tag="DAX"],
+.tag[data-tag="UDF"],
+.tag--dax {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+.tag[data-tag="Fabric"],
+.tag[data-tag="Direct Lake"],
+.tag--fabric {
+    background: #cffafe;
+    color: #0e7490;
+}
+
+.tag[data-tag="DevOps"],
+.tag[data-tag="Git"],
+.tag--devops {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.tag[data-tag="TMDL"],
+.tag[data-tag="Tabular Editor"],
+.tag--tmdl {
+    background: #fef3c7;
+    color: #a16207;
+}
+
+.tag[data-tag="JSON"],
+.tag--json {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.tag--default {
+    background: var(--stone-100);
+    color: var(--stone-700);
+}
+
+/* ============================================
+   Difficulty Badges
+   ============================================ */
+.difficulty-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 2px var(--space-3);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+}
+
+.difficulty-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.difficulty-badge--beginner {
+    background: #dcfce7;
+    color: #15803d;
+}
+.difficulty-badge--beginner::before {
+    background: #16a34a;
+}
+
+.difficulty-badge--intermediate {
+    background: #fef3c7;
+    color: #a16207;
+}
+.difficulty-badge--intermediate::before {
+    background: #ca8a04;
+}
+
+.difficulty-badge--advanced {
+    background: var(--accent-50);
+    color: var(--accent-700);
+}
+.difficulty-badge--advanced::before {
+    background: var(--accent-500);
+}
+
+/* Reading time */
+.reading-time {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.reading-time .material-symbols-outlined {
+    font-size: 14px;
+}
+
+/* Tags row in cards */
+.post-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: var(--accent-500);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--accent-600);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+    background: var(--stone-900);
+    color: var(--text-inverse);
+}
+
+.btn-secondary:hover {
+    background: var(--stone-800);
+    color: var(--text-inverse);
+    transform: translateY(-1px);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+}
+
+.btn-outline:hover {
+    border-color: var(--accent-500);
+    color: var(--accent-600);
+    background: var(--accent-50);
+}
+
+.btn .material-symbols-outlined {
+    font-size: 18px;
+}
+
+/* ============================================
+   Pagination
+   ============================================ */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    margin-top: var(--space-10);
+    padding: 0 var(--space-6);
+}
+
+.page-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--duration-fast);
+    font-variant-numeric: tabular-nums;
+}
+
+.page-btn:hover {
+    background: var(--bg-alt);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+
+.page-btn.active {
+    background: var(--stone-900);
+    color: var(--text-inverse);
+    border-color: var(--stone-900);
+    font-weight: 600;
+}
+
+.page-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   No Results
+   ============================================ */
+.no-results {
+    text-align: center;
+    padding: var(--space-16) var(--space-6);
+    max-width: var(--content-max);
+    margin: 0 auto;
+}
+
+.no-results-icon {
+    font-size: 48px;
+    color: var(--stone-300);
+    margin-bottom: var(--space-4);
+}
+
+.no-results h3 {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-2);
+}
+
+.no-results p {
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   Section Divider
+   ============================================ */
+.section-divider {
+    max-width: var(--content-max);
+    margin: 0 auto var(--space-8);
+    padding: 0 var(--space-6);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.section-divider h2 {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--text-tertiary);
+    white-space: nowrap;
+}
+
+.section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* ============================================
+   Responsive — Components
+   ============================================ */
+@media (max-width: 1024px) {
+    .posts-grid {
+        padding: 0 var(--space-5);
+    }
+
+    .blog-intro {
+        padding: 0 var(--space-5);
+    }
+
+    .tag-filter-bar {
+        padding: 0 var(--space-5);
+    }
+}
+
+@media (max-width: 768px) {
+    .posts-grid {
+        grid-template-columns: 1fr;
+        padding: 0 var(--space-4);
+        gap: var(--space-4);
+    }
+
+    .post-card--featured {
+        flex-direction: column;
+        border-left: none;
+        border-top: 4px solid var(--accent-500);
+    }
+
+    .post-card--featured .post-card-image {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        min-height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .post-card--featured .post-card-body {
+        padding: var(--space-5);
+    }
+
+    .post-card--featured .post-card-title {
+        font-size: var(--text-2xl);
+    }
+
+    .blog-intro {
+        padding: 0 var(--space-4);
+        margin-bottom: var(--space-8);
+    }
+
+    .blog-tagline {
+        font-size: var(--text-3xl);
+    }
+
+    .tag-filter-bar {
+        padding: 0 var(--space-4);
+        gap: var(--space-2);
+        margin-bottom: var(--space-6);
+    }
+
+    .pagination {
+        padding: 0 var(--space-4);
+    }
+}
+
+@media (max-width: 480px) {
+    .blog-tagline {
+        font-size: var(--text-2xl);
+    }
+
+    .post-card-body {
+        padding: var(--space-4);
+    }
+
+    .post-card-title {
+        font-size: var(--text-lg);
+    }
+}
