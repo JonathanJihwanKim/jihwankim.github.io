@@ -23,9 +23,17 @@
     max-width: 36rem;
 }
 
-/* Accent word highlight */
-.blog-tagline .accent {
-    color: var(--accent-500);
+/* Brand word colors in tagline */
+.blog-tagline .brand-powerbi {
+    color: #B8860B;
+}
+
+.blog-tagline .brand-microsoft {
+    color: #00A4EF;
+}
+
+.blog-tagline .brand-fabric {
+    color: #008B8B;
     font-style: italic;
 }
 
