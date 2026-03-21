@@ -8,6 +8,18 @@
     // Blog posts data — newest first
     var posts = [
         {
+            id: 7,
+            title: "Tracing Power BI Visuals Back to Source",
+            preview: "A colleague asked what measure drives a visual and how to trace it back to the source. Walking through PBIP files manually is painful at scale. PBIP Lineage Explorer solves this instantly, client-side.",
+            date: "March 21, 2026",
+            sortDate: "2026-03-21",
+            tags: ["Power BI", "PBIR", "Open Source", "TMDL"],
+            url: "posts/pbip-lineage-explorer-tracing-visuals-to-source.html",
+            featuredImage: "images/blog/pbip-lineage-explorer/featured.png",
+            readingTime: "14 min read",
+            difficulty: "Advanced"
+        },
+        {
             id: 6,
             title: "PBIR JSON Doesn't Tell the Full Story: What's Missing from Field Parameters and Calculation Groups",
             preview: "PBIR visual JSON only captures the last saved state \u2014 hiding calculation group usage and full field parameter selections. Learn how teaching Claude to trace from report to semantic model revealed hidden gaps and led to building pbip-documenter.",
