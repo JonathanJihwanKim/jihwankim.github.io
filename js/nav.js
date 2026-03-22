@@ -89,22 +89,73 @@
     // Inject footer
     var footer = document.getElementById('site-footer');
     if (footer) {
-        footer.innerHTML = `
-            <div class="footer-inner">
-                <div class="footer-left">
-                    <p class="footer-copyright">&copy; ${year} powerbimvp.com &middot; Jihwan Kim</p>
-                    <p class="footer-tagline">Deep technical writing on Power BI, PBIR, DAX, and Microsoft Fabric</p>
-                </div>
+        var sponsorHtml = isPost ? '' : `
                 <div class="footer-sponsor">
-                    <span class="footer-sponsor-text">3 free Power BI tools — used by developers worldwide. Your support keeps them updated.</span>
+                    <span class="footer-sponsor-text">4 free Power BI tools — used by developers worldwide. Your support keeps them updated.</span>
                     <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn-sponsor">
                         <span class="material-symbols-outlined">volunteer_activism</span> Sponsor
                     </a>
                     <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn-sponsor-outline">
                         <span class="material-symbols-outlined">coffee</span> Buy me a coffee
                     </a>
+                </div>`;
+        footer.innerHTML = `
+            <div class="footer-inner">
+                <div class="footer-left">
+                    <p class="footer-copyright">&copy; ${year} powerbimvp.com &middot; Jihwan Kim</p>
+                    <p class="footer-tagline">Deep technical writing on Power BI, PBIR, DAX, and Microsoft Fabric</p>
                 </div>
+                ${sponsorHtml}
             </div>
         `;
+    }
+
+    // Inject sidebar sponsor CTA on blog posts (desktop only)
+    if (isPost) {
+        var sidebarSponsor = document.createElement('div');
+        sidebarSponsor.className = 'sidebar-sponsor';
+        sidebarSponsor.innerHTML = `
+            <div class="sidebar-sponsor-label">Support my work</div>
+            <p class="sidebar-sponsor-text">4 free Power BI tools — your support keeps them updated.</p>
+            <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="sidebar-sponsor-btn sidebar-sponsor-btn--primary">
+                <span class="material-symbols-outlined">volunteer_activism</span> Sponsor
+            </a>
+            <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="sidebar-sponsor-btn sidebar-sponsor-btn--outline">
+                <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+            </a>
+        `;
+        document.body.appendChild(sidebarSponsor);
+
+        // Hide sidebar sponsor when footer is visible
+        var footerEl = document.getElementById('site-footer');
+        if (footerEl && window.IntersectionObserver) {
+            new IntersectionObserver(function (entries) {
+                sidebarSponsor.classList.toggle('hidden', entries[0].isIntersecting);
+            }, { threshold: 0 }).observe(footerEl);
+        }
+    }
+
+    // Inject floating pill sponsor on homepage
+    if (!isPost && (currentPath.endsWith('/') || currentPath.endsWith('/index.html') || currentPath === '/')) {
+        var pill = document.createElement('div');
+        pill.className = 'sponsor-pill';
+        pill.innerHTML = `
+            <span class="sponsor-pill-text">Support my free tools</span>
+            <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="sponsor-pill-btn sponsor-pill-btn--primary">
+                <span class="material-symbols-outlined">volunteer_activism</span> Sponsor
+            </a>
+            <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="sponsor-pill-btn sponsor-pill-btn--outline">
+                <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+            </a>
+        `;
+        document.body.appendChild(pill);
+
+        // Hide pill when footer is visible
+        var footerEl = document.getElementById('site-footer');
+        if (footerEl && window.IntersectionObserver) {
+            new IntersectionObserver(function (entries) {
+                pill.classList.toggle('hidden', entries[0].isIntersecting);
+            }, { threshold: 0 }).observe(footerEl);
+        }
     }
 })();
