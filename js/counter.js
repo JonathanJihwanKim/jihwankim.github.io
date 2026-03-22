@@ -6,7 +6,7 @@
 (function () {
     'use strict';
 
-    // Counter started on 2026-03-22. Visits before this date are not counted.
+    // Counter started Mar. 22, 2026. Visits before this date are not counted.
     var API = 'https://powerbimvp-counter.jonathan-jihwankim.workers.dev';
     var isPost = window.location.pathname.includes('/posts/');
 
