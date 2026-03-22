@@ -957,3 +957,17 @@
         padding: 0 var(--space-4);
     }
 }
+
+/* --- Reader Counter --- */
+
+.article-readers {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+}
+.article-readers .material-symbols-outlined { font-size: 16px; }
+.article-readers .counter-since {
+    margin-left: var(--space-1);
+}

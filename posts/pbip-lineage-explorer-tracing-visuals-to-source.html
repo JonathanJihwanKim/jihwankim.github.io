@@ -6,7 +6,7 @@
     <meta name="description" content="A colleague asked what measure drives a visual and how to trace it back to the source. Walking through PBIP files manually is painful at scale. PBIP Lineage Explorer solves this instantly, client-side.">
     <meta name="keywords" content="Power BI, PBIR, PBIP, TMDL, Lineage, Open Source, Data Engineering, Impact Analysis">
     <meta name="author" content="Jihwan Kim">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:title" content="Tracing Power BI Visuals Back to Source | Jihwan Kim">
@@ -78,6 +78,12 @@
                         <span class="tag" data-tag="Open Source">Open Source</span>
                         <span class="tag" data-tag="TMDL">TMDL</span>
                     </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">since Mar 2026</span>
+                    </span>
                 </div>
             </header>
 
@@ -346,5 +352,6 @@ measure 'Total Sales' = SUMX(sales, sales[Quantity] * sales[UnitPrice])</code></
     <script src="../js/lightbox.js"></script>
     <script src="../js/reading-progress.js"></script>
     <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
 </body>
 </html>

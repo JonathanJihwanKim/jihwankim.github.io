@@ -205,6 +205,10 @@
                     '<div class="post-card-tags">' + tagsHtml + '</div>' +
                     '<div class="post-card-footer">' +
                         '<span class="post-card-date">' + post.date + '</span>' +
+                        '<span class="post-card-readers" data-path="' + post.url + '">' +
+                            '<span class="material-symbols-outlined">visibility</span> ' +
+                            '<span class="reader-count-value"></span>' +
+                        '</span>' +
                         '<span class="post-card-read-more">Read <span class="material-symbols-outlined">arrow_forward</span></span>' +
                     '</div>' +
                 '</div>';

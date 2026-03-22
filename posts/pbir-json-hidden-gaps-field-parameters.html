@@ -6,7 +6,7 @@
     <meta name="description" content="PBIR visual JSON only captures the last saved state for field parameters and calculation groups. Learn how teaching Claude to trace from report to semantic model revealed hidden gaps and led to building pbip-documenter.">
     <meta name="keywords" content="Power BI, PBIR, Field Parameters, Calculation Groups, AI, Claude, pbip-documenter, Open Source, PBIP">
     <meta name="author" content="Jihwan Kim">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:title" content="PBIR JSON Doesn't Tell the Full Story: What's Missing from Field Parameters and Calculation Groups | Jihwan Kim">
@@ -78,6 +78,12 @@
                         <span class="tag" data-tag="AI">AI</span>
                         <span class="tag" data-tag="Open Source">Open Source</span>
                     </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">since Mar 2026</span>
+                    </span>
                 </div>
             </header>
 
@@ -249,5 +255,6 @@
     <script src="../js/lightbox.js"></script>
     <script src="../js/reading-progress.js"></script>
     <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
 </body>
 </html>
