@@ -8,6 +8,18 @@
     // Blog posts data — newest first
     var posts = [
         {
+            id: 8,
+            title: "Selective Branching in Fabric: Feature Branches Without the Clutter",
+            preview: "Exploring Fabric's selective branching feature end-to-end: from picking only the items you need, to committing changes in an isolated workspace, creating a pull request in Azure DevOps, and syncing back to main.",
+            date: "March 29, 2026",
+            sortDate: "2026-03-29",
+            tags: ["Fabric", "Git", "DevOps"],
+            url: "posts/fabric-selective-branching-git-workspace.html",
+            featuredImage: "images/blog/fabric-selective-branching/featured.png",
+            readingTime: "7 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 7,
             title: "Tracing Power BI Visuals Back to Source",
             preview: "A colleague asked what measure drives a visual and how to trace it back to the source. Walking through PBIP files manually is painful at scale. PBIP Lineage Explorer solves this instantly, client-side.",
