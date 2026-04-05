@@ -226,6 +226,28 @@
                 '</div>';
 
             postsContainer.appendChild(card);
+
+            // Inject partner card after the 3rd post on page 1
+            if (index === 2 && currentPage === 1 && window.sponsors && window.sponsors.length > 0) {
+                window.sponsors.forEach(function (s) {
+                    var partnerCard = document.createElement('a');
+                    partnerCard.href = s.url;
+                    partnerCard.target = '_blank';
+                    partnerCard.rel = 'noopener';
+                    partnerCard.className = 'partner-card animate-in';
+                    partnerCard.innerHTML =
+                        '<img src="' + s.heroImage + '" alt="' + s.name + ' — ' + s.tagline + '" class="partner-card-image" loading="lazy">' +
+                        '<div class="partner-card-body">' +
+                            '<span class="partner-label">Partner</span>' +
+                            '<h3 class="partner-card-name">' + s.name + '</h3>' +
+                            '<p class="partner-card-desc">' + s.description + '</p>' +
+                            '<span class="partner-cta-btn">' +
+                                '<span class="material-symbols-outlined">open_in_new</span> Visit on Instagram' +
+                            '</span>' +
+                        '</div>';
+                    postsContainer.appendChild(partnerCard);
+                });
+            }
         });
 
         renderPagination(filteredPosts.length);

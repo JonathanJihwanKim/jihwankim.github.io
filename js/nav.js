@@ -9,11 +9,25 @@
     var currentPath = window.location.pathname;
     var year = new Date().getFullYear();
 
+    // --- Partner / Sponsor Data (exposed globally for blog-data.js) ---
+    window.sponsors = [
+        {
+            name: 'Seoul Bites',
+            tagline: 'Authentic Korean, Made with Care',
+            description: 'Proudly supported by Seoul Bites \u2014 handmade Korean catering for events in the Netherlands.',
+            url: 'https://www.instagram.com/seoulbites.nl/',
+            heroImage: 'images/sponsors/seoulbites/banner-hero.jpg',
+            fullBanner: 'images/sponsors/seoulbites/banner-full.jpg',
+            qrCode: 'images/sponsors/seoulbites/qrcode.png'
+        }
+    ];
+
     // Determine active nav link
     function isActive(page) {
         if (page === 'blog') return currentPath.endsWith('/') || currentPath.endsWith('/index.html') || currentPath.includes('/posts/');
         if (page === 'about') return currentPath.includes('about');
         if (page === 'tools') return currentPath.includes('tools');
+        if (page === 'sponsors') return currentPath.includes('sponsors');
         return false;
     }
 
@@ -27,6 +41,7 @@
                     <a href="${base}index.html" class="${isActive('blog') ? 'active' : ''}">Blog</a>
                     <a href="${base}about.html" class="${isActive('about') ? 'active' : ''}">About</a>
                     <a href="${base}tools.html" class="${isActive('tools') ? 'active' : ''}">Tools</a>
+                    <a href="${base}sponsors.html" class="${isActive('sponsors') ? 'active' : ''}">Sponsors</a>
                 </div>
                 <div class="nav-right">
                     <button class="nav-search-btn" id="search-toggle" aria-label="Search posts">
@@ -66,6 +81,9 @@
             <a href="${base}tools.html" class="${isActive('tools') ? 'active' : ''}">
                 <span class="material-symbols-outlined">build</span> Tools
             </a>
+            <a href="${base}sponsors.html" class="${isActive('sponsors') ? 'active' : ''}">
+                <span class="material-symbols-outlined">handshake</span> Sponsors
+            </a>
         </div>
     `;
     document.body.appendChild(mobilePanel);
@@ -99,11 +117,15 @@
                         <span class="material-symbols-outlined">coffee</span> Buy me a coffee
                     </a>
                 </div>`;
+        var partnerLinks = window.sponsors.map(function (s) {
+            return `<a href="${base}sponsors.html" class="partner-footer-link">Partner: ${s.name}</a>`;
+        }).join(' &middot; ');
         footer.innerHTML = `
             <div class="footer-inner">
                 <div class="footer-left">
                     <p class="footer-copyright">&copy; ${year} powerbimvp.com &middot; Jihwan Kim</p>
                     <p class="footer-tagline">Deep technical writing on Power BI, PBIR, DAX, and Microsoft Fabric</p>
+                    <p class="footer-partners">${partnerLinks}</p>
                 </div>
                 ${sponsorHtml}
             </div>
@@ -132,6 +154,34 @@
             new IntersectionObserver(function (entries) {
                 sidebarSponsor.classList.toggle('hidden', entries[0].isIntersecting);
             }, { threshold: 0 }).observe(footerEl);
+        }
+
+        // Inject sidebar partner widget(s) on blog posts (desktop, left side)
+        if (window.sponsors.length > 0) {
+            window.sponsors.forEach(function (s) {
+                var sidebarPartner = document.createElement('a');
+                sidebarPartner.className = 'partner-sidebar';
+                sidebarPartner.href = s.url;
+                sidebarPartner.target = '_blank';
+                sidebarPartner.rel = 'noopener';
+                sidebarPartner.innerHTML = `
+                    <div class="partner-sidebar-label">Partner</div>
+                    <img src="${base}${s.fullBanner}" alt="${s.name} — ${s.tagline}" loading="lazy">
+                    <div class="partner-sidebar-qr">
+                        <img src="${base}${s.qrCode}" alt="QR — ${s.name}">
+                        <span class="partner-sidebar-qr-text">Scan to follow<br>on Instagram</span>
+                    </div>
+                `;
+                document.body.appendChild(sidebarPartner);
+
+                // Hide when footer is visible
+                var footerForPartner = document.getElementById('site-footer');
+                if (footerForPartner && window.IntersectionObserver) {
+                    new IntersectionObserver(function (entries) {
+                        sidebarPartner.classList.toggle('hidden', entries[0].isIntersecting);
+                    }, { threshold: 0 }).observe(footerForPartner);
+                }
+            });
         }
     }
 
