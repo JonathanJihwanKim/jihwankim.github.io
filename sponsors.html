@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sponsors of powerbimvp.com — proudly supported by businesses we believe in.">
+    <meta name="description" content="Sponsors of powerbimvp.com — proudly supported by businesses we believe in. Reach Power BI and Microsoft Fabric developers worldwide.">
     <meta name="author" content="Jihwan Kim">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:title" content="Sponsors — powerbimvp.com">
-    <meta property="og:description" content="Proudly supported by businesses we believe in.">
+    <meta property="og:description" content="Proudly supported by businesses we believe in. Reach Power BI and Microsoft Fabric developers worldwide.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://powerbimvp.com/sponsors.html">
     <title>Sponsors | Jihwan Kim — Power BI & Microsoft Fabric</title>
@@ -17,89 +17,6 @@
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/article.css">
-    <style>
-        .sponsor-section {
-            max-width: var(--article-max);
-            margin: 0 auto var(--space-12);
-            padding: 0 var(--space-4);
-        }
-        .sponsor-header {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            margin-bottom: var(--space-6);
-        }
-        .sponsor-header h2 {
-            font-family: var(--font-display);
-            font-size: var(--text-3xl);
-            font-weight: 400;
-            color: var(--text-primary);
-            margin: 0;
-        }
-        .sponsor-banner-link {
-            display: block;
-            max-width: 480px;
-            margin: 0 auto var(--space-6);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            border: 1px solid var(--border);
-            transition: all var(--duration-base) var(--ease-out);
-        }
-        .sponsor-banner-link:hover {
-            border-color: var(--stone-300);
-            box-shadow: var(--shadow-card-hover);
-            transform: translateY(-2px);
-        }
-        .sponsor-banner-link img {
-            width: 100%;
-            display: block;
-        }
-        .sponsor-details {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--space-6);
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: var(--space-6);
-        }
-        .sponsor-qr {
-            flex: 0 0 120px;
-        }
-        .sponsor-qr img {
-            width: 120px;
-            height: 120px;
-            border-radius: var(--radius-sm);
-        }
-        .sponsor-qr-caption {
-            font-size: var(--text-xs);
-            color: var(--text-tertiary);
-            text-align: center;
-            margin-top: var(--space-2);
-        }
-        .sponsor-info {
-            flex: 1;
-        }
-        .sponsor-info p {
-            font-size: var(--text-sm);
-            color: var(--text-secondary);
-            line-height: var(--leading-relaxed);
-            margin: 0 0 var(--space-4);
-        }
-        .sponsor-info p:last-of-type {
-            margin-bottom: var(--space-4);
-        }
-        @media (max-width: 640px) {
-            .sponsor-details {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-            .sponsor-banner-link {
-                max-width: 360px;
-            }
-        }
-    </style>
 </head>
 <body>
     <a href="#main" class="skip-link">Skip to content</a>
@@ -113,45 +30,108 @@
             <p class="blog-author-line">Proudly supported by businesses we believe in</p>
         </section>
 
-        <!-- Seoul Bites -->
-        <div class="sponsor-section animate-in">
-            <div class="sponsor-header">
-                <span class="partner-label">Sponsor</span>
-                <h2>Seoul Bites</h2>
-            </div>
-
-            <a href="https://www.instagram.com/seoulbites.nl/" target="_blank" rel="noopener" class="sponsor-banner-link">
-                <img src="images/sponsors/seoulbites/banner-full.jpg" alt="Seoul Bites — Authentic Korean Catering" loading="lazy">
-            </a>
-
-            <div class="sponsor-details">
-                <div class="sponsor-qr">
-                    <img src="images/sponsors/seoulbites/qrcode.png" alt="QR code — Seoul Bites Instagram">
-                    <div class="sponsor-qr-caption">Scan to follow</div>
+        <!-- Current Sponsor: Seoul Bites -->
+        <div class="partner-showcase animate-in">
+            <div class="partner-showcase-card">
+                <div class="partner-showcase-banner">
+                    <a href="https://www.instagram.com/seoulbites.nl/" target="_blank" rel="noopener">
+                        <img src="images/sponsors/seoulbites/banner-full.jpg" alt="Seoul Bites — Authentic Korean Catering" loading="lazy">
+                    </a>
                 </div>
-                <div class="sponsor-info">
-                    <p>
+                <div class="partner-showcase-info">
+                    <span class="partner-label">Sponsor</span>
+                    <h2 class="partner-showcase-name">Seoul Bites</h2>
+                    <p class="partner-showcase-desc">
                         Authentic Korean food, made with care. Seoul Bites offers handmade Korean catering for events in the Netherlands
                         — from intimate gatherings to private parties. Finger food, party platters, homemade kimchi, and custom menus
                         crafted with deep flavor and balance.
                     </p>
-                    <p>Simple, honest, and made fresh — just like home cooking.</p>
-                    <a href="https://www.instagram.com/seoulbites.nl/" target="_blank" rel="noopener" class="partner-cta-btn">
-                        <span class="material-symbols-outlined">open_in_new</span> Visit on Instagram
-                    </a>
+                    <p class="partner-showcase-desc">Simple, honest, and made fresh — just like home cooking.</p>
+                    <div class="partner-showcase-qr">
+                        <img src="images/sponsors/seoulbites/qrcode.png" alt="QR code — Seoul Bites Instagram">
+                        <div class="partner-showcase-qr-text">
+                            <strong>Follow Seoul Bites</strong>
+                            Scan to visit on Instagram
+                        </div>
+                    </div>
+                    <div class="partner-showcase-actions">
+                        <a href="https://www.instagram.com/seoulbites.nl/" target="_blank" rel="noopener" class="partner-cta-btn">
+                            <span class="material-symbols-outlined">open_in_new</span> Visit on Instagram
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- Why Sponsor -->
+        <section class="sponsor-why animate-in">
+            <h2>Why Sponsor powerbimvp.com?</h2>
+            <p class="sponsor-why-subtitle">Your brand in front of the people who build with Power BI and Microsoft Fabric.</p>
+
+            <div class="sponsor-stats-grid">
+                <div class="sponsor-stat-card">
+                    <span class="material-symbols-outlined">military_tech</span>
+                    <h3>Microsoft MVP</h3>
+                    <p>Written by a recognized Microsoft MVP for Power BI & Fabric, with credibility in the global developer community.</p>
+                </div>
+                <div class="sponsor-stat-card">
+                    <span class="material-symbols-outlined">public</span>
+                    <h3>Global Developer Audience</h3>
+                    <p>Readers are senior Power BI architects, Fabric engineers, and data platform leads at enterprises worldwide.</p>
+                </div>
+                <div class="sponsor-stat-card">
+                    <span class="material-symbols-outlined">download</span>
+                    <h3>Open Source Tools</h3>
+                    <p>4 free Power BI tools used by developers globally, each linking back to this site and sponsor placements.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Where Your Brand Appears -->
+        <section class="sponsor-placements animate-in">
+            <h2>Where Your Brand Appears</h2>
+
+            <div class="sponsor-placement-list">
+                <div class="sponsor-placement-item">
+                    <span class="material-symbols-outlined">home</span>
+                    <div>
+                        <h4>Homepage Feed</h4>
+                        <p>Partner card injected in the blog listing. Full-width, prominent placement seen by every visitor.</p>
+                    </div>
+                </div>
+                <div class="sponsor-placement-item">
+                    <span class="material-symbols-outlined">article</span>
+                    <div>
+                        <h4>Blog Post Sidebar</h4>
+                        <p>Fixed sidebar widget visible on every blog post for desktop readers. Persistent presence as readers scroll.</p>
+                    </div>
+                </div>
+                <div class="sponsor-placement-item">
+                    <span class="material-symbols-outlined">web</span>
+                    <div>
+                        <h4>Dedicated Sponsor Page</h4>
+                        <p>Full showcase with banner image, description, QR code, and direct link. Your own space on the site.</p>
+                    </div>
+                </div>
+                <div class="sponsor-placement-item">
+                    <span class="material-symbols-outlined">link</span>
+                    <div>
+                        <h4>Footer & In-Article</h4>
+                        <p>Partner link in the footer of every page and inline banner at the end of each blog post.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Become a Sponsor CTA -->
-        <div class="sponsor-section animate-in" style="text-align: center;">
+        <div class="partner-showcase animate-in">
             <div class="sponsor-cta">
                 <div class="sponsor-cta-icon"><span class="material-symbols-outlined">handshake</span></div>
-                <h3>Become a Sponsor</h3>
-                <p>Interested in reaching Power BI and Microsoft Fabric developers worldwide? Get in touch to discuss partnership opportunities.</p>
+                <h3>Partner With Me</h3>
+                <p>I work with a limited number of sponsors to keep placements meaningful and impactful. If your business serves the data and analytics community, let's talk.</p>
                 <div class="sponsor-cta-buttons">
                     <a href="mailto:jihwan@powerbimvp.com" class="btn btn-primary">
-                        <span class="material-symbols-outlined">mail</span> Contact Me
+                        <span class="material-symbols-outlined">mail</span> Get in Touch
                     </a>
                 </div>
             </div>

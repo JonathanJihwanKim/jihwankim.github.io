@@ -18,6 +18,9 @@
             url: 'https://www.instagram.com/seoulbites.nl/',
             heroImage: 'images/sponsors/seoulbites/banner-hero.jpg',
             fullBanner: 'images/sponsors/seoulbites/banner-full.jpg',
+            sidebarBanner: 'images/sponsors/seoulbites/banner-rows12.jpg',
+            brandBanner: 'images/sponsors/seoulbites/banner-row1.jpg',
+            showcaseBanner: 'images/sponsors/seoulbites/banner-rows1234.jpg',
             qrCode: 'images/sponsors/seoulbites/qrcode.png'
         }
     ];
@@ -166,11 +169,7 @@
                 sidebarPartner.rel = 'noopener';
                 sidebarPartner.innerHTML = `
                     <div class="partner-sidebar-label">Partner</div>
-                    <img src="${base}${s.fullBanner}" alt="${s.name} — ${s.tagline}" loading="lazy">
-                    <div class="partner-sidebar-qr">
-                        <img src="${base}${s.qrCode}" alt="QR — ${s.name}">
-                        <span class="partner-sidebar-qr-text">Scan to follow<br>on Instagram</span>
-                    </div>
+                    <img src="${base}${s.sidebarBanner}" alt="${s.name} — ${s.tagline}" loading="lazy">
                 `;
                 document.body.appendChild(sidebarPartner);
 
@@ -182,6 +181,27 @@
                     }, { threshold: 0 }).observe(footerForPartner);
                 }
             });
+
+            // Inject inline partner banner after sponsor CTA in blog posts
+            var sponsorCta = document.querySelector('.sponsor-cta');
+            if (sponsorCta && sponsorCta.parentNode) {
+                var firstSponsor = window.sponsors[0];
+                var inlinePartner = document.createElement('a');
+                inlinePartner.className = 'partner-inline';
+                inlinePartner.href = firstSponsor.url;
+                inlinePartner.target = '_blank';
+                inlinePartner.rel = 'noopener';
+                inlinePartner.innerHTML = `
+                    <div class="partner-inline-header">
+                        <span class="partner-label">Partner</span>
+                        <span class="partner-cta-btn">
+                            <span class="material-symbols-outlined">open_in_new</span> Visit
+                        </span>
+                    </div>
+                    <img src="${base}${firstSponsor.brandBanner}" alt="${firstSponsor.name} — ${firstSponsor.tagline}" loading="lazy">
+                `;
+                sponsorCta.parentNode.insertBefore(inlinePartner, sponsorCta.nextSibling);
+            }
         }
     }
 

@@ -960,7 +960,7 @@
 }
 
 .partner-showcase-banner {
-    flex: 0 0 340px;
+    flex: 0 0 300px;
     border-radius: var(--radius-md);
     overflow: hidden;
     border: 1px solid var(--border);
@@ -975,18 +975,18 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
+    gap: var(--space-3);
 }
 
 .partner-showcase-name {
     font-family: var(--font-display);
-    font-size: var(--text-3xl);
+    font-size: var(--text-2xl);
     font-weight: 400;
     color: var(--text-primary);
 }
 
 .partner-showcase-desc {
-    font-size: var(--text-base);
+    font-size: var(--text-sm);
     color: var(--text-secondary);
     line-height: var(--leading-relaxed);
 }
@@ -994,21 +994,21 @@
 .partner-showcase-qr {
     display: flex;
     align-items: center;
-    gap: var(--space-5);
-    padding: var(--space-5);
+    gap: var(--space-4);
+    padding: var(--space-4);
     background: var(--stone-50);
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
 }
 
 .partner-showcase-qr img {
-    width: 120px;
-    height: 120px;
+    width: 96px;
+    height: 96px;
     border-radius: var(--radius-sm);
 }
 
 .partner-showcase-qr-text {
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     color: var(--text-secondary);
     line-height: var(--leading-relaxed);
 }
@@ -1050,6 +1050,129 @@
     }
 
     .partner-showcase-name {
-        font-size: var(--text-2xl);
+        font-size: var(--text-xl);
+    }
+}
+
+/* --- Sponsor Sales Page (sponsors.html) --- */
+
+.sponsor-why {
+    max-width: var(--content-max);
+    margin: 0 auto var(--space-16);
+    padding: 0 var(--space-6);
+    text-align: center;
+}
+
+.sponsor-why h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.sponsor-why-subtitle {
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-10);
+    max-width: 36rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sponsor-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    text-align: left;
+}
+
+.sponsor-stat-card {
+    padding: var(--space-6);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    border-top: 3px solid var(--accent-500);
+}
+
+.sponsor-stat-card .material-symbols-outlined {
+    font-size: 32px;
+    color: var(--accent-500);
+    margin-bottom: var(--space-3);
+}
+
+.sponsor-stat-card h3 {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 400;
+    margin-bottom: var(--space-2);
+    color: var(--text-primary);
+}
+
+.sponsor-stat-card p {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+}
+
+/* Placements overview */
+.sponsor-placements {
+    max-width: var(--content-max);
+    margin: 0 auto var(--space-16);
+    padding: 0 var(--space-6);
+}
+
+.sponsor-placements h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: var(--space-8);
+    text-align: center;
+}
+
+.sponsor-placement-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+}
+
+.sponsor-placement-item {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.sponsor-placement-item .material-symbols-outlined {
+    font-size: 28px;
+    color: var(--accent-500);
+    flex-shrink: 0;
+    margin-top: var(--space-1);
+}
+
+.sponsor-placement-item h4 {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 600;
+    margin-bottom: var(--space-1);
+    color: var(--text-primary);
+}
+
+.sponsor-placement-item p {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+}
+
+@media (max-width: 768px) {
+    .sponsor-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .sponsor-placement-list {
+        grid-template-columns: 1fr;
     }
 }
