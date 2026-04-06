@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover how creating a year-week calendar with calendar-based time intelligence revealed the critical role of category configuration — and how TMDL makes calendar definitions fully source-controllable.">
+    <meta name="keywords" content="DAX, Calendar-Based Time Intelligence, Power BI, TMDL, SAMEPERIODLASTYEAR, Year-Week Calendar, Microsoft Fabric">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="From 'Mark as Date Table' to Calendars: My First Year-Week Calendar with Calendar-Based Time Intelligence | Jihwan Kim">
+    <meta property="og:description" content="Discover how creating a year-week calendar with calendar-based time intelligence revealed the critical role of category configuration.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/calendar-based-time-intelligence-year-week.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/calendar-time-intelligence/featured.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/calendar-time-intelligence/featured.png">
+
+    <title>From 'Mark as Date Table' to Calendars: My First Year-Week Calendar with Calendar-Based Time Intelligence | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 10 min read</span>
+                </div>
+                <h1 class="article-title">From &lsquo;Mark as Date Table&rsquo; to Calendars: My First Year-Week Calendar with Calendar-Based Time Intelligence</h1>
+                <div class="article-meta">
+                    <time datetime="2026-04-06">
+                        <span class="material-symbols-outlined">calendar_month</span> April 6, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="DAX">DAX</span>
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="TMDL">TMDL</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started Apr. 6, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/calendar-time-intelligence/featured.png" alt="From Mark as Date Table to Calendars: My First Year-Week Calendar with Calendar-Based Time Intelligence">
+
+            <div class="article-content">
+                <p>In this writing, I want to share how creating a simple year-week calendar with the new <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-time-intelligence?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">calendar-based time intelligence</a> feature turned into a deeper exploration &mdash; one that changed how I think about the relationship between calendar definitions and DAX functions.</p>
+
+                <p>What I didn't expect was a warning message that exposed a gap in my understanding: the calendar knew about weeks and dates, but it didn't know what a year was. That's the story I want to share.</p>
+
+                <h2>1. Starting From What I Know: The Classic Date Table</h2>
+
+                <p>For years, setting up time intelligence in Power BI followed a familiar ritual. I have a date table, I go to the Model view, I click "Mark as date table," and I select the date column. Done. From that point on, functions like <code>SAMEPERIODLASTYEAR</code>, <code>DATEADD</code>, and <code>TOTALYTD</code> just work.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/calendar-options-mark-as-date-table.png" alt="Calendar options dialog showing Mark as date table option">
+
+                <p>The "Mark as date table" dialog is straightforward &mdash; toggle it on, choose the date column, and Power BI validates the table automatically.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/mark-as-date-table-dialog.png" alt="Mark as date table dialog with date column selection">
+
+                <p>In TMDL, this classic approach produces a simple annotation on the table: <code>dataCategory: Time</code>. It's a single line that tells the engine "this table is a date table."</p>
+
+                <img src="../images/blog/calendar-time-intelligence/tmdl-data-category-time.png" alt="TMDL file showing dataCategory: Time annotation">
+
+                <p>With this setup, a standard <code>SAMEPERIODLASTYEAR</code> measure works perfectly at both the year level and month level:</p>
+
+<pre><code class="language-sql">SPLY Total Sales =
+CALCULATE([Total Sales], SAMEPERIODLASTYEAR('date'[Date]))</code></pre>
+
+                <img src="../images/blog/calendar-time-intelligence/sply-year-level-result.png" alt="SAMEPERIODLASTYEAR working correctly at the year level">
+
+                <img src="../images/blog/calendar-time-intelligence/sply-year-month-result.png" alt="SAMEPERIODLASTYEAR working correctly at the month level">
+
+                <p>This is the approach most of us have used for years. But there's a new way.</p>
+
+                <h2>2. The New Calendar Experience: A Different Mental Model</h2>
+
+                <p>Calendar-based time intelligence, described under the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-time-intelligence?wt.mc_id=DP-MVP-5004989#calendar-based-time-intelligence-preview" target="_blank" rel="noopener">"Calendar-based time intelligence (preview)" section in the Implement time-based calculations documentation</a>, replaces the "Mark as date table" approach with something fundamentally different. As the docs put it: <em>"Calendars are metadata definitions added to a table to indicate which columns from that table represent what attributes of time."</em> Instead of simply marking a table, I now <em>define a calendar</em> &mdash; specifying which columns represent which time categories.</p>
+
+                <p>The shift is subtle but significant. "Mark as date table" treats the entire table as a monolithic date reference. The new calendar approach lets me define <em>how time is structured</em> in my data &mdash; what constitutes a year, a quarter, a month, or a week.</p>
+
+                <p>My date table already had a <code>Year-Week Number</code> column with values like "2016-20W", "2016-21W", representing year and week combinations. I wanted to use this column for week-level time intelligence calculations.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/year-week-number-column.png" alt="Date table showing Year-Week Number column with values like 2016-20W">
+
+                <p>In the Calendar options dialog, I clicked "New calendar" to create a custom calendar definition.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/calendar-options-new-calendar.png" alt="Calendar options dialog with New calendar button highlighted">
+
+                <p>I named it <code>year_week_calendar</code> and added two categories: <strong>Week</strong> mapped to my <code>Year-Week Number</code> column, and <strong>Date</strong> mapped to the <code>Date</code> column. The "Validate data" button confirmed everything looked good.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/customize-calendar-week-date.png" alt="Customize calendar dialog showing year_week_calendar with Week and Date categories">
+
+                <p>The calendar appeared in my calendar list. I was ready to write DAX measures against it.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/calendar-created-in-list.png" alt="Calendar options showing year_week_calendar in the calendar list">
+
+                <h2>3. The Surprise: Week vs. Week of Year</h2>
+
+                <p>Before I get to the error I encountered, there's a subtle distinction in the category dropdown that caught my attention. When adding a category, the list offers both <strong>Week</strong> and <strong>Week of Year</strong> &mdash; and they mean different things.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/category-week-tooltip.png" alt="Week category tooltip: The week including the year. For example: Week 50 2023">
+
+                <p><strong>Week</strong> is described as "The week including the year. For example: Week 50 2023." This is for columns where each value uniquely identifies a specific week in a specific year &mdash; like my <code>Year-Week Number</code> column with values "2016-20W".</p>
+
+                <img src="../images/blog/calendar-time-intelligence/category-week-of-year-tooltip.png" alt="Week of Year category tooltip: The week of the year. For example: Week 50">
+
+                <p><strong>Week of Year</strong> is described as "The week of the year. For example: Week 50." This is for columns that contain just the week number (1 through 52 or 53) without any year context &mdash; a relative position within any year.</p>
+
+                <p>The distinction matters because the engine needs to know whether a column value can stand on its own as a unique time identifier or whether it repeats across years. The <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-time-intelligence?wt.mc_id=DP-MVP-5004989#available-column-categories" target="_blank" rel="noopener">Microsoft documentation</a> categorizes these under the "Available column categories" section: <strong>Week</strong> is a "Complete" type &mdash; its values are enough to uniquely identify the time period on their own. <strong>Week of Year</strong> is a "Partial" type &mdash; it needs a parent category like Year to become unambiguous. This is also why the "Period Uniqueness" validation section in the docs lists valid category combinations for week-based calendars: <code>Week</code> alone is valid, but <code>Week of Year</code> requires pairing with <code>Year</code>. Choosing the wrong one could lead to incorrect calculations that are hard to debug.</p>
+
+                <h2>4. The Warning That Changed Everything</h2>
+
+                <p>With my <code>year_week_calendar</code> set up with Week and Date categories, I wrote what I expected to be a straightforward measure:</p>
+
+<pre><code class="language-sql">SPLY by Week Total Sales =
+CALCULATE([Total Sales], SAMEPERIODLASTYEAR('year_week_calendar'))</code></pre>
+
+                <p>Instead of correct results, I got a warning banner:</p>
+
+                <img src="../images/blog/calendar-time-intelligence/sply-warning-missing-year.png" alt="Warning: SAMEPERIODLASTYEAR uses calendar year_week_calendar which does not define all the categories that are required for this operation. At minimum, ensure the Year category is tagged.">
+
+                <p><em>"'SAMEPERIODLASTYEAR' uses calendar 'year_week_calendar', which does not define all the categories that are required for this operation. At minimum, ensure the 'Year' category is tagged."</em></p>
+
+                <p>Look at the two tables in the screenshot. The left table shows Total Sales by Year-Week Number. The right table shows SPLY by Week Total Sales &mdash; but the values are identical. 2016-20W shows 384,091.64 on both sides. No year shift happened at all.</p>
+
+                <p>This was my first <em>aha</em> moment: <strong>a calendar with only Week and Date categories has no concept of what a "year" is.</strong> The function <code>SAMEPERIODLASTYEAR</code> literally needs to know where year boundaries are to shift across them. As the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-time-intelligence?wt.mc_id=DP-MVP-5004989#time-intelligence-functions-and-required-categories" target="_blank" rel="noopener">Microsoft documentation</a> states under "Time intelligence functions and required categories": <em>"Many time intelligence functions require sufficient categories to be included on the calendar... so Power BI can identify a uniquely particular unit of time. In other words, Power BI needs to be able to 'walk-up' from the level the calculation is performed on all the way to an individual year."</em> Without a Year category, the engine doesn't know how to find "last year" &mdash; so it silently returns the current period's value instead.</p>
+
+                <p>The warning was informative, but what concerned me was that it didn't prevent the measure from returning results. It returned <em>wrong</em> results &mdash; values that look plausible at first glance. In a production report, this kind of silent failure could go unnoticed for weeks.</p>
+
+                <h2>5. The Fix: Adding the Year Category</h2>
+
+                <p>The fix was straightforward once I understood the problem. I went back to the Calendar options, clicked the edit button on my <code>year_week_calendar</code>, and added the <strong>Year</strong> category mapped to the <code>Year</code> column.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/calendar-edit-button.png" alt="Calendar options with edit button highlighted on year_week_calendar">
+
+                <img src="../images/blog/calendar-time-intelligence/customize-calendar-with-year.png" alt="Customize calendar now showing Year, Week, and Date categories with Validate data confirmed">
+
+                <p>The calendar now had three categories: Year, Week, and Date. The "Validate data" button confirmed the configuration was valid.</p>
+
+                <h3>Before: TMDL with Week Only</h3>
+
+                <p>Before the fix, the TMDL showed <code>calendarCalendarGroup = week</code> &mdash; meaning the highest-level category in the calendar was Week.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/tmdl-calendar-week-only.png" alt="TMDL showing calendarCalendarGroup = week, with no Year category defined">
+
+                <h3>After: TMDL with Year Added</h3>
+
+                <p>After adding the Year category, the TMDL now shows <code>calendarCalendarGroup = year</code>. The calendar object gained a new entry for the Year category.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/tmdl-calendar-with-year.png" alt="TMDL showing calendarCalendarGroup = year, with Year category properly defined">
+
+                <h3>The Result</h3>
+
+                <p>With the Year category in place, the same measure now works exactly as expected:</p>
+
+<pre><code class="language-sql">SPLY by Week Total Sales =
+CALCULATE([Total Sales], SAMEPERIODLASTYEAR('year_week_calendar'))</code></pre>
+
+                <img src="../images/blog/calendar-time-intelligence/sply-working-year-week.png" alt="SAMEPERIODLASTYEAR now correctly shifting weeks: 2016-20W maps to 2017-20W with correct values">
+
+                <p>2016-20W on the left now correctly maps to 2017-20W on the right. The year shift is working. The values are properly compared across years at the week level.</p>
+
+                <p>Here's the second <em>aha</em> moment: <strong>the TMDL <code>calendarCalendarGroup</code> property tells you the highest-level category defined in the calendar &mdash; and it must reach <code>year</code> for any year-based time intelligence function to work.</strong> This single property in the TMDL file becomes a quick diagnostic &mdash; if I see <code>calendarCalendarGroup = week</code> and the model uses <code>SAMEPERIODLASTYEAR</code>, I know there's a problem before even opening Power BI Desktop.</p>
+
+                <h2>6. The Next Question: Does Date Even Belong Here?</h2>
+
+                <p>With the calendar working, I had three categories: Year, Week, and Date. But looking at my setup, I started to wonder &mdash; if this is a <em>year-week</em> calendar, why is the Date category included at all? My <code>SAMEPERIODLASTYEAR</code> measure operates at the week level, not the date level. What happens if I remove it?</p>
+
+                <p>I went back to the calendar editor and deleted the Date category, leaving only Year and Week.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/calendar-remove-date-category.png" alt="Customize calendar showing Year and Week categories with Date category being deleted">
+
+                <p>The measure still worked perfectly.</p>
+
+                <img src="../images/blog/calendar-time-intelligence/sply-working-without-date.png" alt="SAMEPERIODLASTYEAR still working correctly with only Year and Week categories, no Date">
+
+                <p>This wasn't just a lucky coincidence. The <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-time-intelligence?wt.mc_id=DP-MVP-5004989#period-uniqueness" target="_blank" rel="noopener">Microsoft documentation</a> under the "Period Uniqueness" validation section lists the valid category combinations for week-based calendars. The very first option is simply: <strong>Week</strong>. The Date category is not required. Since <code>Week</code> is a "Complete" type (it uniquely identifies a time period on its own), and I already have <code>Year</code> for the year-level functions, the combination of Year + Week is enough.</p>
+
+                <p>So was including the Date category a mistake? Not exactly &mdash; the calendar validates fine either way. But including Date when the calendar's purpose is week-level analysis has real implications.</p>
+
+                <p>The key is in how <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-time-intelligence?wt.mc_id=DP-MVP-5004989#context-clearing" target="_blank" rel="noopener">context clearing</a> works, explained under the "Context clearing" section of the documentation. When a time intelligence function operates on a calendar, it clears filter context on all columns tagged in that calendar that are dependencies or dependents of the shift level. If the Date category is included and tagged, the engine must consider date-level context clearing even for a week-level operation. Without it, the engine only needs to reason about Year and Week &mdash; a simpler and more focused context clearing path.</p>
+
+                <p>The <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-time-intelligence?wt.mc_id=DP-MVP-5004989#considerations-for-working-with-calendar-based-time-intelligence" target="_blank" rel="noopener">documentation</a> also states under "Considerations for working with calendar-based time-intelligence": <em>"We recommend you associate only the columns in your calendar that you want to use in time intelligence calculations."</em> In other words, don't include categories you don't plan to calculate at. For a year-week calendar that will never need day-level time intelligence, leaving out the Date category isn't just safe &mdash; it's the intended design.</p>
+
+                <p>This was my third <em>aha</em> moment: <strong>a calendar should only define the categories that match the granularity of the calculations it supports.</strong> Including extra categories doesn't just add unnecessary metadata &mdash; it widens the context clearing scope and obscures the calendar's purpose. A Year + Week calendar is a clear signal: "this calendar supports week-level and year-level time intelligence, nothing more."</p>
+
+                <h2>7. What Changed in TMDL: From Annotation to Calendar Object</h2>
+
+                <p>Stepping back, the TMDL representation of time intelligence has fundamentally changed between the old and new approaches.</p>
+
+                <p>The classic "Mark as date table" produces a single annotation:</p>
+
+<pre><code class="language-bash">dataCategory: Time</code></pre>
+
+                <p>That's it. One line. It tells the engine "this is a date table" but says nothing about the structure of time within it. The engine figures out year, quarter, month, and day relationships on its own, assuming a standard Gregorian calendar.</p>
+
+                <p>The new calendar-based approach produces a full calendar object in TMDL:</p>
+
+<pre><code class="language-bash">calendar year_week_calendar
+    calendarCalendarGroup = year
+        primaryColumn: Year
+    calendarCalendarGroup = week
+        primaryColumn: 'Year-Week Number'</code></pre>
+
+                <p>This is richer and more explicit. Each category is named, mapped to a specific column, and organized into a hierarchy. The <code>calendarCalendarGroup</code> entries make the structure visible at a glance &mdash; this calendar supports Year and Week, nothing more. If I'm reviewing a colleague's semantic model in a pull request, I can immediately understand the calendar's purpose and granularity without opening Desktop.</p>
+
+                <p>The shift from a one-line annotation to a structured object is a fundamental improvement in how time intelligence is represented as code.</p>
+
+                <h2>8. From a DevOps Standpoint: Calendar Definitions as Code</h2>
+
+                <p>From a DevOps standpoint, this structural change is foundational.</p>
+
+                <h3>Version Control and Git</h3>
+
+                <p>Calendar definitions in TMDL are plain text and fully diffable. When I added the Year category to my <code>year_week_calendar</code>, that change would show up as a clear, line-by-line diff in Git. A commit message like "fix: add Year category to year_week_calendar for SPLY support" tells the full story. If the change causes unexpected behavior downstream, I can trace it back to a specific commit and revert if needed.</p>
+
+                <p>Compare this with the old approach: changing "Mark as date table" settings in Power BI Desktop produces no meaningful diff because <code>dataCategory: Time</code> stays the same regardless of which columns exist. The new calendar object captures the actual structure, making changes trackable.</p>
+
+                <h3>Code Review and Pull Requests</h3>
+
+                <p>In a pull request, a reviewer can now verify that a calendar defines the right categories mapped to the right columns &mdash; without opening Desktop. If a developer creates a new week-based calendar and forgets the Year category (exactly the mistake I made), a reviewer can catch it by looking at the TMDL diff. The presence or absence of <code>calendarCalendarGroup = year</code> becomes a clear review checkpoint.</p>
+
+                <h3>Validation and Governance</h3>
+
+                <p>The structured nature of the TMDL calendar object opens the door for automated validation. A CI/CD pipeline could parse TMDL files and enforce rules like: "every calendar must define a Year category" or "calendars should only include categories that match their intended calculation granularity." This kind of governance catches misconfigurations before they reach production &mdash; preventing the silent wrong-results scenario I experienced during my own exploration.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>This experience left me with a new mental model: <strong>calendar-based time intelligence isn't just a new way to set up date tables &mdash; it's a contract between your calendar definition and your DAX functions.</strong> The categories I define determine which functions will work correctly. Missing a required category doesn't break the model &mdash; it silently returns wrong results, which is arguably worse. And including unnecessary categories adds complexity without benefit.</p>
+
+                <p>The TMDL representation makes this contract visible and reviewable. The <code>calendarCalendarGroup</code> entries tell me exactly what levels of time hierarchy my calendar supports &mdash; and equally important, what it intentionally does not support. That visibility, combined with Git-based workflows, transforms calendar configuration from a hidden Desktop setting into a first-class, auditable piece of code.</p>
+
+                <p>I hope this helps having fun in exploring calendar-based time intelligence and embracing this new era of flexible, code-first DAX time intelligence!</p>
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="DAX">DAX</span>
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="TMDL">TMDL</span>
+                <span class="tag" data-tag="Time Intelligence">Time Intelligence</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: PBIP Impact Analyzer, PBIR Visual Manager, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="fabric-selective-branching-git-workspace.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">Selective Branching in Fabric: Feature Branches Without the Clutter</span>
+                </a>
+                <div></div>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-rHwBHAxVvWblRZOkJc6/fI+iHFQjWFFGPA6COtU+nGANyEshLN8k+5+rBFFKKDE+UZsEmLoGvcC4hT/xfAtxOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-35RBtvuCKWANuRid6RXP2gYm4D5RMieVLfsMSzPu0Ry0jJFOqGcgJ/MXbSeRso89H12VqAjSH7RLx3tZnQIYGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>

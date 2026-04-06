@@ -8,6 +8,18 @@
     // Blog posts data — newest first
     var posts = [
         {
+            id: 9,
+            title: "From \u2018Mark as Date Table\u2019 to Calendars: My First Year-Week Calendar with Calendar-Based Time Intelligence",
+            preview: "Creating a year-week calendar with calendar-based time intelligence revealed the critical role of category configuration \u2014 a missing Year category silently returned wrong results, and an unnecessary Date category added complexity without benefit. Exploring the new calendar UI, the Week vs. Week of Year distinction, and how TMDL makes calendar definitions source-controllable.",
+            date: "April 6, 2026",
+            sortDate: "2026-04-06",
+            tags: ["DAX", "Power BI", "TMDL"],
+            url: "posts/calendar-based-time-intelligence-year-week.html",
+            featuredImage: "images/blog/calendar-time-intelligence/featured.png",
+            readingTime: "10 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 8,
             title: "Selective Branching in Fabric: Feature Branches Without the Clutter",
             preview: "Exploring Fabric's selective branching feature end-to-end: from picking only the items you need, to committing changes in an isolated workspace, creating a pull request in Azure DevOps, and syncing back to main.",
