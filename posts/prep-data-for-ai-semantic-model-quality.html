@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Preparing the Contoso sales model for Copilot revealed that AI answer quality is a direct reflection of semantic model quality. A walkthrough of Prep data for AI, AI instructions, and the Copilot failure that made the point concrete.">
+    <meta name="keywords" content="Power BI, Copilot, AI, Prep data for AI, Semantic Model, TMDL, AI Instructions, DevOps, Microsoft Fabric">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="Prep Data for AI: Why Semantic Model Quality Is Now an AI Problem | Jihwan Kim">
+    <meta property="og:description" content="Preparing the Contoso sales model for Copilot revealed that AI answer quality is a direct reflection of semantic model quality.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/prep-data-for-ai-semantic-model-quality.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/prep-data-for-ai/prep-data-ai-cover.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/prep-data-for-ai/prep-data-ai-cover.png">
+
+    <title>Prep Data for AI: Why Semantic Model Quality Is Now an AI Problem | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 8 min read</span>
+                </div>
+                <h1 class="article-title">Prep Data for AI: Why Semantic Model Quality Is Now an AI Problem</h1>
+                <div class="article-meta">
+                    <time datetime="2026-04-12">
+                        <span class="material-symbols-outlined">calendar_month</span> April 12, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="AI">AI</span>
+                        <span class="tag" data-tag="TMDL">TMDL</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started Apr. 12, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/prep-data-for-ai/prep-data-ai-cover.png" alt="Prep data for AI dialog in Power BI Desktop showing three features: Simplify the data schema, Verified answers, and Add AI instructions">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how preparing the Contoso sales model for Copilot changed the way I think about semantic model quality. What started as exploring a new button in Power BI Desktop turned into a realization: <strong>the quality of Copilot's answers is a direct reflection of the quality of the semantic model behind them.</strong></p>
+
+                <p>My journey started after reading Microsoft's post <a href="https://powerbi.microsoft.com/en-us/blog/semantic-layers-the-foundation-of-enterprise-ai/?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Semantic Layers: The Foundation of Enterprise AI</a>. The phrase that caught my attention was this: Power BI "doesn't just visualize data; it standardizes meaning." That framing hit differently. A model that returns correct numbers in reports was no longer the full picture. For AI to work well, the model also needs to explain itself.</p>
+
+                <h2>1. The Starting Point: A Model That Works but Doesn't Explain Itself</h2>
+
+                <p>The Contoso sales model I was working with is a clean star schema. Four fact relationships: sales to date, product, customer, and store. Measures in a dedicated table. User-defined functions for time intelligence. By any standard metric, a well-built model.</p>
+
+                <img src="../images/blog/prep-data-for-ai/model-diagram-before.png" alt="Power BI Desktop model view showing the Contoso sales star schema with sales, date, product, customer, store, and supporting tables">
+
+                <p>But looking at the Data pane, I noticed something. The customer table alone has more than 20 columns: Age, Birthday, City, Company, Continent, Country, CountryFull, CustomerKey, EndDT, GeoAreaKey, GivenName, Latitude, Longitude, MiddleInitial, Occupation, StartDT, State, StateFull, StreetAddress, Surname, Title, Vehicle, ZipCode. Many are useful for report filtering. None of them carry any description, synonym, or priority signal for an AI system trying to answer business questions.</p>
+
+                <img src="../images/blog/prep-data-for-ai/fields-pane-before.png" alt="Data pane showing the customer table expanded with 20+ columns including Latitude, Longitude, StreetAddress, Vehicle, ZipCode">
+
+                <p>The model worked perfectly for reports. For Copilot, it was an undifferentiated wall of metadata with no signal about what mattered for analytics.</p>
+
+                <h2>2. Discovering &ldquo;Prep Data for AI&rdquo;</h2>
+
+                <p>Power BI Desktop added a "Prep data for AI" button to the Home ribbon, introduced as a preview in the <a href="https://powerbi.microsoft.com/en-us/blog/power-bi-may-2025-feature-summary/?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">May 2025 update</a> and later <a href="https://powerbi.microsoft.com/en-us/blog/prep-your-data-for-ai-now-in-the-power-bi-service/?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">extended to the Power BI Service in October 2025</a>. I found it next to the Copilot button.</p>
+
+                <img src="../images/blog/prep-data-for-ai/prep-data-ai-button.png" alt="Power BI Desktop Home ribbon with the Prep data for AI button highlighted next to the Copilot button">
+
+                <p>Clicking it opens a dialog grouped under "Prep this model to be AI-ready" with three capabilities, each serving a different purpose. According to <a href="https://learn.microsoft.com/en-us/power-bi/create-reports/copilot-prepare-data-ai?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Microsoft's documentation</a>, these features are designed to reduce Copilot ambiguity, improve relevance and accuracy, and make interactions more fluent.</p>
+
+                <img src="../images/blog/prep-data-for-ai/prep-data-ai-cover.png" alt="Prep data for AI dialog showing three features: Simplify the data schema, Verified answers, and Add AI instructions">
+
+                <p>"Simplify the data schema" lets you create a focused AI data schema by deselecting columns Copilot doesn't need for analytics. "Verified answers" lets you pin specific visuals to specific question phrases so Copilot always returns the same visual for that question. "Add AI instructions" gives Copilot written business context about the model. All three updates save to the semantic model, not the report.</p>
+
+                <h2>3. Simplifying the Data Schema</h2>
+
+                <p>The "Simplify the data schema" tab works through a checklist of the model's tables and columns. For each, I can choose whether to include it in the dedicated AI data schema that Copilot uses when answering questions.</p>
+
+                <img src="../images/blog/prep-data-for-ai/simplify-schema-ui.png" alt="Simplify the data schema UI showing the store table with checkboxes for each column, with some columns unchecked">
+
+                <p>My first instinct was to include everything. But the intent is the opposite: deselect columns that Copilot doesn't need for business analysis. For the store table, that meant unchecking CountryCode, GeoAreaKey, and StoreKey: three operational or internal key columns that Copilot does not need for business analytics. The dialog displays all columns, including any that are already hidden from report users in the data model, with those pre-excluded by default. Deselecting a column here is a separate decision from model visibility: it controls only what Copilot sees.</p>
+
+                <img src="../images/blog/prep-data-for-ai/simplify-schema-after.png" alt="Simplify the data schema after changes, showing store table columns with CloseDate, CountryCode, and others unchecked">
+
+                <p>In the model diagram, those changes are visible as highlighted columns across the affected tables.</p>
+
+                <img src="../images/blog/prep-data-for-ai/model-diagram-after.png" alt="Model diagram after schema simplification showing highlighted columns that have been deselected from the AI schema">
+
+                <p>Here is the first aha moment: <strong>there are two independent visibility controls.</strong> The data model already has its own column visibility settings. Key columns like StoreKey and GeoAreaKey are typically hidden from report users at the model level. The first time the AI schema is set up, those hidden columns are automatically excluded by default. On subsequent edits, the dialog shows all columns in their last saved state, and the developer retains full control over which columns, hidden or visible, Copilot can access. For columns that are visible to report users, deselecting them from the AI schema does not remove them from the report field list either. The AI data schema is saved within the semantic model as a dedicated layer for Copilot only. Model visibility and AI visibility operate completely independently.</p>
+
+                <h2>4. Adding AI Instructions</h2>
+
+                <p>The third feature is where things got more substantive. The AI instructions editor is a free-text field where I can give Copilot direct business context about the model.</p>
+
+                <img src="../images/blog/prep-data-for-ai/ai-instructions-editor.png" alt="AI instructions editor showing written business context about the Contoso model including terminology, measure usage, and date table guidance">
+
+                <p>I structured my instructions in four parts. The first explained the model's purpose: a retail sales analytics model for Contoso, tracking transactional sales data across customers, products, stores, and time periods, with a focus on sales performance, profitability, and customer behavior. The second defined key business terms: Total Sales is Quantity times UnitPrice from the sales table; Total Cost is Quantity times UnitCost; Margin is Total Sales minus Total Cost. The third section covered measure usage: all business measures live in the Measure table, and Copilot should use those measures rather than aggregating raw columns. For revenue questions, use Total Sales. For order counts, use Number of Orders (distinct count of OrderKey). For customer counts, use Number of Customers (distinct count of CustomerKey). The fourth section addressed the date model: the date table is the primary time dimension, connected to sales via OrderDate.</p>
+
+                <p>According to the <a href="https://learn.microsoft.com/en-us/power-bi/create-reports/copilot-prepare-data-ai-instructions?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">AI instructions documentation</a>, these instructions allow model authors to provide context, business logic, and specific guidance so Copilot can better interpret user questions using organizational terminology and analytical priorities. The instructions save to the semantic model, so they apply consistently across every report built on top of it.</p>
+
+                <h2>5. The Moment It Broke: When Copilot Got the Answer Wrong</h2>
+
+                <p>With the schema simplified and instructions written, I published to the service and opened Copilot.</p>
+
+                <p>Simple questions worked well. "Which brand has the most orders?" returned a clean table showing Contoso with the highest order count and the correct measures applied.</p>
+
+                <img src="../images/blog/prep-data-for-ai/copilot-correct-answer.png" alt="Copilot in Power BI Service answering 'Which brand has the most orders?' with a correct table showing brand order counts">
+
+                <p>Then I asked something more analytical: "Which year's sales shows the biggest difference compared to the previous year's sales?"</p>
+
+                <img src="../images/blog/prep-data-for-ai/copilot-wrong-answer.png" alt="Copilot returning 2026 as the year with the biggest sales difference vs previous year, with HCAAT expanded showing the reasoning">
+
+                <p>Copilot returned 2026 as the answer. It said 2026 had the biggest year-over-year change, with a sales difference of minus 91,631,635.19 compared to 2025.</p>
+
+                <p>The answer is wrong. 2026 is the current year and has no sales data yet. It exists in the date table but has no sales transactions. The DAX query treats it as a valid year and compares its blank sales against the full 2025 total, producing an artificially large negative difference. The real year with the most significant swing is somewhere in the complete history, where both the current and prior year have full data on both sides.</p>
+
+                <p>But Copilot had no way of knowing that. I clicked "How Copilot arrived at this" (HCAAT), a transparency panel Copilot shows below its answer to explain the reasoning and DAX it used, to examine what happened. The explanation was transparent: find every year's total sales, calculate the absolute difference against the prior year, return the year with the largest absolute change. That is a valid interpretation of my question. The DAX query Copilot generated to answer it was also technically sound.</p>
+
+                <img src="../images/blog/prep-data-for-ai/copilot-dax-query-modal.png" alt="DAX query modal showing the Copilot-generated query for finding the year with the largest sales difference vs previous year">
+
+<pre><code class="language-sql">// Year with the largest change in total sales vs. the previous year
+DEFINE
+  VAR _YearlySales =
+    SUMMARIZECOLUMNS(
+      'date'[Year],
+      "Year Total Sales", [Total Sales],
+      "Prev Year Total Sales",
+        CALCULATE([Total Sales], DATEADD('date'[Date], -1, YEAR)),
+      "Sales Difference",
+        [Total Sales] - CALCULATE([Total Sales], DATEADD('date'[Date], -1, YEAR)),
+      "Abs Sales Difference",
+        ABS([Total Sales] - CALCULATE([Total Sales], DATEADD('date'[Date], -1, YEAR)))
+    )
+  VAR _TopYear = TOPN(1, _YearlySales, [Abs Sales Difference], DESC)
+EVALUATE
+  SELECTCOLUMNS(
+    _TopYear,
+    "Year", 'date'[Year],
+    "Total Sales", [Year Total Sales],
+    "Previous Year Total Sales", [Prev Year Total Sales],
+    "Sales Difference", [Sales Difference],
+    "Absolute Sales Difference", [Abs Sales Difference]
+  )
+ORDER BY [Year] ASC</code></pre>
+
+                <p>Running the query in the DAX query view confirmed the result: year 2026, blank for current year sales, the full 2025 total as prior year, and a massive absolute difference.</p>
+
+                <img src="../images/blog/prep-data-for-ai/copilot-dax-query-results.png" alt="DAX query results showing 2026 selected as the top year with blank current year sales and 91M as the absolute difference">
+
+                <p>The DAX was correct. The arithmetic was correct. The business context was missing.</p>
+
+                <p>Here is the second aha moment: the gap wasn't in Copilot's reasoning ability. Without any guidance, Copilot treats all years as equally valid for year-over-year comparison. A year with no sales data is evaluated by the same logic as any year with a full twelve months of data. The gap was in my AI instructions. I had explained what the measures mean and how to use them, but I had not told Copilot that the current year may have no sales data yet. An instruction like "The current year may have incomplete data; when comparing year-over-year performance, exclude years where Total Sales is blank or where the year equals the current calendar year" would have steered the answer away from this result. That kind of instruction doesn't change the DAX engine. It changes the framing that guides which DAX gets written, and that framing lives in the semantic model. <strong>AI quality is a semantic model responsibility, not just an AI capability problem.</strong></p>
+
+                <h2>6. What This Looks Like in TMDL</h2>
+
+                <p>From a DevOps standpoint, this is foundational.</p>
+
+                <p>When I looked at the TMDL script view in Desktop, everything I configured through the "Prep data for AI" dialog had been captured in the model's metadata as code. The linguisticMetadata JSON, the AI instructions, the schema simplifications: all of it is stored in the semantic model definition and surfaces through TMDL.</p>
+
+                <img src="../images/blog/prep-data-for-ai/tmdl-ai-metadata.png" alt="TMDL script view showing linguisticMetadata JSON and AI instructions embedded in the semantic model code">
+
+                <p>Opening <code>definition/model.tmdl</code> in VS Code reveals something interesting. On line 14, there is an annotation called <code>PBI_ProTooling</code>. It is a list that Power BI maintains automatically, recording which tools have ever interacted with this model. After going through the "Prep data for AI" workflow, <code>CopilotTooling</code> appeared in that list. The Git blame on that same line shows the exact commit that added it, including the commit message. That traceability comes for free because the model lives in plain text.</p>
+
+                <img src="../images/blog/prep-data-for-ai/model-tmdl-vscode.png" alt="VS Code showing model.tmdl with the PBI_ProTooling annotation on line 14, including CopilotTooling in the list and Git blame showing the commit that changed it">
+
+                <h3>Version Control</h3>
+
+                <p>When I add or change an AI instruction, that change shows up as a text diff in Git. A commit message like "feat: add instruction to exclude years with missing sales data from YoY comparison" describes the intent precisely. If the instruction causes unexpected Copilot behavior in a later release, I can trace it back to a specific commit, understand why it was written, and revert or refine it. That traceability doesn't exist when AI preparation lives only in a UI setting with no source representation.</p>
+
+                <h3>Code Review</h3>
+
+                <p>In a pull request, a reviewer can read the AI instructions directly and challenge them on their merits. "This instruction says to always use the Measure table, but it doesn't address calculated columns in the sales table used for currency conversion" is a reviewable comment. That kind of review is only possible when instructions are text in a diff. A configuration made through a dialog is invisible to anyone working in a Git workflow.</p>
+
+                <h3>Deployment</h3>
+
+                <p>According to Microsoft's documentation on <a href="https://learn.microsoft.com/en-us/power-bi/create-reports/copilot-prepare-data-ai?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Prep data for AI considerations</a>, after deploying LSDL (Linguistic Schema Definition Language, the file format that stores AI instructions, AI data schema, and Q&amp;A synonyms) changes through Git or deployment pipelines, you need to refresh the model in the service to sync the AI preparation changes. This means AI instructions travel through the same deployment pipeline as the rest of the model. They are not a separate manual configuration step. They are part of the model artifact.</p>
+
+                <h2>7. The Final Step: Approved for Copilot in the Service</h2>
+
+                <p>After preparing the model in Desktop and publishing to the service, there is one more step on the service side.</p>
+
+                <p>In the Fabric workspace, I right-clicked the semantic model and opened Settings.</p>
+
+                <img src="../images/blog/prep-data-for-ai/service-settings-nav.png" alt="Fabric workspace showing the semantic model context menu with Settings option highlighted">
+
+                <p>The "Approved for Copilot" section in the settings page has a single checkbox. Checking it and clicking Apply tells the service that this model has been intentionally prepared for AI use.</p>
+
+                <img src="../images/blog/prep-data-for-ai/approved-for-copilot.png" alt="Approved for Copilot settings section showing the checkbox checked and Apply button highlighted">
+
+                <p>Marking a model as approved improves its visibility in search results and removes friction warnings for end users in the standalone Copilot experience. According to the documentation, reports that use an approved semantic model are also considered approved, so the governance signal flows from the semantic model down to every report built on top of it.</p>
+
+                <p>The "Prep data for AI" experience is also available directly from the semantic model's ribbon in the service, so teams can configure and refine AI preparation in the browser without Desktop.</p>
+
+                <img src="../images/blog/prep-data-for-ai/service-prep-button.png" alt="Power BI Service semantic model page showing the Prep data for AI button on the ribbon">
+
+                <img src="../images/blog/prep-data-for-ai/service-prep-dialog.png" alt="Prep data for AI dialog in the Power BI Service showing the Simplify the data schema view">
+
+                <p>The service experience mirrors the Desktop experience. Same three features, same save behavior, same result: the AI preparation is stored on the semantic model and deployed alongside everything else.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>This experience left me with a new mental model: <strong>AI readiness is not a feature you enable; it is a quality standard you build into the semantic model itself.</strong></p>
+
+                <p>The Copilot failure on the year-over-year question was not a Copilot problem. The DAX was valid, the reasoning was transparent, and the "How Copilot arrived at this" explanation was genuinely useful for diagnosing what happened. The problem was a semantic model that had no business context about incomplete data. No amount of AI capability can compensate for context that was never provided.</p>
+
+                <p>Semantic models have always been where business meaning lives: measures, relationships, hierarchies, formatting rules. Now they are also where AI context lives: instructions, schema simplifications, verified answers. The model is becoming the contract between the business and every AI system that reads it. The better that contract is written, the better every AI experience built on top of it will be.</p>
+
+                <p>I hope this helps having fun in exploring how to prepare your semantic models for AI and embracing this new era of AI-powered analytics!</p>
+
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="AI">AI</span>
+                <span class="tag" data-tag="TMDL">TMDL</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: PBIP Impact Analyzer, PBIR Visual Manager, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="calendar-based-time-intelligence-year-week.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">From &lsquo;Mark as Date Table&rsquo; to Calendars: My First Year-Week Calendar with Calendar-Based Time Intelligence</span>
+                </a>
+                <div></div>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-rHwBHAxVvWblRZOkJc6/fI+iHFQjWFFGPA6COtU+nGANyEshLN8k+5+rBFFKKDE+UZsEmLoGvcC4hT/xfAtxOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-35RBtvuCKWANuRid6RXP2gYm4D5RMieVLfsMSzPu0Ry0jJFOqGcgJ/MXbSeRso89H12VqAjSH7RLx3tZnQIYGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>

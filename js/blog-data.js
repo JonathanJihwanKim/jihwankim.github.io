@@ -8,6 +8,18 @@
     // Blog posts data — newest first
     var posts = [
         {
+            id: 10,
+            title: "Prep Data for AI: Why Semantic Model Quality Is Now an AI Problem",
+            preview: "Preparing the Contoso sales model for Copilot revealed that AI answer quality is a direct reflection of semantic model quality. A walkthrough of the Prep data for AI features, AI instructions, and the Copilot failure that made the point concrete.",
+            date: "April 13, 2026",
+            sortDate: "2026-04-13",
+            tags: ["Power BI", "AI", "TMDL", "DevOps"],
+            url: "posts/prep-data-for-ai-semantic-model-quality.html",
+            featuredImage: "images/blog/prep-data-for-ai/prep-data-ai-cover.png",
+            readingTime: "8 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 9,
             title: "From \u2018Mark as Date Table\u2019 to Calendars: My First Year-Week Calendar with Calendar-Based Time Intelligence",
             preview: "Creating a year-week calendar with calendar-based time intelligence revealed the critical role of category configuration \u2014 a missing Year category silently returned wrong results, and an unnecessary Date category added complexity without benefit. Exploring the new calendar UI, the Week vs. Week of Year distinction, and how TMDL makes calendar definitions source-controllable.",
