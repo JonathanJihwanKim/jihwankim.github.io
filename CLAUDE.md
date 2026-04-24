@@ -45,17 +45,19 @@ All CSS and JS is in shared files. HTML pages link to them:
 
 CSS/JS changes only need to be made in one place — the shared files.
 
-### Design System — "Editorial Blueprint" Theme
+### Design System — "Microsoft Technical" Theme
 
 CSS custom properties defined in `css/base.css`:
-- **Accent**: Signal orange (`#E8590C` to `#fdba74`)
-- **Neutrals**: Warm stone scale (`#1c1917` to `#fafaf9`)
-- **Background**: Warm off-white (`#faf9f7`)
-- **Links**: Slate blue (`#2563eb`)
-- **Display font**: DM Serif Display (Google Fonts, loaded via CSS @import in base.css)
-- **Body font**: IBM Plex Sans (Google Fonts)
-- **Code font**: JetBrains Mono (Google Fonts)
-- **Icons**: Google Material Symbols Outlined
+- **Primary accent**: MVP red (`--mvp-500: #E4222E`); also aliased as `--accent-500`
+- **Product accents**: Power BI yellow (`--powerbi-500: #F2C811`), Fabric teal (`--fabric-500: #0ea5be`), Microsoft blue (`--msblue-700: #0078d4`)
+- **Neutrals**: Fluent grey scale (`--grey-950: #11131a` to `--grey-50: #f7f8fa`); also aliased as `--stone-*`
+- **Background**: Clean white (`--bg: #ffffff`)
+- **Links**: Microsoft blue (`--msblue-700: #0078d4`)
+- **Brand wordmarks**: `--brand-powerbi`, `--brand-microsoft`, `--brand-fabric` CSS vars
+- **Display font**: Segoe UI (system font, no Google Fonts fetch needed)
+- **Body font**: Segoe UI (same system stack)
+- **Code font**: JetBrains Mono (Google Fonts, loaded via CSS @import in base.css)
+- **Icons**: Google Material Symbols Outlined (Google Fonts)
 
 ### Dynamic Components
 

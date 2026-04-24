@@ -25,15 +25,15 @@
 
 /* Brand word colors in tagline */
 .blog-tagline .brand-powerbi {
-    color: #B8860B;
+    color: var(--brand-powerbi);
 }
 
 .blog-tagline .brand-microsoft {
-    color: #00A4EF;
+    color: var(--brand-microsoft);
 }
 
 .blog-tagline .brand-fabric {
-    color: #008B8B;
+    color: var(--brand-fabric);
     font-style: italic;
 }
 
@@ -301,8 +301,8 @@
 /* Tag color variants */
 .tag[data-tag="Power BI"],
 .tag--powerbi {
-    background: #dbeafe;
-    color: #1e40af;
+    background: var(--powerbi-100);
+    color: var(--powerbi-700);
 }
 
 .tag[data-tag="PBIR"],
@@ -321,8 +321,8 @@
 .tag[data-tag="Fabric"],
 .tag[data-tag="Direct Lake"],
 .tag--fabric {
-    background: #cffafe;
-    color: #0e7490;
+    background: var(--fabric-100);
+    color: var(--fabric-700);
 }
 
 .tag[data-tag="DevOps"],

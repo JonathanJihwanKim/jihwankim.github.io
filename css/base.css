@@ -1,98 +1,165 @@
 /* ============================================
-   base.css — Design System: "Editorial Blueprint"
+   base.css — Design System: "Microsoft Technical"
    powerbimvp.com — Jihwan Kim
 
-   Architectural precision meets editorial warmth.
-   Signal orange on warm stone. Geometric accents.
+   Microsoft-native palette: MVP red, Power BI yellow,
+   Fabric teal, Microsoft blue on Fluent grey.
    ============================================ */
 
 /* --- Google Fonts Import --- */
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
 /* ============================================
-   CSS Custom Properties
+   CSS Custom Properties — "Microsoft Technical"
    ============================================ */
 :root {
-    /* --- Signal Orange (Primary Accent) --- */
-    --accent-700: #c2410c;
-    --accent-600: #d4500e;
-    --accent-500: #E8590C;
-    --accent-400: #f97316;
-    --accent-300: #fb923c;
-    --accent-200: #fdba74;
-    --accent-100: #fed7aa;
-    --accent-50:  #fff7ed;
+    /* COLOR — MVP Red (primary accent) */
+    --mvp-900: #5c0a0e;
+    --mvp-800: #7a0d13;
+    --mvp-700: #9e1118;
+    --mvp-600: #c31722;
+    --mvp-500: #E4222E;
+    --mvp-400: #ef4a54;
+    --mvp-300: #f37982;
+    --mvp-200: #f8aeb4;
+    --mvp-100: #fcd9dc;
+    --mvp-50:  #fef2f3;
 
-    /* --- Stone (Warm Neutrals) --- */
-    --stone-950: #1c1917;
-    --stone-900: #292524;
-    --stone-800: #44403c;
-    --stone-700: #57534e;
-    --stone-600: #78716c;
-    --stone-500: #a8a29e;
-    --stone-400: #c8c1ba;
-    --stone-300: #d6d3d1;
-    --stone-200: #e7e5e4;
-    --stone-100: #f5f5f4;
-    --stone-50:  #fafaf9;
+    /* Back-compat: --accent-* → MVP red */
+    --accent-900: var(--mvp-900);
+    --accent-800: var(--mvp-800);
+    --accent-700: var(--mvp-700);
+    --accent-600: var(--mvp-600);
+    --accent-500: var(--mvp-500);
+    --accent-400: var(--mvp-400);
+    --accent-300: var(--mvp-300);
+    --accent-200: var(--mvp-200);
+    --accent-100: var(--mvp-100);
+    --accent-50:  var(--mvp-50);
 
-    /* --- Slate Blue (Secondary — links, info) --- */
-    --blue-700: #1e40af;
-    --blue-600: #2563eb;
-    --blue-500: #3b82f6;
-    --blue-400: #60a5fa;
-    --blue-100: #dbeafe;
+    /* COLOR — Power BI Yellow */
+    --powerbi-700: #9a6a00;
+    --powerbi-600: #c28200;
+    --powerbi-500: #F2C811;
+    --powerbi-400: #f5d43a;
+    --powerbi-300: #f8e173;
+    --powerbi-200: #fbedaa;
+    --powerbi-100: #fdf6d8;
+    --powerbi-50:  #fffbea;
 
-    /* --- Semantic Colors --- */
-    --bg:             #faf9f7;
-    --bg-alt:         #f3f1ee;
+    /* COLOR — Microsoft Fabric Teal */
+    --fabric-900: #003b44;
+    --fabric-800: #004f5c;
+    --fabric-700: #006b7d;
+    --fabric-600: #00879c;
+    --fabric-500: #0ea5be;
+    --fabric-400: #33bcd4;
+    --fabric-300: #67d0e3;
+    --fabric-200: #a5e4ee;
+    --fabric-100: #d4f2f7;
+    --fabric-50:  #ecfafd;
+
+    /* COLOR — Microsoft Blue */
+    --msblue-900: #004578;
+    --msblue-800: #005a9e;
+    --msblue-700: #0078d4;
+    --msblue-600: #0091f2;
+    --msblue-500: #00A4EF;
+    --msblue-400: #40bcf7;
+    --msblue-300: #72d0fa;
+    --msblue-200: #a7e1fc;
+    --msblue-100: #d6f0fe;
+    --msblue-50:  #edf8ff;
+
+    /* Back-compat: --blue-* → Microsoft blue */
+    --blue-700: var(--msblue-700);
+    --blue-600: var(--msblue-700);
+    --blue-500: var(--msblue-500);
+    --blue-400: var(--msblue-400);
+    --blue-100: var(--msblue-100);
+
+    /* COLOR — Fluent Grey (neutrals) */
+    --grey-950: #11131a;
+    --grey-900: #1b1d26;
+    --grey-800: #2b2d36;
+    --grey-700: #424450;
+    --grey-600: #5c5f6e;
+    --grey-500: #878a99;
+    --grey-400: #b0b3be;
+    --grey-300: #ced1d9;
+    --grey-200: #e4e6eb;
+    --grey-100: #f1f2f5;
+    --grey-50:  #f7f8fa;
+
+    /* Back-compat: --stone-* → Fluent grey */
+    --stone-950: var(--grey-950);
+    --stone-900: var(--grey-900);
+    --stone-800: var(--grey-800);
+    --stone-700: var(--grey-700);
+    --stone-600: var(--grey-600);
+    --stone-500: var(--grey-500);
+    --stone-400: var(--grey-400);
+    --stone-300: var(--grey-300);
+    --stone-200: var(--grey-200);
+    --stone-100: var(--grey-100);
+    --stone-50:  var(--grey-50);
+
+    /* COLOR — Tag palette */
+    --tag-powerbi:  var(--powerbi-500);
+    --tag-pbir:     var(--mvp-500);
+    --tag-dax:      #7c3aed;
+    --tag-fabric:   var(--fabric-500);
+    --tag-devops:   #107c10;
+    --tag-tmdl:     #ca8a04;
+    --tag-default:  var(--grey-600);
+
+    /* COLOR — Brand wordmarks */
+    --brand-powerbi:   var(--powerbi-600);
+    --brand-microsoft: var(--msblue-500);
+    --brand-fabric:    var(--fabric-600);
+
+    /* COLOR — Semantic aliases */
+    --bg:             #ffffff;
+    --bg-alt:         var(--grey-50);
     --bg-elevated:    #ffffff;
     --bg-code:        #1e1e2e;
-    --text-primary:   var(--stone-900);
-    --text-secondary: var(--stone-600);
-    --text-tertiary:  var(--stone-500);
-    --text-inverse:   #fafaf9;
-    --border:         var(--stone-200);
-    --border-strong:  var(--stone-300);
-    --link:           var(--blue-600);
-    --link-hover:     var(--blue-700);
+    --text-primary:   var(--grey-900);
+    --text-secondary: var(--grey-600);
+    --text-tertiary:  var(--grey-500);
+    --text-inverse:   #ffffff;
+    --border:         var(--grey-200);
+    --border-strong:  var(--grey-300);
+    --link:           var(--msblue-700);
+    --link-hover:     var(--msblue-800);
 
-    /* --- Tag Colors (per topic) --- */
-    --tag-powerbi:    #2563eb;
-    --tag-pbir:       #E8590C;
-    --tag-dax:        #7c3aed;
-    --tag-fabric:     #0891b2;
-    --tag-devops:     #16a34a;
-    --tag-tmdl:       #ca8a04;
-    --tag-default:    var(--stone-600);
+    /* TYPE — Families */
+    --font-display: 'Segoe UI', 'Segoe UI Semibold', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    --font-body:    'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono:    'JetBrains Mono', 'Cascadia Code', 'Consolas', 'Fira Code', monospace;
 
-    /* --- Typography --- */
-    --font-display: 'DM Serif Display', Georgia, serif;
-    --font-body:    'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    /* TYPE — Size scale */
+    --text-xs:   0.75rem;
+    --text-sm:   0.875rem;
+    --text-base: 1rem;
+    --text-lg:   1.125rem;
+    --text-xl:   1.25rem;
+    --text-2xl:  1.5rem;
+    --text-3xl:  1.875rem;
+    --text-4xl:  2.25rem;
+    --text-5xl:  3rem;
 
-    --text-xs:   0.75rem;    /* 12px */
-    --text-sm:   0.875rem;   /* 14px */
-    --text-base: 1rem;       /* 16px */
-    --text-lg:   1.125rem;   /* 18px */
-    --text-xl:   1.25rem;    /* 20px */
-    --text-2xl:  1.5rem;     /* 24px */
-    --text-3xl:  1.875rem;   /* 30px */
-    --text-4xl:  2.25rem;    /* 36px */
-    --text-5xl:  3rem;       /* 48px */
-
-    --leading-tight:  1.25;
-    --leading-snug:   1.375;
-    --leading-normal: 1.5;
+    /* TYPE — Leading & tracking */
+    --leading-tight:   1.25;
+    --leading-snug:    1.375;
+    --leading-normal:  1.5;
     --leading-relaxed: 1.75;
-    --leading-loose:  2;
-
+    --leading-loose:   2;
     --tracking-tight:  -0.025em;
     --tracking-normal: 0;
     --tracking-wide:   0.025em;
     --tracking-wider:  0.05em;
 
-    /* --- Spacing --- */
+    /* SPACING — 4px base scale */
     --space-1:  0.25rem;
     --space-2:  0.5rem;
     --space-3:  0.75rem;
@@ -106,29 +173,29 @@
     --space-20: 5rem;
     --space-24: 6rem;
 
-    /* --- Layout --- */
-    --content-max:   72rem;   /* 1152px */
-    --article-max:   44rem;   /* 704px */
-    --nav-height:    4rem;    /* 64px */
+    /* LAYOUT */
+    --content-max: 72rem;
+    --article-max: 44rem;
+    --nav-height:  4rem;
 
-    /* --- Borders --- */
-    --radius-sm:  4px;
-    --radius-md:  8px;
+    /* RADII */
+    --radius-sm:   4px;
+    --radius-md:   8px;
     --radius-lg:  12px;
     --radius-xl:  16px;
     --radius-full: 9999px;
 
-    /* --- Shadows (warm-tinted) --- */
-    --shadow-sm:  0 1px 2px rgba(28, 25, 23, 0.05);
-    --shadow-md:  0 4px 6px -1px rgba(28, 25, 23, 0.07), 0 2px 4px -2px rgba(28, 25, 23, 0.05);
-    --shadow-lg:  0 10px 15px -3px rgba(28, 25, 23, 0.08), 0 4px 6px -4px rgba(28, 25, 23, 0.04);
-    --shadow-xl:  0 20px 25px -5px rgba(28, 25, 23, 0.1), 0 8px 10px -6px rgba(28, 25, 23, 0.05);
-    --shadow-card: 0 1px 3px rgba(28, 25, 23, 0.06), 0 1px 2px rgba(28, 25, 23, 0.04);
-    --shadow-card-hover: 0 10px 30px -8px rgba(28, 25, 23, 0.12), 0 4px 8px rgba(28, 25, 23, 0.04);
+    /* SHADOWS — cool-tinted (grey-950 base) */
+    --shadow-sm:         0 1px 2px rgba(17, 19, 26, 0.05);
+    --shadow-md:         0 4px 6px -1px rgba(17, 19, 26, 0.08), 0 2px 4px -2px rgba(17, 19, 26, 0.05);
+    --shadow-lg:         0 10px 15px -3px rgba(17, 19, 26, 0.09), 0 4px 6px -4px rgba(17, 19, 26, 0.04);
+    --shadow-xl:         0 20px 25px -5px rgba(17, 19, 26, 0.11), 0 8px 10px -6px rgba(17, 19, 26, 0.05);
+    --shadow-card:       0 1px 3px rgba(17, 19, 26, 0.06), 0 1px 2px rgba(17, 19, 26, 0.04);
+    --shadow-card-hover: 0 10px 30px -8px rgba(17, 19, 26, 0.13), 0 4px 8px rgba(17, 19, 26, 0.05);
 
-    /* --- Transitions --- */
-    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* MOTION */
+    --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
     --duration-fast: 150ms;
     --duration-base: 250ms;
     --duration-slow: 400ms;
