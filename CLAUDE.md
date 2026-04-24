@@ -17,6 +17,7 @@ jihwankim.github.io/
 ├── index.html              Homepage — blog listing with tag filters
 ├── about.html              Author bio, credentials, photos
 ├── tools.html              Open source tools showcase
+├── sponsors.html           Partner/sponsor page
 ├── css/
 │   ├── base.css            Design tokens, reset, typography, animations, utilities
 │   ├── layout.css          Top nav, content areas, footer, responsive breakpoints
@@ -26,10 +27,11 @@ jihwankim.github.io/
 │   ├── nav.js              Shared top navigation + footer injection
 │   ├── theme.js            Mobile menu, search overlay, keyboard shortcuts
 │   ├── blog-data.js        Posts array, rendering, search, pagination, tag filtering
+│   ├── counter.js          Visitor/reader counts via Cloudflare Workers API
 │   ├── lightbox.js         Image zoom overlay (blog posts only)
 │   ├── reading-progress.js Scroll-based reading progress bar (blog posts only)
 │   └── toc.js              Table of contents generation + scroll spy (blog posts only)
-├── posts/                  6 blog post HTML files
+├── posts/                  Blog post HTML files (10 published)
 ├── images/                 Profile images, badges, icons
 │   └── blog/<post-slug>/   Per-post images (featured images, screenshots)
 ├── CNAME                   Custom domain: powerbimvp.com
@@ -39,8 +41,8 @@ jihwankim.github.io/
 ### Shared CSS/JS Architecture
 
 All CSS and JS is in shared files. HTML pages link to them:
-- **Homepage** (`index.html`): `base.css`, `layout.css`, `components.css` + `nav.js`, `theme.js`, `blog-data.js`
-- **Blog posts** (`posts/*.html`): `base.css`, `layout.css`, `components.css`, `article.css` + `nav.js`, `theme.js`, `lightbox.js`, `reading-progress.js`, `toc.js` + Prism.js CDN
+- **Homepage** (`index.html`): `base.css`, `layout.css`, `components.css` + `nav.js`, `theme.js`, `blog-data.js`, `counter.js`
+- **Blog posts** (`posts/*.html`): `base.css`, `layout.css`, `components.css`, `article.css` + `nav.js`, `theme.js`, `lightbox.js`, `reading-progress.js`, `toc.js`, `counter.js` + Prism.js CDN
 - **About/Tools pages**: `base.css`, `layout.css`, `components.css`, `article.css` + `nav.js`, `theme.js`
 
 CSS/JS changes only need to be made in one place — the shared files.
@@ -54,40 +56,42 @@ CSS custom properties defined in `css/base.css`:
 - **Background**: Clean white (`--bg: #ffffff`)
 - **Links**: Microsoft blue (`--msblue-700: #0078d4`)
 - **Brand wordmarks**: `--brand-powerbi`, `--brand-microsoft`, `--brand-fabric` CSS vars
-- **Display font**: Segoe UI (system font, no Google Fonts fetch needed)
-- **Body font**: Segoe UI (same system stack)
-- **Code font**: JetBrains Mono (Google Fonts, loaded via CSS @import in base.css)
-- **Icons**: Google Material Symbols Outlined (Google Fonts)
+- **Display/Body font**: Segoe UI (system font, no external fetch)
+- **Code font**: JetBrains Mono (loaded via @import in `css/base.css`)
+- **Icons**: Google Material Symbols Outlined (loaded via @import in `css/base.css`)
 
 ### Dynamic Components
 
-- **nav.js**: Injects the top navigation header and footer into `#site-header` and `#site-footer` on all pages. Detects `/posts/` path to set correct relative paths.
-- **blog-data.js**: Contains the posts array with metadata. Renders post cards, handles tag filtering (`?tag=PBIR`), search (`?search=query`), and pagination on the homepage.
-- **toc.js**: Auto-generates table of contents from h2 elements in `.article-content`. Desktop sidebar + mobile dropdown.
+- **nav.js**: Injects the top navigation header and footer into `#site-header` and `#site-footer` on all pages. Detects `/posts/` path to set correct relative paths (`../` prefix). Also injects sidebar sponsor widgets on blog posts and a floating sponsor pill on the homepage. Exposes `window.sponsors` globally.
+- **blog-data.js**: Contains the `posts` array with metadata. Renders post cards, handles tag filtering (`?tag=PBIR`), search (`?search=query`), and pagination on the homepage. Exposes `window.blogPosts` for `theme.js` search. Injects a partner card after the 3rd post on page 1.
+- **counter.js**: Records page visits and fetches counts from `https://powerbimvp-counter.jonathan-jihwankim.workers.dev`. Uses `sessionStorage` to prevent double-counting. Homepage fetches total site visits + per-post reader counts; blog posts fetch that post's reader count.
+- **toc.js**: Auto-generates table of contents from h2 elements in `.article-content`. Desktop sidebar + mobile dropdown with scroll-spy highlighting.
 
 ### Content-Security-Policy
 
-- **Homepage, About, Tools**: `script-src 'self' 'unsafe-inline'`; no external CDN
+- **Homepage, About, Tools**: `script-src 'self' 'unsafe-inline'`; no external CDN scripts
 - **Blog posts**: Additionally allow `https://cdnjs.cloudflare.com` for Prism.js syntax highlighting
+
+When adding any new external resource (script, stylesheet, font), update the CSP meta tag in the affected HTML files.
 
 ### External Dependencies (CDN only)
 
-- Google Fonts: DM Serif Display, IBM Plex Sans, JetBrains Mono, Material Symbols Outlined (loaded via @import in base.css)
-- Prism.js 1.29.0 with `prism-tomorrow` theme for syntax highlighting (blog posts only) — includes JSON, Bash, and SQL language components
+- Google Fonts: JetBrains Mono, Material Symbols Outlined (loaded via @import in `css/base.css`)
+- Prism.js 1.29.0 with `prism-tomorrow` theme (blog posts only) — includes JSON, Bash, and SQL language components, loaded from `https://cdnjs.cloudflare.com`
 
 ## Deployment
 
 Push to `main` branch deploys automatically via GitHub Pages. No build step required.
 
-```
+```bash
 git add <files> && git commit -m "message" && git push origin main
 ```
 
 ## Development
 
-Open `index.html` directly in a browser or use any local HTTP server:
-```
-npx serve .
+Run a local HTTP server (direct file:// open won't work due to CSP and relative paths):
+```bash
+npx http-server . -p 8080 -c-1
 # or
 python -m http.server 8000
 ```
@@ -96,14 +100,15 @@ python -m http.server 8000
 
 1. Create `posts/<slug>.html` — copy an existing post as template
 2. Add post images to `images/blog/<slug>/`
-3. Add the post entry to the `posts` array in `js/blog-data.js` with: `id`, `title`, `preview`, `date`, `sortDate`, `tags`, `url`, `featuredImage`, `readingTime`, `difficulty`
+3. Add the post entry to the `posts` array at the top of `js/blog-data.js` (newest first) with: `id`, `title`, `preview`, `date`, `sortDate`, `tags`, `url`, `featuredImage`, `readingTime`, `difficulty`
 4. Update prev/next navigation links in the new post and the previously-newest post
 5. Set OG/Twitter meta tags in the new post's `<head>`
 6. Update the Content-Security-Policy meta tag if loading new external resources
 
 ## Working with This Codebase
 
-- CSS changes go in the shared `css/` files — no need to edit individual HTML pages
+- CSS changes go in the shared `css/` files — no page-specific stylesheets exist
 - JS changes go in the shared `js/` files
 - For blog post content changes, edit the specific `posts/*.html` file
+- All JS files use the IIFE pattern; they don't import each other (nav.js exposes globals via `window.*`)
 - Windows environment: use `rm` not `del` in Bash (git bash shell)
