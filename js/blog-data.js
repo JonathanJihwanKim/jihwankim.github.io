@@ -8,6 +8,18 @@
     // Blog posts data — newest first
     var posts = [
         {
+            id: 11,
+            title: "INFO.USERDEFINEDFUNCTIONS and the isHidden Gap in DAX UDF Governance",
+            preview: "Running INFO.USERDEFINEDFUNCTIONS against my Contoso model surfaced one metadata column I wasn't expecting. Setting isHidden in TMDL updated the metadata but didn't actually hide the function — a documented preview limitation that reframes how DAX UDFs are governable today.",
+            date: "April 26, 2026",
+            sortDate: "2026-04-26",
+            tags: ["DAX", "Power BI", "TMDL", "DevOps"],
+            url: "posts/info-userdefinedfunctions-ishidden-preview-gap.html",
+            featuredImage: "images/blog/info-userdefinedfunctions-ishidden-preview-gap/featured.png",
+            readingTime: "6 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 10,
             title: "Prep Data for AI: Why Semantic Model Quality Is Now an AI Problem",
             preview: "Preparing the Contoso sales model for Copilot revealed that AI answer quality is a direct reflection of semantic model quality. A walkthrough of the Prep data for AI features, AI instructions, and the Copilot failure that made the point concrete.",

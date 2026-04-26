@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Running INFO.USERDEFINEDFUNCTIONS against my Contoso model surfaced one metadata column I wasn't expecting, and following that column led to a documented preview limitation that reframed what DAX UDFs can and can't do today.">
+    <meta name="keywords" content="DAX, Power BI, INFO.USERDEFINEDFUNCTIONS, UDF, isHidden, TMDL, DevOps, Microsoft Fabric, Semantic Model">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="INFO.USERDEFINEDFUNCTIONS and the isHidden Gap in DAX UDF Governance | Jihwan Kim">
+    <meta property="og:description" content="Running INFO.USERDEFINEDFUNCTIONS against my Contoso model surfaced one metadata column I wasn't expecting, and following that column led to a documented preview limitation.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/info-userdefinedfunctions-ishidden-preview-gap.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/info-userdefinedfunctions-ishidden-preview-gap/featured.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/info-userdefinedfunctions-ishidden-preview-gap/featured.png">
+
+    <title>INFO.USERDEFINEDFUNCTIONS and the isHidden Gap in DAX UDF Governance | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 6 min read</span>
+                </div>
+                <h1 class="article-title">INFO.USERDEFINEDFUNCTIONS and the isHidden Gap in DAX UDF Governance</h1>
+                <div class="article-meta">
+                    <time datetime="2026-04-26">
+                        <span class="material-symbols-outlined">calendar_month</span> April 26, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="DAX">DAX</span>
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="TMDL">TMDL</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started Apr. 26, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/info-userdefinedfunctions-ishidden-preview-gap/featured.png" alt="INFO.USERDEFINEDFUNCTIONS and DAX UDF governance featured image">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how running <a href="https://learn.microsoft.com/en-us/dax/info-userdefinedfunctions-function-dax?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener"><code>INFO.USERDEFINEDFUNCTIONS</code></a> against my Contoso semantic model surfaced one small metadata column I wasn't expecting, and how following that single column led me to a documented preview limitation I hadn't read about before.</p>
+
+                <p>I didn't expect a routine introspection query to teach me about UDF governance. My plan was simple: I had three DAX user-defined functions sitting in my model, and I wanted to see how the new INFO function would describe them. Instead, I ran an experiment that didn't behave the way I assumed it would, and then opened the Microsoft Learn documentation to figure out why.</p>
+
+                <h2>1. The Moment Curiosity Turned Into a Query</h2>
+
+                <p>Three UDFs lived in my Contoso semantic model. <code>TotalOf</code> accepts a column reference and returns its sum. <code>LabelMeasure</code> accepts a measure reference and returns a labelled string of its value. <code>DescribeColumn</code> accepts a column reference and returns a single-row table with the column name, its home table, distinct count, and blank count. It can only return a table, never a scalar. All three lean on the new <code>NAMEOF</code> and <code>TABLEOF</code> functions to introspect their own arguments.</p>
+
+                <img src="../images/blog/info-userdefinedfunctions-ishidden-preview-gap/tmdl-functions-node.png" alt="TMDL view in Power BI Desktop showing three user-defined functions (DescribeColumn, LabelMeasure, TotalOf) listed under the Functions node in Model explorer">
+
+                <p>The TMDL view groups them under a <code>Functions (3)</code> node in Model explorer, peers of measures and tables in the model tree. That positioning alone was already a small shift in how I thought about UDFs. They weren't query helpers anymore. They were model objects.</p>
+
+                <p>The natural next step was to point the new INFO function at them.</p>
+
+<pre><code class="language-sql">EVALUATE INFO.USERDEFINEDFUNCTIONS()</code></pre>
+
+                <h2>2. The First Surprise: A Column I Wasn't Expecting</h2>
+
+                <img src="../images/blog/info-userdefinedfunctions-ishidden-preview-gap/info-userdefinedfunctions-result.png" alt="DAX query view result of EVALUATE INFO.USERDEFINEDFUNCTIONS showing three rows for TotalOf, LabelMeasure, and DescribeColumn with full metadata columns including ID, ModelID, Name, Description, Expression, IsHidden, State, ErrorMessage, ModifiedTime">
+
+                <p>The result returned the columns I expected: <code>[ID]</code>, <code>[Name]</code>, <code>[Description]</code>, <code>[Expression]</code>, plus modification timestamps and lineage tags. But there was one column I hadn't anticipated. <code>[IsHidden]</code> sat right between <code>[Expression]</code> and <code>[State]</code>, and every row showed <code>False</code>.</p>
+
+                <p>Here is the first aha moment that reshaped my understanding: <strong>UDFs now expose the same governance metadata surface as measures, columns, and tables.</strong> I had assumed UDFs were function-flavored objects that lived alongside the model, and that visibility was something only fields and measures cared about. The column proved otherwise.</p>
+
+                <p>I wanted to see how closely measures and UDFs aligned in this introspection layer, so I unioned their results:</p>
+
+<pre><code class="language-sql">EVALUATE
+UNION (
+    SELECTCOLUMNS ( INFO.MEASURES(),             "Kind", "Measure", "Name", [Name], "Description", [Description] ),
+    SELECTCOLUMNS ( INFO.USERDEFINEDFUNCTIONS(), "Kind", "UDF",     "Name", [Name], "Description", [Description] )
+)</code></pre>
+
+                <img src="../images/blog/info-userdefinedfunctions-ishidden-preview-gap/info-measures-udfs-union.png" alt="DAX query view showing UNION of INFO.MEASURES and INFO.USERDEFINEDFUNCTIONS, with 17 measures and 3 UDFs distinguishable only by a Kind column">
+
+                <p>Seventeen measures and three UDFs landed in one result set, distinguishable only by a <code>[Kind]</code> column. The introspection layer treats them as siblings.</p>
+
+                <p>A cleaner curated view followed, focused on just the columns most useful for documentation work:</p>
+
+                <img src="../images/blog/info-userdefinedfunctions-ishidden-preview-gap/info-userdefinedfunctions-curated.png" alt="DAX query view showing SELECTCOLUMNS of INFO.USERDEFINEDFUNCTIONS with curated Name, Description, Expression columns ordered by Name">
+
+                <h2>3. Setting isHidden and Watching Nothing Happen</h2>
+
+                <p>If <code>[IsHidden]</code> was returning <code>False</code> for every UDF, the obvious experiment was to flip one to <code>True</code> and see what changed. I opened the TMDL view, added the <code>isHidden</code> flag under the <code>DescribeColumn</code> function declaration, and clicked Apply.</p>
+
+                <img src="../images/blog/info-userdefinedfunctions-ishidden-preview-gap/tmdl-ishidden-flag.png" alt="TMDL view with the DescribeColumn function showing the isHidden flag added on its own line beneath the function declaration">
+
+                <p>The flag form (just <code>isHidden</code>, no explicit value) is TMDL shorthand for <code>isHidden: true</code>. After applying, I went looking for the result.</p>
+
+                <p>The Functions list in Model explorer still showed <code>DescribeColumn</code>. IntelliSense in the formula bar still suggested it the moment I typed <code>Describe</code> while authoring a new measure.</p>
+
+                <img src="../images/blog/info-userdefinedfunctions-ishidden-preview-gap/intellisense-describecolumn.png" alt="Power BI Desktop measure formula bar showing IntelliSense popup suggesting DescribeColumn after typing 'test = des', proving the hidden UDF still appears in suggestions">
+
+                <p>The popup proposed <code>DescribeColumn</code> as freely as before. Even the DAX query view's autocomplete brought it up without hesitation.</p>
+
+                <p>I re-ran <code>INFO.USERDEFINEDFUNCTIONS</code>, this time filtered to the one row I had just changed:</p>
+
+<pre><code class="language-sql">EVALUATE
+FILTER (
+    INFO.USERDEFINEDFUNCTIONS(),
+    [Name] = "DescribeColumn"
+)</code></pre>
+
+                <img src="../images/blog/info-userdefinedfunctions-ishidden-preview-gap/filter-info-udf-ishidden-true.png" alt="DAX query view showing FILTER of INFO.USERDEFINEDFUNCTIONS for DescribeColumn with the IsHidden column highlighted showing True">
+
+                <p>The <code>[IsHidden]</code> column for <code>DescribeColumn</code> did update to <code>True</code>. So the metadata had been saved. The TMDL property was being persisted, and the introspection function was reading it back faithfully. But nothing else seemed to care.</p>
+
+                <p>This was the second aha moment. <strong>Setting isHidden updates the metadata, but doesn't actually hide the function.</strong> The TMDL stores the property. The engine returns it through the INFO function. The runtime and UI haven't been wired to honor it yet.</p>
+
+                <h2>4. What the Documentation Actually Says</h2>
+
+                <p>I opened the Microsoft Learn page on <a href="https://learn.microsoft.com/en-us/dax/best-practices/dax-user-defined-functions?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">DAX user-defined functions</a> and scrolled down to the <strong>Considerations and limitations</strong> section. Under its <strong>General</strong> subsection, alongside the other current preview restrictions, the documentation calls out that hiding or unhiding a UDF in the model is not currently supported.</p>
+
+                <p>That single line explained the entire experiment. Power BI is treating UDF hiding as a property the model can record but the runtime intentionally doesn't honor yet. The metadata is forward-compatible, ready for the day governance enforcement lands. For now, the property is a placeholder waiting for its runtime to catch up.</p>
+
+                <h2>5. From a DevOps Standpoint, This Is Foundational</h2>
+
+                <h3>Version Control</h3>
+
+                <p>Because TMDL persists <code>isHidden</code> on a UDF even though the UI ignores it, the property survives every commit into <code>definition/functions.tmdl</code> of a <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Power BI Project</a>.</p>
+
+                <img src="../images/blog/info-userdefinedfunctions-ishidden-preview-gap/vscode-functions-tmdl.png" alt="VS Code Explorer showing the import_contoso_sales.SemanticModel folder structure with definition/functions.tmdl highlighted, alongside other model definition files like database.tmdl, expressions.tmdl, model.tmdl, and relationships.tmdl">
+
+                <p>When the runtime starts honoring the property, models that already declared their intent will simply start behaving correctly without a TMDL migration. Recording governance intent today protects future-you.</p>
+
+                <h3>Code Review</h3>
+
+                <p>Reviewers can enforce hiding conventions on UDFs in pull requests today. The text is already in the diff. The fact that Desktop won't act on it yet doesn't stop a team from agreeing that helper UDFs ship with <code>isHidden: true</code>, and that a missing property fails review.</p>
+
+                <h3>Validation</h3>
+
+                <p>External tooling that scans TMDL or queries <code>INFO.USERDEFINEDFUNCTIONS</code> can already build governance reports that flag UDFs intended to be hidden but still discoverable. The introspection layer makes that scan possible. This is exactly the surface my PBIP Documenter work has been operating on for measures and columns, now extended to UDFs.</p>
+
+                <h3>Documentation</h3>
+
+                <p>Self-documenting tools that consume the INFO output can render hidden UDFs differently from public ones the moment teams decide to mark them, regardless of whether Desktop honors the property. Documentation systems get to be ahead of the runtime.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>This experience left me with a new mental model: <strong>DAX UDFs have arrived as introspectable model objects, but they haven't yet arrived as governable ones.</strong> The metadata is there. The introspection function returns it. TMDL persists it. The moment you try to act on a property like <code>isHidden</code>, the gap shows up.</p>
+
+                <p>That gap is a useful one to know about. It tells me where DAX UDFs are in their lifecycle, and it tells me where to invest tooling effort while the runtime catches up.</p>
+
+                <p>I hope this inspires you to run <code>INFO.USERDEFINEDFUNCTIONS</code> against your own models and pay attention to which columns surprise you.</p>
+
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="DAX">DAX</span>
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="TMDL">TMDL</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: PBIP Impact Analyzer, PBIR Visual Manager, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="prep-data-for-ai-semantic-model-quality.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">Prep Data for AI: Why Semantic Model Quality Is Now an AI Problem</span>
+                </a>
+                <div></div>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-rHwBHAxVvWblRZOkJc6/fI+iHFQjWFFGPA6COtU+nGANyEshLN8k+5+rBFFKKDE+UZsEmLoGvcC4hT/xfAtxOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-35RBtvuCKWANuRid6RXP2gYm4D5RMieVLfsMSzPu0Ry0jJFOqGcgJ/MXbSeRso89H12VqAjSH7RLx3tZnQIYGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>
