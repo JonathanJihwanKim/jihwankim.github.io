@@ -90,25 +90,25 @@
             <img class="featured-image" src="../images/blog/pbip-lineage-explorer/featured.png" alt="Tracing Power BI Visuals Back to Source">
 
             <div class="article-content">
-                <p>In this writing, I want to share how a question I keep hearing from colleagues &mdash; <em>&ldquo;What measure is behind this visual, and where does the data actually come from?&rdquo;</em> &mdash; led me to build an open-source tool that traces <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Power BI project</a> visuals all the way back to their source tables.</p>
+                <p>In this writing, I want to share how a question I keep hearing from colleagues, <em>"What measure is behind this visual, and where does the data actually come from?"</em>, led me to build an open-source tool that traces <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Power BI project</a> visuals all the way back to their source tables.</p>
 
-                <p>I didn&rsquo;t expect a routine conversation about a bar chart to become a story about data lineage at scale. The question was simple. The answer &mdash; when done manually &mdash; was not. That gap between a simple question and a painful answer is the reason <a href="https://github.com/JonathanJihwanKim/pbip-lineage-explorer" target="_blank" rel="noopener">PBIP Lineage Explorer</a> exists.</p>
+                <p>I didn't expect a routine conversation about a bar chart to become a story about data lineage at scale. The question was simple. The answer, when done manually, was not. That gap between a simple question and a painful answer is the reason <a href="https://github.com/JonathanJihwanKim/pbip-lineage-explorer" target="_blank" rel="noopener">PBIP Lineage Explorer</a> exists.</p>
 
                 <h2>1. The Question That Keeps Coming Back</h2>
 
-                <p>A colleague pointed at a bar chart in a Power BI report and asked: <em>&ldquo;What measure is showing in this visual? How is the DAX written? What are the actual names of the columns and tables from the source? Did you rename anything on the Power BI side?&rdquo;</em> And then the real question: <em>&ldquo;How can data engineers trace this back to the source tables and columns that they built themselves?&rdquo;</em></p>
+                <p>A colleague pointed at a bar chart in a Power BI report and asked: <em>"What measure is showing in this visual? How is the DAX written? What are the actual names of the columns and tables from the source? Did you rename anything on the Power BI side?"</em> And then the real question: <em>"How can data engineers trace this back to the source tables and columns that they built themselves?"</em></p>
 
-                <p>This wasn&rsquo;t the first time I heard these questions. Data engineers need to validate that the numbers in a Power BI report match what they expect from the source system they built. BI developers need to understand how measures are constructed before modifying them. Managers need to know that governance requirements are met and that lineage is documented.</p>
+                <p>This wasn't the first time I heard these questions. Data engineers need to validate that the numbers in a Power BI report match what they expect from the source system they built. BI developers need to understand how measures are constructed before modifying them. Managers need to know that governance requirements are met and that lineage is documented.</p>
 
                 <p>Every role has a legitimate reason to ask. And every time, answering means manually digging through files.</p>
 
                 <h2>2. The Manual Trace: From Visual JSON to Source Table</h2>
 
-                <p>To show what this manual process looks like, I&rsquo;ll walk through a concrete example using a Contoso sample report saved in <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-report?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">PBIP/PBIR format</a>. The report has a bar chart showing <strong>Total Sales by Gender</strong>. The question is straightforward: <em>what measure drives this visual, how is it calculated, and where does the data come from?</em></p>
+                <p>To show what this manual process looks like, I'll walk through a concrete example using a Contoso sample report saved in <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-report?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">PBIP/PBIR format</a>. The report has a bar chart showing <strong>Total Sales by Gender</strong>. The question is straightforward: <em>what measure drives this visual, how is it calculated, and where does the data come from?</em></p>
 
                 <h3>Step 1: Open the visual JSON</h3>
 
-                <p>Every visual in a PBIR report is stored as a <code>visual.json</code> file inside a folder named with the visual&rsquo;s ID. Here is what the bar chart&rsquo;s visual JSON looks like (simplified for readability):</p>
+                <p>Every visual in a PBIR report is stored as a <code>visual.json</code> file inside a folder named with the visual's ID. Here is what the bar chart's visual JSON looks like (simplified for readability):</p>
 
 <pre><code class="language-json">{
   "visual": {
@@ -164,7 +164,7 @@ column UnitPrice
     dataType: double
     sourceColumn: UnitPrice</code></pre>
 
-                <p>The <code>sourceColumn</code> property tells me the Power BI column name matches the source column name &mdash; no renaming happened here. But in many real-world projects, Power Query transformations rename columns, and the names in the semantic model no longer match the source. That&rsquo;s when traceability breaks.</p>
+                <p>The <code>sourceColumn</code> property tells me the Power BI column name matches the source column name: no renaming happened here. But in many real-world projects, Power Query transformations rename columns, and the names in the semantic model no longer match the source. That's when traceability breaks.</p>
 
                 <p>To confirm the actual data source, I look at the partition definition in the same file:</p>
 
@@ -182,7 +182,7 @@ column UnitPrice
 
                 <p>The data comes from <code>dbo.sales</code> in a Fabric Lakehouse called <code>Lakehouse_Contoso</code>. Now the data engineer has the full chain: the bar chart shows <code>Total Sales</code>, which multiplies <code>sales[Quantity] * sales[UnitPrice]</code>, and both columns come from <code>dbo.sales</code> in the lakehouse.</p>
 
-                <p><em>That&rsquo;s three files opened, three mental hops, and we traced exactly one measure in one visual.</em></p>
+                <p><em>That's three files opened, three mental hops, and we traced exactly one measure in one visual.</em></p>
 
                 <h3>Step 4: Check relationships</h3>
 
@@ -210,71 +210,71 @@ column UnitPrice
 measure 'Number of Customers' = DISTINCTCOUNT(sales[CustomerKey])
 measure 'Total Sales' = SUMX(sales, sales[Quantity] * sales[UnitPrice])</code></pre>
 
-                <p>And each column referenced &mdash; <code>OrderKey</code>, <code>CustomerKey</code>, <code>Quantity</code>, <code>UnitPrice</code>, <code>CountryName</code>, <code>State</code>, <code>Brand</code> &mdash; lives in a different TMDL file with its own source mapping and relationship chain.</p>
+                <p>And each column referenced (<code>OrderKey</code>, <code>CustomerKey</code>, <code>Quantity</code>, <code>UnitPrice</code>, <code>CountryName</code>, <code>State</code>, <code>Brand</code>) lives in a different TMDL file with its own source mapping and relationship chain.</p>
 
-                <p>To fully answer <em>&ldquo;what does this pivot table show and where does the data come from?&rdquo;</em>, I would need to open at least six TMDL files: <code>Measure.tmdl</code>, <code>Internal Measures.tmdl</code>, <code>sales.tmdl</code>, <code>store.tmdl</code>, <code>product.tmdl</code>, and <code>relationships.tmdl</code>.</p>
+                <p>To fully answer <em>"what does this pivot table show and where does the data come from?"</em>, I would need to open at least six TMDL files: <code>Measure.tmdl</code>, <code>Internal Measures.tmdl</code>, <code>sales.tmdl</code>, <code>store.tmdl</code>, <code>product.tmdl</code>, and <code>relationships.tmdl</code>.</p>
 
-                <p>A real enterprise report doesn&rsquo;t have two pages with eleven visuals. It has dozens of pages with hundreds of visuals. Multiply that across an organization with hundreds of reports.</p>
+                <p>A real enterprise report doesn't have two pages with eleven visuals. It has dozens of pages with hundreds of visuals. Multiply that across an organization with hundreds of reports.</p>
 
-                <p>The manual approach doesn&rsquo;t scale.</p>
+                <p>The manual approach doesn't scale.</p>
 
                 <h2>4. This Happens Everywhere</h2>
 
                 <p>This is not a hypothetical problem. Every organization with a mature Power BI deployment runs into this friction, and it manifests in several ways.</p>
 
-                <p><strong>Data engineers can&rsquo;t verify data quality</strong> without knowing exactly which source columns feed which visuals. When a number looks wrong in a dashboard, the first question is always <em>&ldquo;what column is this actually reading from?&rdquo;</em> If the answer requires manually tracing through three layers of files, the verification doesn&rsquo;t happen &mdash; or it happens too slowly.</p>
+                <p><strong>Data engineers can't verify data quality</strong> without knowing exactly which source columns feed which visuals. When a number looks wrong in a dashboard, the first question is always <em>"what column is this actually reading from?"</em> If the answer requires manually tracing through three layers of files, the verification doesn't happen, or it happens too slowly.</p>
 
                 <p><strong>Column renames in Power Query break the traceability chain.</strong> A column called <code>CustKey</code> in the source might become <code>CustomerKey</code> in Power Query and <code>Customer ID</code> in the semantic model. Without a tool that tracks the rename chain, the connection between the visual and the source is invisible.</p>
 
                 <p><strong>Impact analysis for source schema changes is nearly impossible manually.</strong> When a data engineer needs to rename a column in the source database, they need to know which Power BI reports will break. Answering that question manually means opening every report, tracing every visual, and checking every TMDL file. Most teams skip this step entirely and discover the breakage in production.</p>
 
-                <p><strong>Governance and compliance require documented lineage.</strong> Auditors and data governance teams increasingly ask: <em>&ldquo;Can you show me the complete path from this dashboard number to its source?&rdquo;</em> If the answer is <em>&ldquo;I can, but it takes me an hour per visual,&rdquo;</em> that&rsquo;s not a sustainable governance posture.</p>
+                <p><strong>Governance and compliance require documented lineage.</strong> Auditors and data governance teams increasingly ask: <em>"Can you show me the complete path from this dashboard number to its source?"</em> If the answer is <em>"I can, but it takes me an hour per visual,"</em> that's not a sustainable governance posture.</p>
 
-                <p>Here&rsquo;s the first <em>aha</em> moment that shaped this project: <strong>the information needed to trace lineage already exists in PBIP files &mdash; it&rsquo;s just scattered across dozens of JSON and TMDL files that no human can navigate efficiently at scale.</strong></p>
+                <p>Here's the first <em>aha</em> moment that shaped this project: <strong>the information needed to trace lineage already exists in PBIP files; it's just scattered across dozens of JSON and TMDL files that no human can navigate efficiently at scale.</strong></p>
 
                 <h2>5. The Solution: PBIP Lineage Explorer</h2>
 
-                <p>This gap between <em>&ldquo;the information exists&rdquo;</em> and <em>&ldquo;no one can find it fast enough&rdquo;</em> is why I built <a href="https://github.com/JonathanJihwanKim/pbip-lineage-explorer" target="_blank" rel="noopener"><strong>PBIP Lineage Explorer</strong></a>. It&rsquo;s a browser-based application that parses your entire PBIP project &mdash; both the report folder and the semantic model folder &mdash; and builds an interactive dependency graph. The same trace that took me three files and four mental hops in Section 2 happens in a single click.</p>
+                <p>This gap between <em>"the information exists"</em> and <em>"no one can find it fast enough"</em> is why I built <a href="https://github.com/JonathanJihwanKim/pbip-lineage-explorer" target="_blank" rel="noopener"><strong>PBIP Lineage Explorer</strong></a>. It's a browser-based application that parses your entire PBIP project, both the report folder and the semantic model folder, and builds an interactive dependency graph. The same trace that took me three files and four mental hops in Section 2 happens in a single click.</p>
 
                 <h3>Visual-to-source tracing</h3>
 
-                <p>Click any visual in the tool, and it shows the complete reference chain: which measures the visual uses, how each measure is written in DAX, which columns those measures reference, which tables those columns belong to, and what the source connection looks like. The full path from visual to source &mdash; the same path I walked manually through <code>visual.json</code>, <code>Internal Measures.tmdl</code>, and <code>sales.tmdl</code> &mdash; is rendered as an interactive dependency tree.</p>
+                <p>Click any visual in the tool, and it shows the complete reference chain: which measures the visual uses, how each measure is written in DAX, which columns those measures reference, which tables those columns belong to, and what the source connection looks like. The full path from visual to source, the same path I walked manually through <code>visual.json</code>, <code>Internal Measures.tmdl</code>, and <code>sales.tmdl</code>, is rendered as an interactive dependency tree.</p>
 
                 <h3>DAX syntax highlighting</h3>
 
-                <p>Every measure definition is displayed with syntax highlighting, and all referenced measures and columns are identified. When a measure like <code>Total Sales</code> references <code>sales[Quantity]</code> and <code>sales[UnitPrice]</code>, the tool doesn&rsquo;t just show the DAX &mdash; it links each reference to the actual column definition in the semantic model.</p>
+                <p>Every measure definition is displayed with syntax highlighting, and all referenced measures and columns are identified. When a measure like <code>Total Sales</code> references <code>sales[Quantity]</code> and <code>sales[UnitPrice]</code>, the tool doesn't just show the DAX; it links each reference to the actual column definition in the semantic model.</p>
 
                 <h3>Source column mapping with rename chain</h3>
 
-                <p>This is where the tool addresses the column renaming problem. The source column mapping can be exported as a CSV file that shows the complete rename chain &mdash; from the original source column name through any Power Query transformations to the final semantic model column name. When a data engineer asks <em>&ldquo;did you rename my columns?&rdquo;</em>, the CSV provides a definitive answer.</p>
+                <p>This is where the tool addresses the column renaming problem. The source column mapping can be exported as a CSV file that shows the complete rename chain: from the original source column name through any Power Query transformations to the final semantic model column name. When a data engineer asks <em>"did you rename my columns?"</em>, the CSV provides a definitive answer.</p>
 
                 <h3>Impact analysis</h3>
 
-                <p>The question <em>&ldquo;what breaks if I rename <code>dbo.sales.Quantity</code>?&rdquo;</em> is answered instantly. The tool shows every measure that references <code>sales[Quantity]</code>, every visual that uses those measures, and every other column or relationship in the dependency chain. This is the what-if analysis that teams skip because doing it manually takes hours.</p>
+                <p>The question <em>"what breaks if I rename <code>dbo.sales.Quantity</code>?"</em> is answered instantly. The tool shows every measure that references <code>sales[Quantity]</code>, every visual that uses those measures, and every other column or relationship in the dependency chain. This is the what-if analysis that teams skip because doing it manually takes hours.</p>
 
                 <h3>Page layout minimap</h3>
 
-                <p>The tool renders all report visuals positioned as they appear in Power BI, giving a spatial overview of the report layout. Clicking any visual in the minimap jumps to its dependency tree. This makes it easy to answer <em>&ldquo;what does page 2 show and where does it all come from?&rdquo;</em> without opening Power BI Desktop.</p>
+                <p>The tool renders all report visuals positioned as they appear in Power BI, giving a spatial overview of the report layout. Clicking any visual in the minimap jumps to its dependency tree. This makes it easy to answer <em>"what does page 2 show and where does it all come from?"</em> without opening Power BI Desktop.</p>
 
                 <h3>Orphan detection</h3>
 
-                <p>Over time, semantic models accumulate measures that are no longer used by any visual. The tool automatically identifies these orphaned measures. This is a cleanup opportunity &mdash; every unused measure is technical debt that slows model processing and confuses anyone trying to understand the model.</p>
+                <p>Over time, semantic models accumulate measures that are no longer used by any visual. The tool automatically identifies these orphaned measures. This is a cleanup opportunity: every unused measure is technical debt that slows model processing and confuses anyone trying to understand the model.</p>
 
                 <h3>Advanced pattern recognition</h3>
 
-                <p>The tool detects <a href="https://learn.microsoft.com/en-us/power-bi/create-reports/power-bi-field-parameters?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">field parameters</a> and <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/calculation-groups?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">calculation groups</a> &mdash; two features that are notoriously difficult to trace because, as I wrote in a <a href="pbir-json-hidden-gaps-field-parameters.html">previous post</a>, the visual JSON only captures the last saved state, not the full configuration.</p>
+                <p>The tool detects <a href="https://learn.microsoft.com/en-us/power-bi/create-reports/power-bi-field-parameters?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">field parameters</a> and <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/calculation-groups?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">calculation groups</a>, two features that are notoriously difficult to trace because, as I wrote in a <a href="pbir-json-hidden-gaps-field-parameters.html">previous post</a>, the visual JSON only captures the last saved state, not the full configuration.</p>
 
                 <h3>100% client-side processing</h3>
 
                 <p>No data is uploaded to any server. The tool runs entirely in your browser using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API" target="_blank" rel="noopener">File System Access API</a> (Chrome 86+ or Edge 86+). You open your local PBIP folder, and all parsing happens on your machine. For enterprise teams working with sensitive data, this is non-negotiable.</p>
 
-                <p><em>This was the aha moment</em> that validated the entire project: <strong>the tool doesn&rsquo;t invent lineage information &mdash; it reads what PBIP files already contain and presents it in a way that humans can actually navigate.</strong></p>
+                <p><em>This was the aha moment</em> that validated the entire project: <strong>the tool doesn't invent lineage information; it reads what PBIP files already contain and presents it in a way that humans can actually navigate.</strong></p>
 
                 <h2>6. What This Means Beyond Individual Productivity</h2>
 
                 <p>For managers and team leads, the implications go beyond saving time for individual developers.</p>
 
-                <p><strong>Data governance and audit trails.</strong> When an auditor asks for lineage documentation, the tool&rsquo;s CSV export provides a complete, machine-readable mapping from visual to source. This turns a multi-day documentation exercise into a minutes-long export.</p>
+                <p><strong>Data governance and audit trails.</strong> When an auditor asks for lineage documentation, the tool's CSV export provides a complete, machine-readable mapping from visual to source. This turns a multi-day documentation exercise into a minutes-long export.</p>
 
                 <p><strong>Faster onboarding.</strong> New team members joining a project can explore the dependency graph to understand how the report is wired together, without needing someone to walk them through it file by file. The visual minimap gives spatial context; the dependency trees give technical depth.</p>
 
@@ -294,13 +294,13 @@ measure 'Total Sales' = SUMX(sales, sales[Quantity] * sales[UnitPrice])</code></
 
                 <h2>Reflection</h2>
 
-                <p>This experience left me with a new mental model: <strong>data lineage in Power BI is not a missing capability &mdash; it&rsquo;s a navigation problem.</strong> The PBIP format already contains everything needed to trace a visual back to its source. The challenge was never the information; it was the effort required to connect the dots across scattered files.</p>
+                <p>This experience left me with a new mental model: <strong>data lineage in Power BI is not a missing capability; it's a navigation problem.</strong> The PBIP format already contains everything needed to trace a visual back to its source. The challenge was never the information; it was the effort required to connect the dots across scattered files.</p>
 
-                <p>The journey from <em>&ldquo;what measure is behind this visual?&rdquo;</em> to building an open-source lineage explorer reinforced something I keep discovering: <strong>when you treat Power BI artifacts as code, problems that seem unsolvable with the UI become straightforward with the right tooling.</strong></p>
+                <p>The journey from <em>"what measure is behind this visual?"</em> to building an open-source lineage explorer reinforced something I keep discovering: <strong>when you treat Power BI artifacts as code, problems that seem unsolvable with the UI become straightforward with the right tooling.</strong></p>
 
                 <p>PBIP Lineage Explorer is free, open source, and available at <a href="https://github.com/JonathanJihwanKim/pbip-lineage-explorer" target="_blank" rel="noopener">github.com/JonathanJihwanKim/pbip-lineage-explorer</a>.</p>
 
-                <p>I hope this helps having fun in exploring data lineage and embracing this new era of understanding Power BI reports as code &mdash; from the visual all the way back to the source!</p>
+                <p>I hope this helps having fun in exploring data lineage and embracing this new era of understanding Power BI reports as code, from the visual all the way back to the source!</p>
             </div>
 
             <div class="article-tags-section">

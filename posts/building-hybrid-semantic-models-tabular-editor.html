@@ -85,9 +85,9 @@
             <img class="featured-image" src="../images/blog/hybrid-semantic-models/featured.png" alt="Building Hybrid Semantic Models with Tabular Editor: Combining Direct Lake and Import Mode">
 
             <div class="article-content">
-                <p>In this writing, I want to share my journey exploring <strong>hybrid semantic models</strong>&mdash;the new composite model pattern that combines Direct Lake and Import mode tables inside a single semantic model. This feature was described in mid or late 2025 <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-composite-models?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use composite models in Power BI</a>, and after experimenting with it hands-on, I discovered both its power and its hidden friction points.</p>
+                <p>In this writing, I want to share my journey exploring <strong>hybrid semantic models</strong>, the new composite model pattern that combines Direct Lake and Import mode tables inside a single semantic model. This feature was described in mid or late 2025 <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-composite-models?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use composite models in Power BI</a>, and after experimenting with it hands-on, I discovered both its power and its hidden friction points.</p>
 
-                <p>If you've been following the Direct Lake story, you know the promise: near-Import performance without the refresh overhead for massive fact tables. But you also know the limitations&mdash;no calculated columns, no user hierarchies for Excel consumption, no Power Query transformations inside the model. The hybrid pattern finally lets us split the model sensibly: big facts stay in Direct Lake, nimble dimensions come in as Import tables with full modeling flexibility. No more choosing between performance and features.</p>
+                <p>If you've been following the Direct Lake story, you know the promise: near-Import performance without the refresh overhead for massive fact tables. But you also know the limitations: no calculated columns, no user hierarchies for Excel consumption, no Power Query transformations inside the model. The hybrid pattern finally lets us split the model sensibly: big facts stay in Direct Lake, nimble dimensions come in as Import tables with full modeling flexibility. No more choosing between performance and features.</p>
 
                 <p>What I didn't expect was the gateway configuration step that blocked my first deployment. That's the story I want to share.</p>
 
@@ -100,7 +100,7 @@
                     <li>I created a new <strong>Direct Lake mode semantic model</strong> in my Fabric workspace, selecting only the fact table from my Lakehouse.</li>
                     <li>I connected to this Direct Lake model via <strong>Tabular Editor 3</strong>.</li>
                     <li>I opened my original Import mode semantic model in a second instance of Tabular Editor 3.</li>
-                    <li>I copied everything from the Import model&mdash;dimension tables, expressions, measures, relationships, DAX UDFs&mdash;except the fact table, and pasted them into the Direct Lake model.</li>
+                    <li>I copied everything from the Import model (dimension tables, expressions, measures, relationships, DAX UDFs) except the fact table, and pasted them into the Direct Lake model.</li>
                     <li>Now I had a hybrid semantic model: fact table in Direct Lake, dimension tables in Import mode.</li>
                 </ol>
 
@@ -110,13 +110,13 @@
 
                 <img src="../images/blog/hybrid-semantic-models/image-4.png" alt="Import tables showing storage mode">
 
-                <p>In Power BI Desktop's live editing mode, I can see the mixed storage modes clearly. The product table shows <strong>Storage mode: Import</strong>, and at the bottom right, the status bar confirms <strong>Storage Mode: Mixed</strong>&mdash;proof that this is now a true hybrid model.</p>
+                <p>In Power BI Desktop's live editing mode, I can see the mixed storage modes clearly. The product table shows <strong>Storage mode: Import</strong>, and at the bottom right, the status bar confirms <strong>Storage Mode: Mixed</strong>, proof that this is now a true hybrid model.</p>
 
                 <p>This workflow works. But the next step is where I got stuck.</p>
 
                 <h2>2. The Gateway Credential Gotcha</h2>
 
-                <p>Before refreshing this hybrid model in the Power BI Service, I discovered that <strong>gateway settings for the imported tables have to be configured separately</strong>&mdash;and the error message says like below.</p>
+                <p>Before refreshing this hybrid model in the Power BI Service, I discovered that <strong>gateway settings for the imported tables have to be configured separately</strong>, and the error message says like below.</p>
 
                 <img src="../images/blog/hybrid-semantic-models/image-7.png" alt="Error message about gateway credentials">
 
@@ -138,13 +138,13 @@
 
                 <h2>3. Proving There's No Model Boundary Tax</h2>
 
-                <p>Once the credentials were configured and the refresh succeeded, I wanted to verify that the hybrid model actually behaves as a single unified model&mdash;not two models stitched together with limited relationships.</p>
+                <p>Once the credentials were configured and the refresh succeeded, I wanted to verify that the hybrid model actually behaves as a single unified model, not two models stitched together with limited relationships.</p>
 
                 <p>The proof is in DAX Studio's <strong>Server Timings</strong>. I ran a simple query that crosses from the Direct Lake fact table (sales) to an Import dimension table (product):</p>
 
                 <img src="../images/blog/hybrid-semantic-models/image-6.png" alt="DAX Studio SE Queries result">
 
-                <p>The query <code>SUMMARIZECOLUMNS('product'[ProductName], "Total Sales", [Total Sales])</code> joins data across storage modes. The critical number is <strong>SE Queries: 1</strong>. A single Storage Engine query means VertiPaq treated both tables as part of the same "continent"&mdash;no filter lists being passed between separate models, no multiple round trips.</p>
+                <p>The query <code>SUMMARIZECOLUMNS('product'[ProductName], "Total Sales", [Total Sales])</code> joins data across storage modes. The critical number is <strong>SE Queries: 1</strong>. A single Storage Engine query means VertiPaq treated both tables as part of the same "continent": no filter lists being passed between separate models, no multiple round trips.</p>
 
                 <p>If this were the old composite model pattern with limited relationships, I'd see multiple SE queries and significantly worse performance. The single SE query confirms there's no model boundary tax.</p>
 
@@ -180,19 +180,19 @@
 
                 <p>When I look at the TMDL files in my Git repository, Direct Lake and Import partitions store fundamentally different things.</p>
 
-                <p>A Direct Lake partition is essentially a pointer. It says: "Go to OneLake, find this entity named sales in the dbo schema, and read the data directly from the Delta files." That's it. There's no transformation logic, no filtering, no column renaming&mdash;just a reference. The actual data processing happened upstream in my Lakehouse, managed by the data engineering pipeline.</p>
+                <p>A Direct Lake partition is essentially a pointer. It says: "Go to OneLake, find this entity named sales in the dbo schema, and read the data directly from the Delta files." That's it. There's no transformation logic, no filtering, no column renaming: just a reference. The actual data processing happened upstream in my Lakehouse, managed by the data engineering pipeline.</p>
 
-                <p>An Import partition is different. It contains the complete Power Query (M) expression&mdash;every step of the data transformation journey. It might say: "Connect to this SQL Server, authenticate with these credentials, navigate to this database, select this table, filter rows where Status equals 'Active', rename the CustomerID column to CustomerKey, change this column's data type, and then load the result." All of that logic lives inside the TMDL file.</p>
+                <p>An Import partition is different. It contains the complete Power Query (M) expression: every step of the data transformation journey. It might say: "Connect to this SQL Server, authenticate with these credentials, navigate to this database, select this table, filter rows where Status equals 'Active', rename the CustomerID column to CustomerKey, change this column's data type, and then load the result." All of that logic lives inside the TMDL file.</p>
 
                 <p>This distinction has real consequences for version control and code reviews.</p>
 
-                <p>When someone modifies a Direct Lake table&mdash;say, adding a new column&mdash;the Git diff is minimal and easy to review. I'll see a few lines added for the new column definition: its name, data type, maybe a description. The change is self-contained and obvious.</p>
+                <p>When someone modifies a Direct Lake table (say, adding a new column), the Git diff is minimal and easy to review. I'll see a few lines added for the new column definition: its name, data type, maybe a description. The change is self-contained and obvious.</p>
 
                 <img src="../images/blog/hybrid-semantic-models/image-10.png" alt="sales.tmdl file structure">
 
                 <p>When someone modifies an Import table, the Git diff shows M expression changes. These can be complex: nested let statements, multiple transformation steps, function calls. Reviewing a PR that modifies Import table logic requires understanding Power Query, not just reading metadata. It's a different level of cognitive load.</p>
 
-                <p>For hybrid models, this means my PR reviews will have two flavors: simple schema diffs for Direct Lake tables, and logic diffs for Import tables. Knowing which is which&mdash;by organizing my folder structure or using clear naming conventions&mdash;helps reviewers understand what they're looking at.</p>
+                <p>For hybrid models, this means my PR reviews will have two flavors: simple schema diffs for Direct Lake tables, and logic diffs for Import tables. Knowing which is which, by organizing my folder structure or using clear naming conventions, helps reviewers understand what they're looking at.</p>
 
                 <h2>5. Git Folder Structure for Multi-Source Hybrid Models</h2>
 
@@ -222,7 +222,7 @@
 ├── diagramLayout.json
 └── .platform</code></pre>
 
-                <p>The <code>_direct-lake</code>, <code>_import</code>, and <code>_calculated</code> subfolders aren't required by the PBIP spec&mdash;TMDL doesn't care about folder hierarchy within <code>tables/</code>. But for human readability and PR reviews, this separation makes it immediately clear which tables have which storage mode. When a teammate modifies an Import table's M expression, the diff appears under <code>_import/</code>, and reviewers know to check for credential implications.</p>
+                <p>The <code>_direct-lake</code>, <code>_import</code>, and <code>_calculated</code> subfolders aren't required by the PBIP spec; TMDL doesn't care about folder hierarchy within <code>tables/</code>. But for human readability and PR reviews, this separation makes it immediately clear which tables have which storage mode. When a teammate modifies an Import table's M expression, the diff appears under <code>_import/</code>, and reviewers know to check for credential implications.</p>
 
                 <img src="../images/blog/hybrid-semantic-models/image-11.png" alt="Tables folder structure">
 
@@ -230,7 +230,7 @@
 
                 <p>The hybrid semantic model pattern is the pragmatic middle ground I've been waiting for. Big facts stay in Direct Lake with zero refresh overhead; dimensions come in as Import tables with full modeling flexibility. The "model boundary tax" of the old composite pattern is gone.</p>
 
-                <p>But the tooling isn't fully baked yet. GUI support is limited&mdash;I still need Tabular Editor or Semantic Link Labs to add Import tables. And the documentation doesn't clearly explain the authentication difference between Direct Lake and Import tables. If you know where I can find better documentation on this, please let me know!</p>
+                <p>But the tooling isn't fully baked yet. GUI support is limited; I still need Tabular Editor or Semantic Link Labs to add Import tables. And the documentation doesn't clearly explain the authentication difference between Direct Lake and Import tables. If you know where I can find better documentation on this, please let me know!</p>
 
                 <p>I hope this helps having fun in exploring hybrid semantic models and embracing this new era of flexible, enterprise-ready Fabric architectures!</p>
             </div>

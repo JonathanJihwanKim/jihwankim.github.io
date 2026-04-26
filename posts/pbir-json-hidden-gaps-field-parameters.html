@@ -90,7 +90,7 @@
             <img class="featured-image" src="../images/blog/pbir-json-hidden-gaps/featured.png" alt="PBIR JSON Doesn't Tell the Full Story: What's Missing from Field Parameters and Calculation Groups">
 
             <div class="article-content">
-                <p>In this writing, I want to share how exploring <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-report?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">PBIR visual JSON</a> files led me to discover a gap that changes the way I think about report documentation and AI-assisted analysis. My plan was simple: understand how a matrix visual with <strong>field parameters</strong> and a <strong>calculation group</strong> is stored in the PBIR format. Instead, I found that the JSON only tells part of the story &mdash; and that teaching Claude to read the full picture led to building an open-source tool.</p>
+                <p>In this writing, I want to share how exploring <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-report?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">PBIR visual JSON</a> files led me to discover a gap that changes the way I think about report documentation and AI-assisted analysis. My plan was simple: understand how a matrix visual with <strong>field parameters</strong> and a <strong>calculation group</strong> is stored in the PBIR format. Instead, I found that the JSON only tells part of the story, and that teaching Claude to read the full picture led to building an open-source tool.</p>
 
                 <p>I didn't expect a routine exploration of JSON files to become a conversation about the limits of AI-assisted report analysis. What I found has implications for anyone who relies on PBIR source files to understand, document, or automate Power BI reports.</p>
 
@@ -116,7 +116,7 @@
 
                 <h3>Calculation groups are invisible in the JSON</h3>
 
-                <p>The first thing I noticed: there is no indication in the visual JSON that a <strong>calculation group</strong> is being used. The column <code>'This Year Last Year'[This Year vs. Last Year]</code> appears as a regular column reference. Nothing in the JSON distinguishes it from any other column &mdash; no marker, no metadata, no hint that this column drives a calculation group with custom DAX logic behind each item.</p>
+                <p>The first thing I noticed: there is no indication in the visual JSON that a <strong>calculation group</strong> is being used. The column <code>'This Year Last Year'[This Year vs. Last Year]</code> appears as a regular column reference. Nothing in the JSON distinguishes it from any other column: no marker, no metadata, no hint that this column drives a calculation group with custom DAX logic behind each item.</p>
 
                 <img src="../images/blog/pbir-json-hidden-gaps/json-no-calculation-group.png" alt="Visual JSON file showing the calculation group column as an ordinary column reference with no calculation group indicator">
 
@@ -124,31 +124,31 @@
 
                 <h3>Field parameters show only the last selection</h3>
 
-                <p>The second surprise was the field parameters. The first field parameter shows only <strong>Brand</strong> &mdash; the last selection I saved before closing the file. There is no mention of Store Code or Gender, even though users can switch to those dimensions at any time.</p>
+                <p>The second surprise was the field parameters. The first field parameter shows only <strong>Brand</strong>, the last selection I saved before closing the file. There is no mention of Store Code or Gender, even though users can switch to those dimensions at any time.</p>
 
                 <img src="../images/blog/pbir-json-hidden-gaps/json-field-param-brand-only.png" alt="Visual JSON showing only Brand for the first field parameter, missing Store Code and Gender">
 
-                <p>The same pattern repeats for the second field parameter: only <strong>Number of Orders</strong> appears in the JSON. Total Cost and Total Quantity &mdash; the other two options users can select &mdash; are nowhere to be found.</p>
+                <p>The same pattern repeats for the second field parameter: only <strong>Number of Orders</strong> appears in the JSON. Total Cost and Total Quantity (the other two options users can select) are nowhere to be found.</p>
 
                 <img src="../images/blog/pbir-json-hidden-gaps/json-field-param-orders-only.png" alt="Visual JSON showing only Number of Orders for the second field parameter, missing Total Cost and Total Quantity">
 
-                <p>In summary, the JSON file only tells you three things: the <code>'This Year Last Year'[This Year vs. Last Year]</code> column is used, the visual shows Brand, and the visual shows Number of Orders. That's it. The full picture &mdash; three switchable dimensions, three switchable measures, and a calculation group &mdash; is invisible.</p>
+                <p>In summary, the JSON file only tells you three things: the <code>'This Year Last Year'[This Year vs. Last Year]</code> column is used, the visual shows Brand, and the visual shows Number of Orders. That's it. The full picture (three switchable dimensions, three switchable measures, and a calculation group) is invisible.</p>
 
                 <p><em>This was the aha moment.</em> The PBIR format, by design, only writes the last saved state. For static visuals, this is fine. But for visuals that use dynamic features like field parameters and calculation groups, <strong>the JSON becomes a partial snapshot, not a complete specification.</strong></p>
 
                 <h2>3. What This Means for AI-Assisted Analysis</h2>
 
-                <p>I experienced this gap firsthand. I was right there, working with Claude, asking it to analyze this visualization based on the PBIR JSON &mdash; and it gave me incomplete information. It said something like: <em>"This visual shows Number of Orders by Brand with a year comparison."</em> It did not mention Total Cost, Total Quantity, Store Code, or Gender &mdash; because those don't exist in the JSON.</p>
+                <p>I experienced this gap firsthand. I was right there, working with Claude, asking it to analyze this visualization based on the PBIR JSON, and it gave me incomplete information. It said something like: <em>"This visual shows Number of Orders by Brand with a year comparison."</em> It did not mention Total Cost, Total Quantity, Store Code, or Gender, because those don't exist in the JSON.</p>
 
-                <p>I was literally shouting at my screen. I knew this visual could do so much more. I asked: <em>"Can this report show total quantity by gender?"</em> And Claude confidently answered: <em>"No, this report does not show total quantity by gender."</em> That answer, based on the JSON evidence available, was technically justified &mdash; but completely wrong. I built this report. I know exactly what it can do. And the AI was telling me my own report couldn't do something it absolutely can.</p>
+                <p>I was literally shouting at my screen. I knew this visual could do so much more. I asked: <em>"Can this report show total quantity by gender?"</em> And Claude confidently answered: <em>"No, this report does not show total quantity by gender."</em> That answer, based on the JSON evidence available, was technically justified, but completely wrong. I built this report. I know exactly what it can do. And the AI was telling me my own report couldn't do something it absolutely can.</p>
 
-                <p>That frustration became the turning point. If I &mdash; the developer who built the report &mdash; was getting wrong answers, imagine what happens when someone else asks the same question. The risk is real: incomplete AI analysis leads to duplicated work. A new developer, trusting the AI's assessment, might create additional visuals that already exist in the report. The knowledge gap in the JSON becomes a knowledge gap in the team.</p>
+                <p>That frustration became the turning point. If I (the developer who built the report) was getting wrong answers, imagine what happens when someone else asks the same question. The risk is real: incomplete AI analysis leads to duplicated work. A new developer, trusting the AI's assessment, might create additional visuals that already exist in the report. The knowledge gap in the JSON becomes a knowledge gap in the team.</p>
 
                 <h2>4. Teaching Claude to Trace the Full Picture</h2>
 
-                <p>As the person who developed this report, I know what the visual contains. The challenge was teaching Claude to discover the same information &mdash; not by reading only the report folder, but by tracing references back to the <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-dataset?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">semantic model folder</a>.</p>
+                <p>As the person who developed this report, I know what the visual contains. The challenge was teaching Claude to discover the same information: not by reading only the report folder, but by tracing references back to the <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-dataset?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">semantic model folder</a>.</p>
 
-                <p>This became an iterative collaboration. I didn't just ask Claude to read the JSON &mdash; I guided it with the domain expertise that the JSON alone cannot provide.</p>
+                <p>This became an iterative collaboration. I didn't just ask Claude to read the JSON; I guided it with the domain expertise that the JSON alone cannot provide.</p>
 
                 <h3>Tracing calculation groups to the semantic model</h3>
 
@@ -166,25 +166,25 @@
 
                 <img src="../images/blog/pbir-json-hidden-gaps/ai-trace-field-parameters-result.png" alt="Claude's result showing all field parameter options including Brand, Store Code, Gender, Number of Orders, Total Cost, and Total Quantity">
 
-                <p>Now Claude could see the full picture: three dimensions (Brand, Store Code, Gender) and three measures (Number of Orders, Total Cost, Total Quantity) &mdash; not just the last saved defaults.</p>
+                <p>Now Claude could see the full picture: three dimensions (Brand, Store Code, Gender) and three measures (Number of Orders, Total Cost, Total Quantity), not just the last saved defaults.</p>
 
                 <h3>Following references to actual columns and measures</h3>
 
                 <p>My third instruction went deeper: <em>"Do not stop tracing because field parameters reference columns or measures. Trace all the way back to the actual columns and actual measures where those come from and how those are written."</em></p>
 
-                <p>This is where the iterative nature of the collaboration mattered most. Each instruction built on the previous one, and each one required domain knowledge that only I &mdash; as the report developer &mdash; could provide. Claude brought the ability to parse TMDL files, navigate folder structures, and synthesize information across dozens of files. I brought the understanding of what to look for and why it matters.</p>
+                <p>This is where the iterative nature of the collaboration mattered most. Each instruction built on the previous one, and each one required domain knowledge that only I (as the report developer) could provide. Claude brought the ability to parse TMDL files, navigate folder structures, and synthesize information across dozens of files. I brought the understanding of what to look for and why it matters.</p>
 
                 <h2>5. A Note on Learning with Claude</h2>
 
-                <p>I want to be transparent about this process. This was how I started to learn together with Claude using the PBIR format. By showing Claude what I do as a daily job &mdash; how I check JSON files in report folders and trace references back to semantic model folders &mdash; I was teaching it my workflow. And in return, Claude could apply that workflow at a speed and scale that I could not match manually.</p>
+                <p>I want to be transparent about this process. This was how I started to learn together with Claude using the PBIR format. By showing Claude what I do as a daily job (how I check JSON files in report folders and trace references back to semantic model folders), I was teaching it my workflow. And in return, Claude could apply that workflow at a speed and scale that I could not match manually.</p>
 
-                <p>Was my guidance actually helpful? Having reflected on it honestly: <strong>it was essential.</strong> Without domain expertise pointing Claude to the semantic model folder, it would have stopped at the JSON and reported incomplete information &mdash; just like any other tool reading the same files. The human contribution was not optional; it was the difference between a partial answer and the full picture.</p>
+                <p>Was my guidance actually helpful? Having reflected on it honestly: <strong>it was essential.</strong> Without domain expertise pointing Claude to the semantic model folder, it would have stopped at the JSON and reported incomplete information, just like any other tool reading the same files. The human contribution was not optional; it was the difference between a partial answer and the full picture.</p>
 
                 <h2>6. From Exploration to Open Source: pbip-documenter</h2>
 
-                <p>This iterative process &mdash; tracing from report to semantic model, teaching Claude how I read PBIR files, refining the instructions until the output matched what I knew to be true &mdash; didn't stop at a single conversation. More work followed, and together we built an application called <strong><a href="https://github.com/JonathanJihwanKim/pbip-documenter" target="_blank" rel="noopener">pbip-documenter</a></strong>, now open source on GitHub.</p>
+                <p>This iterative process (tracing from report to semantic model, teaching Claude how I read PBIR files, refining the instructions until the output matched what I knew to be true) didn't stop at a single conversation. More work followed, and together we built an application called <strong><a href="https://github.com/JonathanJihwanKim/pbip-documenter" target="_blank" rel="noopener">pbip-documenter</a></strong>, now open source on GitHub.</p>
 
-                <p>The tool does what I taught Claude to do, but at scale and for any PBIP project. It traces not only <strong>upstream</strong> &mdash; from a visual to the measures, columns, and tables it depends on &mdash; but also <strong>downstream</strong> &mdash; from a measure or column to every visual that uses it. This bidirectional tracing means you can answer both directions of the question: <em>"What does this visual actually show?"</em> and <em>"Where is this measure being used?"</em></p>
+                <p>The tool does what I taught Claude to do, but at scale and for any PBIP project. It traces not only <strong>upstream</strong> (from a visual to the measures, columns, and tables it depends on) but also <strong>downstream</strong>: from a measure or column to every visual that uses it. This bidirectional tracing means you can answer both directions of the question: <em>"What does this visual actually show?"</em> and <em>"Where is this measure being used?"</em></p>
 
                 <img src="../images/blog/pbir-json-hidden-gaps/pbip-documenter-overview.png" alt="pbip-documenter application overview showing the tracing interface">
 
@@ -198,9 +198,9 @@
 
                 <p>This experience left me with a new mental model: <strong>PBIR JSON is a serialization format, not a documentation format.</strong> It captures what Power BI Desktop needs to reconstruct a visual, not what a human or an AI needs to understand it. For static visuals, the difference is negligible. For visuals with field parameters and calculation groups, the difference is the gap between partial knowledge and full understanding.</p>
 
-                <p>The journey from <em>"why doesn't the JSON show all the measures?"</em> to building an open-source documentation tool reinforced something I keep discovering: <strong>when you combine domain expertise with AI capability, the result is greater than either one alone.</strong> Claude could parse files and follow references faster than I ever could. But without my guidance &mdash; knowing to trace to the semantic model, knowing what a calculation group looks like, knowing that field parameters hide their full configuration &mdash; the AI would have stopped at the same incomplete picture that the JSON provides.</p>
+                <p>The journey from <em>"why doesn't the JSON show all the measures?"</em> to building an open-source documentation tool reinforced something I keep discovering: <strong>when you combine domain expertise with AI capability, the result is greater than either one alone.</strong> Claude could parse files and follow references faster than I ever could. But without my guidance (knowing to trace to the semantic model, knowing what a calculation group looks like, knowing that field parameters hide their full configuration), the AI would have stopped at the same incomplete picture that the JSON provides.</p>
 
-                <p>I hope this helps having fun in exploring PBIR format and embracing this new era of understanding Power BI reports as code &mdash; gaps, hidden details, and all!</p>
+                <p>I hope this helps having fun in exploring PBIR format and embracing this new era of understanding Power BI reports as code, gaps, hidden details, and all!</p>
             </div>
 
             <div class="article-tags-section">

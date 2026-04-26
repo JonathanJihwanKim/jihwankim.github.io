@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Discover how to trace measures through PBIR visual JSON files and field parameters to TMDL definitions — answering stakeholder questions like a developer, without opening Power BI Desktop.">
+    <meta name="description" content="Discover how to trace measures through PBIR visual JSON files and field parameters to TMDL definitions, answering stakeholder questions like a developer, without opening Power BI Desktop.">
     <meta name="keywords" content="Power BI, PBIR, Field Parameters, TMDL, DevOps, Visual JSON, Measures, Calculation Groups, PBIP Impact Analyzer">
     <meta name="author" content="Jihwan Kim">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:title" content="Answering Like a Developer: Tracing Measures Through PBIR Visual JSON, Field Parameters, and TMDL | Jihwan Kim">
-    <meta property="og:description" content="Discover how to trace measures through PBIR visual JSON files and field parameters to TMDL definitions — answering stakeholder questions like a developer, without opening Power BI Desktop.">
+    <meta property="og:description" content="Discover how to trace measures through PBIR visual JSON files and field parameters to TMDL definitions, answering stakeholder questions like a developer, without opening Power BI Desktop.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://powerbimvp.com/posts/pbir-visual-json-field-parameters.html">
     <meta property="og:image" content="https://powerbimvp.com/images/blog/pbir-visual-json-field-parameters/featured.png">
@@ -21,7 +21,7 @@
     <meta property="og:image:alt" content="Answering Like a Developer: Tracing measures through PBIR visual JSON, field parameters, and TMDL without opening Power BI Desktop">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Answering Like a Developer: Tracing Measures Through PBIR Visual JSON, Field Parameters, and TMDL">
-    <meta name="twitter:description" content="Discover how to trace measures through PBIR visual JSON files and field parameters to TMDL definitions — answering stakeholder questions like a developer, without opening Power BI Desktop.">
+    <meta name="twitter:description" content="Discover how to trace measures through PBIR visual JSON files and field parameters to TMDL definitions, answering stakeholder questions like a developer, without opening Power BI Desktop.">
     <meta name="twitter:image" content="https://powerbimvp.com/images/blog/pbir-visual-json-field-parameters/featured.png">
     <meta name="twitter:image:alt" content="Tracing measures through PBIR visual JSON to TMDL">
 
@@ -90,25 +90,25 @@
             <img class="featured-image" src="../images/blog/pbir-visual-json-field-parameters/featured.png" alt="Answering Like a Developer: Tracing Measures Through PBIR Visual JSON, Field Parameters, and TMDL">
 
             <div class="article-content">
-                <p>In this writing, I want to share how a simple question from users and a product owner led me down a path of discovery &mdash; one that changed the way I think about answering questions in Power BI. My plan was simple: find a way to explain what measures are shown in a visual and how they are calculated, without the slow roundtrip of opening Power BI Desktop. Instead, I discovered something deeper about how <strong>PBIR visual JSON</strong> handles measures, how <strong>field parameters</strong> hold the key to tracing them, and how this entire workflow can be automated.</p>
+                <p>In this writing, I want to share how a simple question from users and a product owner led me down a path of discovery, one that changed the way I think about answering questions in Power BI. My plan was simple: find a way to explain what measures are shown in a visual and how they are calculated, without the slow roundtrip of opening Power BI Desktop. Instead, I discovered something deeper about how <strong>PBIR visual JSON</strong> handles measures, how <strong>field parameters</strong> hold the key to tracing them, and how this entire workflow can be automated.</p>
 
                 <h2>1. The Question That Started It All</h2>
 
-                <p>It started with a straightforward request. Users and the product owner were looking at a report in the Power BI Service and asked: <em>"The measures on this visual &mdash; Number of Orders, Total Cost, Total Quantity &mdash; how are they calculated?"</em></p>
+                <p>It started with a straightforward request. Users and the product owner were looking at a report in the Power BI Service and asked: <em>"The measures on this visual (Number of Orders, Total Cost, Total Quantity), how are they calculated?"</em></p>
 
                 <img src="../images/blog/pbir-visual-json-field-parameters/pbi-service-visual.png" alt="Power BI Service showing a visual with Number of Orders, Total Cost, and Total Quantity measures">
 
-                <p>A fair question. The typical response would be to open Power BI Desktop, wait for the file to load, navigate to the right page, click the visual, and inspect each measure. But I wanted to answer differently. I wanted to answer like a developer &mdash; directly from VS Code, from the <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-report?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">PBIR source files</a> in the Git repository. No Desktop needed. No loading time. Just code.</p>
+                <p>A fair question. The typical response would be to open Power BI Desktop, wait for the file to load, navigate to the right page, click the visual, and inspect each measure. But I wanted to answer differently. I wanted to answer like a developer, directly from VS Code, from the <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-report?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">PBIR source files</a> in the Git repository. No Desktop needed. No loading time. Just code.</p>
 
                 <h2>2. The First Surprise: Where Are the Other Measures?</h2>
 
-                <p>I opened the visual's JSON file in VS Code. The <a href="https://powerbi.microsoft.com/en-us/blog/power-bi-enhanced-report-format-pbir-in-power-bi-desktop-developer-mode-preview/?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">PBIR format</a> stores each visual as a separate JSON file, which makes it easy to locate and inspect. I expected to see all three measures listed there &mdash; Number of Orders, Total Cost, and Total Quantity. But when I opened the file, I found only one: the default selection, <strong>Number of Orders</strong>.</p>
+                <p>I opened the visual's JSON file in VS Code. The <a href="https://powerbi.microsoft.com/en-us/blog/power-bi-enhanced-report-format-pbir-in-power-bi-desktop-developer-mode-preview/?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">PBIR format</a> stores each visual as a separate JSON file, which makes it easy to locate and inspect. I expected to see all three measures listed there, Number of Orders, Total Cost, and Total Quantity. But when I opened the file, I found only one: the default selection, <strong>Number of Orders</strong>.</p>
 
                 <img src="../images/blog/pbir-visual-json-field-parameters/visual-json-default-measure.png" alt="Visual JSON file in VS Code showing only the default measure - Number of Orders">
 
-                <p>Total Cost and Total Quantity were nowhere to be found. This was the moment that made me pause. <em>Where did the other measures go?</em> I checked the file again, scrolled through it, searched for the measure names &mdash; nothing. It felt like the visual was only configured for one measure, but I knew from the Power BI Service that it was displaying three.</p>
+                <p>Total Cost and Total Quantity were nowhere to be found. This was the moment that made me pause. <em>Where did the other measures go?</em> I checked the file again, scrolled through it, searched for the measure names: nothing. It felt like the visual was only configured for one measure, but I knew from the Power BI Service that it was displaying three.</p>
 
-                <p>This is when I learned something important about how PBIR writes configuration: <strong>for efficiency, non-default or non-selected values are simply omitted from the JSON</strong>. If the visual has a default measure selection and other measures are available through a dynamic mechanism, the JSON only describes the default. It doesn't write what it doesn't need to write. This default-omission pattern keeps the files clean, minimal, and diff-friendly &mdash; but it also means that reading the visual JSON alone doesn't tell you the full story.</p>
+                <p>This is when I learned something important about how PBIR writes configuration: <strong>for efficiency, non-default or non-selected values are simply omitted from the JSON</strong>. If the visual has a default measure selection and other measures are available through a dynamic mechanism, the JSON only describes the default. It doesn't write what it doesn't need to write. This default-omission pattern keeps the files clean, minimal, and diff-friendly; but it also means that reading the visual JSON alone doesn't tell you the full story.</p>
 
                 <h2>3. The Key: fieldParameters Property</h2>
 
@@ -122,11 +122,11 @@
 
                 <h2>4. Tracing from Visual JSON to Semantic Model TMDL</h2>
 
-                <p>I followed the reference from the visual JSON's <code>fieldParameters</code> property into the semantic model folder. There, I found the field parameter definition in a <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-tmdl-view?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">TMDL file</a> &mdash; a clean, human-readable definition of the calculated table that powers the field parameter.</p>
+                <p>I followed the reference from the visual JSON's <code>fieldParameters</code> property into the semantic model folder. There, I found the field parameter definition in a <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-tmdl-view?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">TMDL file</a>, a clean, human-readable definition of the calculated table that powers the field parameter.</p>
 
                 <img src="../images/blog/pbir-visual-json-field-parameters/prm-measures-tmdl.png" alt="The prm_measures.tmdl file showing the field parameter definition with all three measures">
 
-                <p>And there they were: <strong>all three measures</strong> &mdash; Number of Orders, Total Cost, and Total Quantity &mdash; listed as rows in the field parameter's calculated table. The TMDL file made it clear which measures comprised this field parameter and in what order they would appear.</p>
+                <p>And there they were: <strong>all three measures</strong> (Number of Orders, Total Cost, and Total Quantity) listed as rows in the field parameter's calculated table. The TMDL file made it clear which measures comprised this field parameter and in what order they would appear.</p>
 
                 <p>Now I could trace from the field parameter to each individual measure to see the DAX formula:</p>
 
@@ -136,7 +136,7 @@
 
                 <h2>5. Bonus: Tracing Calculation Groups Too</h2>
 
-                <p>While investigating the visual, I noticed that one of the columns in the visualization was not a regular column &mdash; it was filled by a <strong>calculation group</strong>.</p>
+                <p>While investigating the visual, I noticed that one of the columns in the visualization was not a regular column: it was filled by a <strong>calculation group</strong>.</p>
 
                 <img src="../images/blog/pbir-visual-json-field-parameters/visual-column-reference.png" alt="Column reference in the visual JSON pointing to a calculation group">
 
@@ -148,21 +148,21 @@
 
                 <h2>6. A Note on Learning with AI</h2>
 
-                <p>I want to be transparent about one part of this journey: I didn't figure all of this out alone. I was working with Claude (AI) as I explored the PBIR files. When I first asked about the missing measures in the visual JSON, Claude didn't immediately know why Total Cost and Total Quantity were absent. It suggested checking various properties, but the key insight &mdash; that non-default measures are omitted because of the default-omission pattern, and that <code>fieldParameters</code> is the breadcrumb to follow &mdash; came from my own domain knowledge of Power BI.</p>
+                <p>I want to be transparent about one part of this journey: I didn't figure all of this out alone. I was working with Claude (AI) as I explored the PBIR files. When I first asked about the missing measures in the visual JSON, Claude didn't immediately know why Total Cost and Total Quantity were absent. It suggested checking various properties, but the key insight (that non-default measures are omitted because of the default-omission pattern, and that <code>fieldParameters</code> is the breadcrumb to follow) came from my own domain knowledge of Power BI.</p>
 
                 <p>I guided the investigation: "Don't just look at the measures described in the visual JSON. Check if there's a <code>fieldParameters</code> property. If there is, trace it to the semantic model to find all the measures." Once I provided that direction, we were able to work together systematically to build the full tracing workflow.</p>
 
-                <p>Was my guidance actually helpful, or was this an illusion? Having reflected on it honestly: <strong>it was genuinely helpful.</strong> PBIR is a relatively new format, and the specific behavior of how field parameter visuals serialize to JSON isn't widely documented. The default-omission pattern is a design choice that makes perfect sense from an engineering perspective, but it's not something an AI model would infer without either encountering it in training data or having a human with domain experience point it out. My contribution was real &mdash; this was collaborative discovery where Power BI domain expertise met AI capability, and together we arrived at a workflow that neither of us would have built as quickly alone.</p>
+                <p>Was my guidance actually helpful, or was this an illusion? Having reflected on it honestly: <strong>it was genuinely helpful.</strong> PBIR is a relatively new format, and the specific behavior of how field parameter visuals serialize to JSON isn't widely documented. The default-omission pattern is a design choice that makes perfect sense from an engineering perspective, but it's not something an AI model would infer without either encountering it in training data or having a human with domain experience point it out. My contribution was real: this was collaborative discovery where Power BI domain expertise met AI capability, and together we arrived at a workflow that neither of us would have built as quickly alone.</p>
 
                 <h2>7. From Discovery to Open Source: PBIP Impact Analyzer</h2>
 
-                <p>This experience &mdash; tracing from visual to field parameter to measure to DAX &mdash; made me realize that this kind of dependency analysis shouldn't require manual file-by-file investigation every time. What if there was a tool that could do this automatically, at scale, for any PBIP project?</p>
+                <p>This experience (tracing from visual to field parameter to measure to DAX) made me realize that this kind of dependency analysis shouldn't require manual file-by-file investigation every time. What if there was a tool that could do this automatically, at scale, for any PBIP project?</p>
 
                 <p>That question led me to build the <strong>PBIP Impact Analyzer</strong>.</p>
 
                 <img src="../images/blog/pbir-visual-json-field-parameters/pbip-impact-analyzer.png" alt="The PBIP Impact Analyzer application showing dependency analysis">
 
-                <p>The app analyzes an entire PBIP folder and maps the dependencies across the project. It identifies every measure, column, and visual affected by potential changes. It reveals both <strong>upstream dependencies</strong> (what an object needs) and <strong>downstream dependents</strong> (what uses it), with depth indicators and DAX formula viewing. Dependencies are color-coded &mdash; tables in purple, columns in blue, measures in green, visuals in orange &mdash; and visuals are grouped by report page for easy navigation.</p>
+                <p>The app analyzes an entire PBIP folder and maps the dependencies across the project. It identifies every measure, column, and visual affected by potential changes. It reveals both <strong>upstream dependencies</strong> (what an object needs) and <strong>downstream dependents</strong> (what uses it), with depth indicators and DAX formula viewing. Dependencies are color-coded (tables in purple, columns in blue, measures in green, visuals in orange) and visuals are grouped by report page for easy navigation.</p>
 
                 <p>The tool also supports <strong>safe refactoring</strong>: side-by-side diffs before applying changes, name validation against reserved DAX keywords, and automatic backups with rollback functionality. Built-in safety checks detect circular dependencies, orphaned references, and performance concerns for large models.</p>
 
@@ -170,7 +170,7 @@
 
                 <h2>8. The DevOps Perspective</h2>
 
-                <p>From a DevOps standpoint, this discovery is foundational. The ability to trace from a visual all the way to its underlying DAX &mdash; without opening Power BI Desktop &mdash; unlocks several workflows that were previously impossible or impractical.</p>
+                <p>From a DevOps standpoint, this discovery is foundational. The ability to trace from a visual all the way to its underlying DAX (without opening Power BI Desktop) unlocks several workflows that were previously impossible or impractical.</p>
 
                 <p><strong>Git-based Q&amp;A workflow:</strong> When stakeholders ask "how is this measure calculated?", the answer lives in the repository. Open VS Code, navigate the PBIR and TMDL files, trace the dependency chain. No Desktop, no loading, no waiting. This is answering like a developer, and <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Power BI Projects (PBIP)</a> make this possible by design.</p>
 
@@ -178,7 +178,7 @@
 
                 <p><strong>CI/CD validation:</strong> Automated checks can verify that every field parameter referenced in a visual JSON actually exists in the semantic model. They can detect orphaned references, validate that calculation group items are properly defined, and flag measures that have changed without corresponding visual review. Microsoft has announced that <a href="https://powerbi.microsoft.com/en-us/blog/pbir-will-become-the-default-power-bi-report-format-get-ready-for-the-transition/?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">PBIR will become the default format</a>, which means these validation pipelines will become the standard, not the exception.</p>
 
-                <p><strong>The PBIP Impact Analyzer as automation:</strong> The app I built directly serves this DevOps pipeline. Instead of manually tracing dependencies, teams can use the Impact Analyzer to get an instant, comprehensive view of what changes will affect &mdash; before those changes reach production.</p>
+                <p><strong>The PBIP Impact Analyzer as automation:</strong> The app I built directly serves this DevOps pipeline. Instead of manually tracing dependencies, teams can use the Impact Analyzer to get an instant, comprehensive view of what changes will affect, before those changes reach production.</p>
 
                 <h2>Reflection</h2>
 
@@ -186,7 +186,7 @@
 
                 <p>The journey from "where are the other measures?" to building an open-source impact analyzer was unexpected, but it reinforced something I keep discovering: <strong>the more you treat Power BI artifacts as code, the more powerful your workflows become.</strong></p>
 
-                <p>I hope this helps having fun in exploring PBIR visual JSON, field parameters, and TMDL &mdash; and embracing this new era of answering stakeholder questions like a developer!</p>
+                <p>I hope this helps having fun in exploring PBIR visual JSON, field parameters, and TMDL; and embracing this new era of answering stakeholder questions like a developer!</p>
             </div>
 
             <div class="article-tags-section">

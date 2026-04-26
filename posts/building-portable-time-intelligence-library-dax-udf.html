@@ -99,7 +99,7 @@
 
 <pre><code class="language-sql">FUNCTION AddTax = (amount: NUMERIC) =&gt; amount * 1.1</code></pre>
 
-                <p>What makes this powerful isn't the syntax&mdash;it's the parameter passing modes. As <a href="https://www.sqlbi.com/articles/introducing-user-defined-functions-in-dax/" target="_blank" rel="noopener">SQLBI's detailed article explains</a>, there are two modes that fundamentally change how my function behaves. <strong>VAL</strong> (value) parameters are evaluated before the function call, like DAX variables. <strong>EXPR</strong> (expression) parameters pass an unevaluated expression that the function evaluates in its own context&mdash;this is what enables filter context manipulation inside CALCULATE.</p>
+                <p>What makes this powerful isn't the syntax; it's the parameter passing modes. As <a href="https://www.sqlbi.com/articles/introducing-user-defined-functions-in-dax/" target="_blank" rel="noopener">SQLBI's detailed article explains</a>, there are two modes that fundamentally change how my function behaves. <strong>VAL</strong> (value) parameters are evaluated before the function call, like DAX variables. <strong>EXPR</strong> (expression) parameters pass an unevaluated expression that the function evaluates in its own context; this is what enables filter context manipulation inside CALCULATE.</p>
 
                 <p>Understanding this distinction is critical. If I want my function to work with measures that need context transition, I must use EXPR parameters. This was my first <em>aha</em> moment.</p>
 
@@ -113,13 +113,13 @@
 
                 <p>This is tightly coupled to a specific model. It references <code>[Total Sales]</code> and <code>'Date'[Date]</code> directly. If I copy this to another model that uses <code>'Calendar'[DateKey]</code> and <code>[Revenue]</code>, I have to manually edit everything.</p>
 
-                <p>The insight from <a href="https://www.sqlbi.com/articles/model-dependent-and-model-independent-user-defined-functions-in-dax/" target="_blank" rel="noopener">SQLBI's article on model-dependent versus model-independent functions</a> clarified the solution. A <strong>model-independent function</strong> has no references to specific tables, columns, or measures&mdash;everything comes through parameters. This makes the function portable to any semantic model that can provide the required inputs.</p>
+                <p>The insight from <a href="https://www.sqlbi.com/articles/model-dependent-and-model-independent-user-defined-functions-in-dax/" target="_blank" rel="noopener">SQLBI's article on model-dependent versus model-independent functions</a> clarified the solution. A <strong>model-independent function</strong> has no references to specific tables, columns, or measures: everything comes through parameters. This makes the function portable to any semantic model that can provide the required inputs.</p>
 
                 <p>So instead of hardcoding, I needed to accept the measure and date column as parameters. The consumer would pass in their model-specific references, and the function would handle the calculation logic.</p>
 
                 <h2>Designing TimeIntel.PeriodCompare</h2>
 
-                <p>My first function needed to replace the common pattern of DATEADD-based period comparisons. I wanted a single function that could handle year, quarter, month, or day shifts&mdash;not four separate functions.</p>
+                <p>My first function needed to replace the common pattern of DATEADD-based period comparisons. I wanted a single function that could handle year, quarter, month, or day shifts, not four separate functions.</p>
 
                 <p>Here's the challenge: DATEADD requires a literal keyword (YEAR, QUARTER, MONTH, DAY) for its granularity parameter. I can't pass a variable. This means I had to use a SWITCH pattern to route to the appropriate DATEADD call based on a string parameter.</p>
 
@@ -150,7 +150,7 @@
             )
         )</code></pre>
 
-                <p>Several design decisions are worth noting. The <code>metricExpr: EXPR</code> type hint ensures the measure expression is passed unevaluated, so CALCULATE can apply context transition properly. The <code>dateColumn: ANYREF</code> accepts any column reference, giving flexibility for models with different date table structures. The <code>UPPER()</code> normalization lets consumers pass "Year", "year", or "YEAR" without breaking. And the BLANK check prevents calculations when there's no data in the current context&mdash;keeping visuals clean.</p>
+                <p>Several design decisions are worth noting. The <code>metricExpr: EXPR</code> type hint ensures the measure expression is passed unevaluated, so CALCULATE can apply context transition properly. The <code>dateColumn: ANYREF</code> accepts any column reference, giving flexibility for models with different date table structures. The <code>UPPER()</code> normalization lets consumers pass "Year", "year", or "YEAR" without breaking. And the BLANK check prevents calculations when there's no data in the current context, keeping visuals clean.</p>
 
                 <p>Now any model can use this:</p>
 
@@ -164,7 +164,7 @@ Revenue LY = TimeIntel.PeriodCompare([Revenue], 'Calendar'[DateKey], 1, "YEAR")<
 
                 <h2>Building TimeIntel.PeriodVariance</h2>
 
-                <p>With the comparison function working, I wanted to add a variance function that could return either absolute difference or percentage change. Rather than duplicating the DATEADD logic, I called the first function from within the second&mdash;demonstrating UDF composition.</p>
+                <p>With the comparison function working, I wanted to add a variance function that could return either absolute difference or percentage change. Rather than duplicating the DATEADD logic, I called the first function from within the second, demonstrating UDF composition.</p>
 
 <pre><code class="language-sql">DEFINE
     /// Returns variance between current and prior period values
@@ -193,7 +193,7 @@ Revenue LY = TimeIntel.PeriodCompare([Revenue], 'Calendar'[DateKey], 1, "YEAR")<
                 BLANK()
             )</code></pre>
 
-                <p>This composition pattern is significant. When I improve <code>TimeIntel.PeriodCompare</code>&mdash;adding error handling, supporting new granularities, or optimizing performance&mdash;every function that calls it inherits those improvements automatically. This is how professional codebases work, and now DAX can work this way too.</p>
+                <p>This composition pattern is significant. When I improve <code>TimeIntel.PeriodCompare</code> (adding error handling, supporting new granularities, or optimizing performance), every function that calls it inherits those improvements automatically. This is how professional codebases work, and now DAX can work this way too.</p>
 
                 <img src="../images/blog/dax-udf/image.png" alt="DAX UDF code in Power BI">
 
@@ -215,7 +215,7 @@ Revenue LY = TimeIntel.PeriodCompare([Revenue], 'Calendar'[DateKey], 1, "YEAR")<
 
                 <img src="../images/blog/dax-udf/image-1.png" alt="TMDL folder structure in Visual Studio Code">
 
-                <p>The <code>functions.tmdl</code> file is plain text&mdash;which means standard Git workflows apply. I can diff UDF changes in pull requests, see exactly who modified a business calculation and when, roll back broken functions to a previous commit, and branch experimental UDFs without affecting production.</p>
+                <p>The <code>functions.tmdl</code> file is plain text, which means standard Git workflows apply. I can diff UDF changes in pull requests, see exactly who modified a business calculation and when, roll back broken functions to a previous commit, and branch experimental UDFs without affecting production.</p>
 
                 <p>Here's what the TMDL content looks like:</p>
 
@@ -276,13 +276,13 @@ Revenue LY = TimeIntel.PeriodCompare([Revenue], 'Calendar'[DateKey], 1, "YEAR")<
                             BLANK()
                         )</code></pre>
 
-                <p>For teams maintaining multiple semantic models, I could store my UDF library in a shared repository and import the <code>functions.tmdl</code> content into each model's definition folder during CI. The library becomes a versioned dependency&mdash;update once, deploy everywhere.</p>
+                <p>For teams maintaining multiple semantic models, I could store my UDF library in a shared repository and import the <code>functions.tmdl</code> content into each model's definition folder during CI. The library becomes a versioned dependency: update once, deploy everywhere.</p>
 
                 <h2>DAX Lib: Sharing with the Community</h2>
 
                 <p>As Marco Russo announced in his <a href="https://www.sqlbi.com/blog/marco/2025/12/12/introducing-dax-lib-the-app-store-for-dax-user-defined-functions/" target="_blank" rel="noopener">introduction to DAX Lib</a>, SQLBI has created an open-source repository at <a href="https://daxlib.org" target="_blank" rel="noopener">daxlib.org</a> where the community can share model-independent functions. The site already hosts over 30 libraries covering SVG visuals, formatting, conversions, and common calculation patterns.</p>
 
-                <p>Using DAX Lib is straightforward: copy the TMDL script from the library page, paste it into your model's TMDL view in Power BI Desktop, and apply. Submitting your own library follows a similar process&mdash;you contribute well-documented, model-independent functions that any developer can import and use immediately.</p>
+                <p>Using DAX Lib is straightforward: copy the TMDL script from the library page, paste it into your model's TMDL view in Power BI Desktop, and apply. Submitting your own library follows a similar process; you contribute well-documented, model-independent functions that any developer can import and use immediately.</p>
 
                 <p>The naming convention matters here. Model-independent functions intended for DAX Lib should use a library prefix (like <code>TimeIntel.</code>) to avoid conflicts when multiple libraries are imported into the same model. <a href="https://www.sqlbi.com/articles/model-dependent-and-model-independent-user-defined-functions-in-dax/" target="_blank" rel="noopener">SQLBI's naming conventions documentation</a> recommends reserving <code>Local.</code> prefix for model-dependent functions that won't be shared.</p>
 
@@ -292,7 +292,7 @@ Revenue LY = TimeIntel.PeriodCompare([Revenue], 'Calendar'[DateKey], 1, "YEAR")<
 
                 <p>The combination of UDFs, TMDL, and Git integration creates something genuinely new: a proper software engineering workflow for semantic model development. Functions are versioned, diffable, testable, and shareable. This is what enterprise-scale DAX development should look like.</p>
 
-                <p>I hope this inspires you to find the patterns in your own models that deserve to become portable functions&mdash;and perhaps contribute them back to the community through DAX Lib.</p>
+                <p>I hope this inspires you to find the patterns in your own models that deserve to become portable functions, and perhaps contribute them back to the community through DAX Lib.</p>
             </div>
 
             <div class="article-tags-section">

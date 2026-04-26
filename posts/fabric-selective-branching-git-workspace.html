@@ -89,13 +89,13 @@
             <img class="featured-image" src="../images/blog/fabric-selective-branching/featured.png" alt="Fabric workspace with only selected items after selective branching">
 
             <div class="article-content">
-                <p>In this writing, I want to share how exploring Fabric&rsquo;s <strong>selective branching</strong> turned a simple workspace experiment into a full DevOps workflow discovery &mdash; from branching out with only the items I needed, all the way through creating a pull request in Azure DevOps and syncing the changes back to the main workspace.</p>
+                <p>In this writing, I want to share how exploring Fabric's <strong>selective branching</strong> turned a simple workspace experiment into a full DevOps workflow discovery, from branching out with only the items I needed, all the way through creating a pull request in Azure DevOps and syncing the changes back to the main workspace.</p>
 
-                <p>I didn&rsquo;t expect a quick test of the <a href="https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Branch out to workspace</a> feature to raise so many questions. My plan was simple: branch out, make a small change, and commit. Instead, I found myself asking <em>&ldquo;How do I merge back to main?&rdquo;</em>, <em>&ldquo;What happens to the workspace after the pull request?&rdquo;</em>, and <em>&ldquo;Why does Select related items only work in one direction?&rdquo;</em> Those unanswered questions became the real story.</p>
+                <p>I didn't expect a quick test of the <a href="https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Branch out to workspace</a> feature to raise so many questions. My plan was simple: branch out, make a small change, and commit. Instead, I found myself asking <em>"How do I merge back to main?"</em>, <em>"What happens to the workspace after the pull request?"</em>, and <em>"Why does Select related items only work in one direction?"</em> Those unanswered questions became the real story.</p>
 
                 <h2>1. The Starting Point: A Workspace Connected to Main</h2>
 
-                <p>I started with a Contoso sample workspace connected to a Git repository in Azure DevOps. The workspace had several items &mdash; reports, semantic models, a lakehouse, and a SQL analytics endpoint &mdash; all synced to the <code>main</code> branch.</p>
+                <p>I started with a Contoso sample workspace connected to a Git repository in Azure DevOps. The workspace had several items (reports, semantic models, a lakehouse, and a SQL analytics endpoint) all synced to the <code>main</code> branch.</p>
 
                 <img src="../images/blog/fabric-selective-branching/image.png" alt="Contoso workspace connected to main branch with Source control panel open" loading="lazy">
 
@@ -111,27 +111,27 @@
 
                 <img src="../images/blog/fabric-selective-branching/image-2.png" alt="Branch out dialog with Select items individually checkbox" loading="lazy">
 
-                <p>Checking that box changed the entire experience. Instead of cloning every item from the main workspace into the new branch, I could pick only what I needed. The <a href="https://blog.fabric.microsoft.com/en-us/blog/fabric-march-2026-feature-summary?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Fabric March 2026 Feature Summary</a> describes this as <strong>selective branching</strong> &mdash; a more focused branch-out experience that reduces clutter, improves reliability, and accelerates time-to-code.</p>
+                <p>Checking that box changed the entire experience. Instead of cloning every item from the main workspace into the new branch, I could pick only what I needed. The <a href="https://blog.fabric.microsoft.com/en-us/blog/fabric-march-2026-feature-summary?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Fabric March 2026 Feature Summary</a> describes this as <strong>selective branching</strong>, a more focused branch-out experience that reduces clutter, improves reliability, and accelerates time-to-code.</p>
 
                 <img src="../images/blog/fabric-selective-branching/image-3.png" alt="Select items dialog showing all workspace items with checkboxes" loading="lazy">
 
-                <p>I selected a report and noticed the <strong>Select related items</strong> button at the bottom. Clicking it automatically added the related semantic model to my selection. That made sense &mdash; a report depends on its semantic model to function.</p>
+                <p>I selected a report and noticed the <strong>Select related items</strong> button at the bottom. Clicking it automatically added the related semantic model to my selection. That made sense: a report depends on its semantic model to function.</p>
 
                 <img src="../images/blog/fabric-selective-branching/image-4.png" alt="Select items dialog with report and semantic model selected via Select related items" loading="lazy">
 
-                <p>But here&rsquo;s what caught my attention: when I selected a semantic model first instead of the report, clicking <strong>Select related items</strong> did <em>not</em> auto-select the reports that use it. The button only selects <em>dependencies</em> &mdash; items that the selected item requires to work &mdash; not items that depend on it. A report needs its semantic model, but a semantic model doesn&rsquo;t need any specific report.</p>
+                <p>But here's what caught my attention: when I selected a semantic model first instead of the report, clicking <strong>Select related items</strong> did <em>not</em> auto-select the reports that use it. The button only selects <em>dependencies</em> (items that the selected item requires to work), not items that depend on it. A report needs its semantic model, but a semantic model doesn't need any specific report.</p>
 
-                <p>This was my first <em>aha</em> moment: <strong>Select related items follows the same dependency logic as deployment pipelines.</strong> It traces downward to what an item needs, not upward to what uses it. Once I understood this, the behavior made perfect sense &mdash; but it wasn&rsquo;t obvious at first glance.</p>
+                <p>This was my first <em>aha</em> moment: <strong>Select related items follows the same dependency logic as deployment pipelines.</strong> It traces downward to what an item needs, not upward to what uses it. Once I understood this, the behavior made perfect sense, but it wasn't obvious at first glance.</p>
 
                 <h2>3. An Isolated Workspace With Only What I Needed</h2>
 
-                <p>After clicking <strong>Create branch</strong>, Fabric created a new workspace called <code>blue-workspace-ticket-101</code>. The result was exactly what selective branching promises: a clean workspace containing only the two items I selected &mdash; the report and its semantic model.</p>
+                <p>After clicking <strong>Create branch</strong>, Fabric created a new workspace called <code>blue-workspace-ticket-101</code>. The result was exactly what selective branching promises: a clean workspace containing only the two items I selected: the report and its semantic model.</p>
 
                 <img src="../images/blog/fabric-selective-branching/image-5.png" alt="New workspace blue-workspace-ticket-101 with only two items" loading="lazy">
 
-                <p>No lakehouse, no SQL analytics endpoint, no other reports. Just the items I needed for the task at hand. For a workspace with dozens of items, this dramatically reduces the noise and makes it immediately clear what you&rsquo;re working on.</p>
+                <p>No lakehouse, no SQL analytics endpoint, no other reports. Just the items I needed for the task at hand. For a workspace with dozens of items, this dramatically reduces the noise and makes it immediately clear what you're working on.</p>
 
-                <p>I also discovered that if I realized later I needed additional items, I didn&rsquo;t have to start over. The source control panel offered a <strong>Select connected items</strong> option to add more items from the Git branch into the workspace after the fact.</p>
+                <p>I also discovered that if I realized later I needed additional items, I didn't have to start over. The source control panel offered a <strong>Select connected items</strong> option to add more items from the Git branch into the workspace after the fact.</p>
 
                 <img src="../images/blog/fabric-selective-branching/image-6.png" alt="Source control panel showing Select connected items option" loading="lazy">
 
@@ -141,29 +141,29 @@
 
                 <img src="../images/blog/fabric-selective-branching/image-7.png" alt="Workspace settings showing Git integration with auto-created branch name" loading="lazy">
 
-                <p>Switching to Azure DevOps confirmed the same thing from the other side &mdash; the branch appeared in the Branches view, created from main.</p>
+                <p>Switching to Azure DevOps confirmed the same thing from the other side: the branch appeared in the Branches view, created from main.</p>
 
                 <img src="../images/blog/fabric-selective-branching/image-8.png" alt="Azure DevOps Branches page showing blue-workspace-ticket-101 branch" loading="lazy">
 
-                <p>This is a real Git branch. Everything that works with Git branches &mdash; pull requests, branch policies, code reviews &mdash; works here.</p>
+                <p>This is a real Git branch. Everything that works with Git branches (pull requests, branch policies, code reviews) works here.</p>
 
                 <h2>5. Making Changes and Reviewing the Diff</h2>
 
-                <p>With the isolated workspace ready, I refreshed the semantic model and made changes to both the report and the semantic model &mdash; adding two visuals to the global overview page and updating SPLY (Same Period Last Year) measures.</p>
+                <p>With the isolated workspace ready, I refreshed the semantic model and made changes to both the report and the semantic model: adding two visuals to the global overview page and updating SPLY (Same Period Last Year) measures.</p>
 
                 <p>The workspace immediately reflected the changes. Both items showed a <strong>Modified</strong> status in the Git status column.</p>
 
                 <img src="../images/blog/fabric-selective-branching/image-9.png" alt="Workspace items showing Modified git status" loading="lazy">
 
-                <p>Opening the <strong>Source control</strong> panel showed two pending changes. But what caught my eye was the <strong>Review changes</strong> button &mdash; a side-by-side diff view right inside the Power BI service.</p>
+                <p>Opening the <strong>Source control</strong> panel showed two pending changes. But what caught my eye was the <strong>Review changes</strong> button, a side-by-side diff view right inside the Power BI service.</p>
 
                 <img src="../images/blog/fabric-selective-branching/image-10.png" alt="Source control panel showing 2 changes and Review changes button" loading="lazy">
 
-                <p>Clicking it opened the <strong>Change Review</strong> panel. I could see the exact TMDL changes side by side &mdash; the modified branch on the left, the current main branch on the right. The measure definition changes were highlighted in green and red, just like a Git diff.</p>
+                <p>Clicking it opened the <strong>Change Review</strong> panel. I could see the exact TMDL changes side by side: the modified branch on the left, the current main branch on the right. The measure definition changes were highlighted in green and red, just like a Git diff.</p>
 
                 <img src="../images/blog/fabric-selective-branching/image-11.png" alt="Change Review showing TMDL measure changes in side-by-side diff view" loading="lazy">
 
-                <p><em>This was the second aha moment.</em> <strong>Fabric&rsquo;s built-in change review gives you a real code diff experience for semantic model changes, directly in the browser.</strong> For anyone used to reviewing pull requests in Azure DevOps or GitHub, this feels immediately familiar &mdash; and it happens before you even commit.</p>
+                <p><em>This was the second aha moment.</em> <strong>Fabric's built-in change review gives you a real code diff experience for semantic model changes, directly in the browser.</strong> For anyone used to reviewing pull requests in Azure DevOps or GitHub, this feels immediately familiar, and it happens before you even commit.</p>
 
                 <p>I wrote a descriptive commit message and committed both items.</p>
 
@@ -171,9 +171,9 @@
 
                 <h2>6. Merging Back: The Answer Lives in Azure DevOps</h2>
 
-                <p>This was the question I didn&rsquo;t know the answer to when I started: <em>how do I merge my changes back to main?</em> Is there a merge button somewhere in the Power BI service? Or do I need to go to Azure DevOps?</p>
+                <p>This was the question I didn't know the answer to when I started: <em>how do I merge my changes back to main?</em> Is there a merge button somewhere in the Power BI service? Or do I need to go to Azure DevOps?</p>
 
-                <p>The answer: <strong>there is no merge-back UI in the Power BI service.</strong> You create a pull request in your Git provider &mdash; Azure DevOps in my case. In the <a href="https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Manage branches</a> documentation, under <strong>Scenario 2 &mdash; Branch-out to another workspace</strong>, step 11 states that the review and merge processes are done through the related Git provider.</p>
+                <p>The answer: <strong>there is no merge-back UI in the Power BI service.</strong> You create a pull request in your Git provider, Azure DevOps in my case. In the <a href="https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Manage branches</a> documentation, under <strong>Scenario 2: Branch-out to another workspace</strong>, step 11 states that the review and merge processes are done through the related Git provider.</p>
 
                 <p>Switching to Azure DevOps, I could see my commit in the branch. I clicked <strong>Create a pull request</strong>.</p>
 
@@ -205,7 +205,7 @@
 
                 <p>The loop was complete. But one question remained: <em>what do I do with the <code>blue-workspace-ticket-101</code> workspace now?</em></p>
 
-                <p>I looked through the <a href="https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Manage branches</a> documentation but found no mention of automatic workspace cleanup after a pull request completes. The documentation describes the branch-out and merge flow in <strong>Scenario 2</strong>, but stops at the point where the main workspace receives the merged changes. From my testing, the feature workspace simply remains after the PR is merged &mdash; it is <strong>not automatically deleted</strong>. You need to manually delete the workspace and optionally delete the branch in Azure DevOps. For teams that create feature branches frequently, this means workspaces can accumulate quickly if not cleaned up.</p>
+                <p>I looked through the <a href="https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Manage branches</a> documentation but found no mention of automatic workspace cleanup after a pull request completes. The documentation describes the branch-out and merge flow in <strong>Scenario 2</strong>, but stops at the point where the main workspace receives the merged changes. From my testing, the feature workspace simply remains after the PR is merged; it is <strong>not automatically deleted</strong>. You need to manually delete the workspace and optionally delete the branch in Azure DevOps. For teams that create feature branches frequently, this means workspaces can accumulate quickly if not cleaned up.</p>
 
                 <h2>8. From a DevOps Standpoint: This Is Foundational</h2>
 
@@ -215,17 +215,17 @@
 
                 <h3>Code review through pull requests</h3>
 
-                <p>The fact that merging back to main goes through Azure DevOps means teams can enforce branch policies, require reviewers, and run automated checks before changes reach the shared workspace. The built-in Change Review in the Power BI service provides a first look at the diff, and the pull request in Azure DevOps provides the formal review gate. This two-layer review process &mdash; preview in Fabric, approve in Azure DevOps &mdash; is a natural fit for enterprise teams.</p>
+                <p>The fact that merging back to main goes through Azure DevOps means teams can enforce branch policies, require reviewers, and run automated checks before changes reach the shared workspace. The built-in Change Review in the Power BI service provides a first look at the diff, and the pull request in Azure DevOps provides the formal review gate. This two-layer review process (preview in Fabric, approve in Azure DevOps) is a natural fit for enterprise teams.</p>
 
                 <h3>Governance and blast radius</h3>
 
-                <p>Selective branching fundamentally reduces the blast radius of changes. When a developer branches out with only a report and its semantic model, they physically cannot modify any other items in the workspace. This is not just a convention or a guideline &mdash; it&rsquo;s enforced by the workspace itself. For organizations with strict governance requirements, this kind of structural isolation is more reliable than relying on team discipline alone.</p>
+                <p>Selective branching fundamentally reduces the blast radius of changes. When a developer branches out with only a report and its semantic model, they physically cannot modify any other items in the workspace. This is not just a convention or a guideline; it's enforced by the workspace itself. For organizations with strict governance requirements, this kind of structural isolation is more reliable than relying on team discipline alone.</p>
 
                 <h2>Reflection</h2>
 
-                <p>This experience left me with a new mental model: <strong>selective branching transforms Fabric workspaces from shared sandboxes into proper Git feature branches &mdash; scoped, isolated, and reviewable.</strong></p>
+                <p>This experience left me with a new mental model: <strong>selective branching transforms Fabric workspaces from shared sandboxes into proper Git feature branches: scoped, isolated, and reviewable.</strong></p>
 
-                <p>The full workflow &mdash; branch out with selected items, work in isolation, commit, create a pull request in Azure DevOps, merge, and sync back to main &mdash; mirrors what software development teams have done with code repositories for years. The fact that this now works for Power BI reports and semantic models inside Fabric is a significant step forward for teams that take their BI development lifecycle seriously.</p>
+                <p>The full workflow (branch out with selected items, work in isolation, commit, create a pull request in Azure DevOps, merge, and sync back to main) mirrors what software development teams have done with code repositories for years. The fact that this now works for Power BI reports and semantic models inside Fabric is a significant step forward for teams that take their BI development lifecycle seriously.</p>
 
                 <p>I hope this helps having fun in exploring selective branching and embracing this new era of Git-integrated Fabric development!</p>
             </div>
@@ -255,7 +255,7 @@
             <nav class="post-navigation">
                 <a href="calendar-based-time-intelligence-year-week.html" class="post-nav-link post-nav-link--next">
                     <span class="post-nav-label">Next</span>
-                    <span class="post-nav-title">From &lsquo;Mark as Date Table&rsquo; to Calendars: My First Year-Week Calendar with Calendar-Based Time Intelligence</span>
+                    <span class="post-nav-title">From 'Mark as Date Table' to Calendars: My First Year-Week Calendar with Calendar-Based Time Intelligence</span>
                 </a>
                 <a href="pbip-lineage-explorer-tracing-visuals-to-source.html" class="post-nav-link" target="_blank" rel="noopener">
                     <span class="post-nav-label">Previous</span>

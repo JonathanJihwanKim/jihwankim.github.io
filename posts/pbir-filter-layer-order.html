@@ -90,13 +90,13 @@
             <img class="featured-image" src="../images/blog/pbir-filter-layer-order/featured.png" alt="From Click-by-Click to Code: How PBIR Transformed My Filters Pane Visibility and Layer Order Workflow">
 
             <div class="article-content">
-                <p>In this writing, I want to share how a simple UI change in Power BI Desktop sparked my curiosity to deep dive into the PBIR format&mdash;and ultimately changed how I think about report maintenance at scale.</p>
+                <p>In this writing, I want to share how a simple UI change in Power BI Desktop sparked my curiosity to deep dive into the PBIR format, and ultimately changed how I think about report maintenance at scale.</p>
 
                 <h2>1. The Moment Curiosity Turned Into Action</h2>
 
                 <p>I didn't expect "hide filters from view mode" to become a DevOps conversation. My plan was simple: clean up the Filters pane for end users by hiding visual-level filters they don't need to see. Instead, I found myself staring at JSON diffs in VS Code, realizing that what used to take dozens of clicks now leaves a traceable, reviewable, automatable trail.</p>
 
-                <p>My journey started with a Contoso Sales report&mdash;five visuals on a single page. Each visual had filters that cluttered the Filters pane for report consumers. In the old days (before PBIR), I would click each visual, expand the Filters pane, and toggle the eye icon for every single filter. Miss one? You won't know until someone complains. Want to apply the same standard across 50 reports? Good luck.</p>
+                <p>My journey started with a Contoso Sales report, five visuals on a single page. Each visual had filters that cluttered the Filters pane for report consumers. In the old days (before PBIR), I would click each visual, expand the Filters pane, and toggle the eye icon for every single filter. Miss one? You won't know until someone complains. Want to apply the same standard across 50 reports? Good luck.</p>
 
                 <p>That era is officially ending.</p>
 
@@ -106,7 +106,7 @@
 
                 <p>When I examined the visual.json files before making any changes, I expected to see something like <code>"isHiddenInViewMode": false</code> for each filter. It wasn't there. The property simply didn't exist.</p>
 
-                <p>The same was true for "Maintain layer order"&mdash;a setting under Format > Properties > Advanced options that controls whether visuals stay in their defined z-order during interactions. Before enabling it, there was no <code>keepLayerOrder</code> property anywhere in the code.</p>
+                <p>The same was true for "Maintain layer order", a setting under Format > Properties > Advanced options that controls whether visuals stay in their defined z-order during interactions. Before enabling it, there was no <code>keepLayerOrder</code> property anywhere in the code.</p>
 
                 <p>I noticed that PBIR doesn't write default values to the JSON files. Properties like isHiddenInViewMode or keepLayerOrder simply don't exist until I change them from their defaults.</p>
 
@@ -123,7 +123,7 @@
 
                 <h3>Before: Filters Visible in the Filters Pane</h3>
 
-                <p>The Filters pane shows all visual-level filters visible&mdash;Month, Total Sales, Brand, and others. Each has an eye icon indicating it's visible to report consumers.</p>
+                <p>The Filters pane shows all visual-level filters visible: Month, Total Sales, Brand, and others. Each has an eye icon indicating it's visible to report consumers.</p>
 
                 <img src="../images/blog/pbir-filter-layer-order/image.png" alt="Slicer with filters visible">
                 <img src="../images/blog/pbir-filter-layer-order/image-1.png" alt="Card with filters visible">
@@ -172,7 +172,7 @@
 
                 <h3>After: Maintain Layer Order Enabled</h3>
 
-                <p>With the toggle enabled, visuals now respect their z-order during interactions&mdash;critical for reports with overlapping elements or layered designs.</p>
+                <p>With the toggle enabled, visuals now respect their z-order during interactions, critical for reports with overlapping elements or layered designs.</p>
 
                 <img src="../images/blog/pbir-filter-layer-order/image-16.png" alt="Maintain layer order toggle enabled">
 
@@ -196,7 +196,7 @@
   ]
 }</code></pre>
 
-                <p>It added these 15 lines to each of the five visual.json files&mdash;75 lines total, all traceable in Git history.</p>
+                <p>It added these 15 lines to each of the five visual.json files, 75 lines total, all traceable in Git history.</p>
 
                 <img src="../images/blog/pbir-filter-layer-order/image-20.png" alt="Slicer layer order diff in VS Code">
                 <img src="../images/blog/pbir-filter-layer-order/image-19.png" alt="Card layer order diff in VS Code">
@@ -208,7 +208,7 @@
 
                 <h3>Code Review Angle</h3>
 
-                <p>In a DevOps workflow, every change goes through a pull request. Before PBIR, filter visibility changes were invisible to reviewers&mdash;you'd have to open the .pbix file and click through each visual to verify. Now, a teammate reviewing my PR can see exactly what changed:</p>
+                <p>In a DevOps workflow, every change goes through a pull request. Before PBIR, filter visibility changes were invisible to reviewers; you'd have to open the .pbix file and click through each visual to verify. Now, a teammate reviewing my PR can see exactly what changed:</p>
 
                 <p><em>"Jihwan added <code>isHiddenInViewMode: true</code> to 12 filters across 5 visuals." Approved.</em></p>
 
@@ -249,7 +249,7 @@
                     <p>Insert it after the <code>objects</code> property but before <code>drillFilterOtherVisuals</code> within the <code>visual</code> object.</p>
                 </blockquote>
 
-                <p>With these prompts, an AI can generate working scripts in seconds. This is the combination of PBIR's transparency and AI's code generation capabilities&mdash;a workflow that simply wasn't possible with binary .pbix files.</p>
+                <p>With these prompts, an AI can generate working scripts in seconds. This is the combination of PBIR's transparency and AI's code generation capabilities, a workflow that simply wasn't possible with binary .pbix files.</p>
 
                 <h2>6. The Challenge: Absence Means Default</h2>
 
@@ -260,7 +260,7 @@
                 <p>This mental model is crucial for:</p>
                 <ul>
                     <li><strong>Reading PBIR files correctly</strong>: Don't assume missing properties are bugs</li>
-                    <li><strong>Writing automation scripts</strong>: I am not fixing missing values&mdash;I am overriding defaults</li>
+                    <li><strong>Writing automation scripts</strong>: I am not fixing missing values; I am overriding defaults</li>
                     <li><strong>Troubleshooting</strong>: If a setting isn't working, check if the property exists at all</li>
                 </ul>
 
