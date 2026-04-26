@@ -155,6 +155,8 @@ FILTER (
 
                 <p>This was the second aha moment. <strong>Setting isHidden updates the metadata, but doesn't actually hide the function.</strong> The TMDL stores the property. The engine returns it through the INFO function. The runtime and UI haven't been wired to honor it yet.</p>
 
+                <p>To be precise, hidden measures and columns stay visible in Model explorer and IntelliSense too, since both are developer surfaces. The <code>isHidden</code> property hides them only from the Data pane in Report view, the report-author surface. UDFs don't currently appear in the Data pane the way measures and columns do, so there isn't yet a natural consumer surface where the <code>isHidden</code> flag would have a visible effect. That helps explain why the documentation calls hide/unhide unsupported during preview today: the property is captured in TMDL, but the surface where it would matter doesn't exist yet.</p>
+
                 <h2>4. What the Documentation Actually Says</h2>
 
                 <p>I opened the Microsoft Learn page on <a href="https://learn.microsoft.com/en-us/dax/best-practices/dax-user-defined-functions?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">DAX user-defined functions</a> and scrolled down to the <strong>Considerations and limitations</strong> section. Under its <strong>General</strong> subsection, alongside the other current preview restrictions, the documentation calls out that hiding or unhiding a UDF in the model is not currently supported.</p>
