@@ -8,6 +8,18 @@
     // Blog posts data — newest first
     var posts = [
         {
+            id: 12,
+            title: "I Expected a Merge Conflict and Got a Clean PR Instead: What Changed in Power BI Source Control",
+            preview: "A deliberate two-branch merge conflict experiment in a PBIP repository merged cleanly anyway. Walking through why TMDL's per-table, per-measure file shape is the reason, with Microsoft Learn citations on Git merge rules, PBIP, TMDL, and Fabric Git integration.",
+            date: "May 3, 2026",
+            sortDate: "2026-05-03",
+            tags: ["PBIP", "TMDL", "Git", "DevOps", "Power BI"],
+            url: "posts/tmdl-merge-conflict-experiment.html",
+            featuredImage: "images/blog/tmdl-merge-conflict-experiment/featured.png",
+            readingTime: "9 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 11,
             title: "INFO.USERDEFINEDFUNCTIONS and the isHidden Gap in DAX UDF Governance",
             preview: "Running INFO.USERDEFINEDFUNCTIONS against my Contoso model surfaced one metadata column I wasn't expecting. Setting isHidden in TMDL updated the metadata but didn't actually hide the function — a documented preview limitation that reframes how DAX UDFs are governable today.",

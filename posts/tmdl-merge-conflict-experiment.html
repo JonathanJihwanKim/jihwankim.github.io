@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A deliberate two-branch merge conflict experiment in a PBIP repository merged cleanly anyway. Walking through why TMDL's per-table, per-measure file shape is the reason, with Microsoft Learn citations on Git merge rules, PBIP, TMDL, and Fabric Git integration.">
+    <meta name="keywords" content="TMDL, PBIP, Power BI, Git, Merge Conflict, Source Control, DevOps, Microsoft Fabric, Semantic Model">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="I Expected a Merge Conflict and Got a Clean PR Instead: What Changed in Power BI Source Control | Jihwan Kim">
+    <meta property="og:description" content="A deliberate two-branch merge conflict experiment in a PBIP repository merged cleanly anyway. Walking through why TMDL's per-table, per-measure file shape is the reason.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/tmdl-merge-conflict-experiment.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/tmdl-merge-conflict-experiment/featured.png">
+    <meta property="og:image:secure_url" content="https://powerbimvp.com/images/blog/tmdl-merge-conflict-experiment/featured.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Two PBIP branches merging cleanly in a Power BI source-control workflow">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="I Expected a Merge Conflict and Got a Clean PR Instead: What Changed in Power BI Source Control">
+    <meta name="twitter:description" content="A deliberate two-branch merge conflict experiment in a PBIP repository merged cleanly anyway. Walking through why TMDL's per-table, per-measure file shape is the reason.">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/tmdl-merge-conflict-experiment/featured.png">
+    <meta name="twitter:image:alt" content="Two PBIP branches merging cleanly in a Power BI source-control workflow">
+
+    <title>I Expected a Merge Conflict and Got a Clean PR Instead: What Changed in Power BI Source Control | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 9 min read</span>
+                </div>
+                <h1 class="article-title">I Expected a Merge Conflict and Got a Clean PR Instead: What Changed in Power BI Source Control</h1>
+                <div class="article-meta">
+                    <time datetime="2026-05-03">
+                        <span class="material-symbols-outlined">calendar_month</span> May 3, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="PBIP">PBIP</span>
+                        <span class="tag" data-tag="TMDL">TMDL</span>
+                        <span class="tag" data-tag="Git">Git</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started May. 3, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/tmdl-merge-conflict-experiment/featured.png" alt="Two PBIP branches merging cleanly in a Power BI source-control workflow">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how a deliberate conflict experiment in a Power BI project repository merged cleanly anyway, and what I learned about <em>when</em> and <em>what</em> in Power BI source control made that possible.</p>
+
+                <p>I didn't expect a <em>deliberate</em> conflict test to merge cleanly. My plan was simple. Create two branches off <code>main</code>. Have each branch edit the same <code>Internal Measures.tmdl</code> file. Open PR1 and merge it. Open PR2 against the updated <code>main</code>. Watch PR2 fail with a merge conflict. Instead, both pull requests merged automatically, and I sat staring at a green check mark asking myself <em>"why didn't the second PR fail?"</em> The answer changed how I think about the whole Power BI source-control workflow.</p>
+
+                <img src="../images/blog/tmdl-merge-conflict-experiment/image-1.png" alt="Both PRs merged cleanly against main, no conflict on PR2" loading="lazy">
+
+                <h2>1. The Setup: Two Branches, One TMDL File, Two Different Measures</h2>
+
+                <p>The repository is a PBIP project of the Contoso semantic model, with the model definition stored as TMDL under <code>import_contoso_sales.SemanticModel/definition/</code>. I created two feature branches off <code>main</code>.</p>
+
+                <p><strong>Branch <code>vscode_subbranch_001</code></strong> edited the <code>Total Sales</code> measure inside <code>definition/tables/Internal Measures.tmdl</code>. I added a comment, reformatted the expression onto multiple lines, and added a format-hint annotation. The commit hash was <code>d8fa799</code>.</p>
+
+                <img src="../images/blog/tmdl-merge-conflict-experiment/image-2.png" alt="VS Code diff of vscode_subbranch_001's Total Sales measure edit" loading="lazy">
+
+                <img src="../images/blog/tmdl-merge-conflict-experiment/image-5.png" alt="Second view of the vscode_subbranch_001 change" loading="lazy">
+
+                <p><strong>Branch <code>vscode_subbranch_002</code></strong> edited the <code>SPLY Total Sales</code> measure in the <em>same</em> file. I added a single comment line above the <code>CALCULATE(...)</code> expression. The commit hash was <code>67acbdd</code>.</p>
+
+                <img src="../images/blog/tmdl-merge-conflict-experiment/image-3.png" alt="VS Code diff of vscode_subbranch_002's SPLY Total Sales measure edit" loading="lazy">
+
+                <img src="../images/blog/tmdl-merge-conflict-experiment/image-4.png" alt="Second view of the vscode_subbranch_002 change" loading="lazy">
+
+                <p>So both branches modified the <strong>same file</strong>. The difference is each branch modified a <strong>different DAX measure</strong> inside that file. By my pre-test mental model, two writers, simultaneous edits, same filename, that should have ended in a collision on the second PR.</p>
+
+                <h2>2. The Result That Surprised Me: Both PRs Merged Cleanly</h2>
+
+                <p>I merged PR1 first. Standard, no surprises. Then I opened PR2 against the updated <code>main</code>, expecting Git or the Git provider to flag the file as conflicted. It didn't. PR2 reported as mergeable, the merge ran, and the post-merge <code>Internal Measures.tmdl</code> contained both edits side by side.</p>
+
+                <p>I genuinely paused. The screenshot at the top of this post was the moment I sat back and asked myself <em>"something improved? when, and what?"</em> That is the question this post is built around.</p>
+
+                <h2>3. The First Surprise: "Same File" Wasn't Enough to Cause a Conflict</h2>
+
+                <p><em>"Two branches editing the same file at the same time"</em> still felt like a guaranteed collision when I designed the experiment, and I expected the second PR to fail.</p>
+
+                <p>The Microsoft Learn page on <a href="https://learn.microsoft.com/en-us/azure/devops/repos/git/merging?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Resolve Git merge conflicts</a> tells me, in plain terms, why my intuition was off. The first paragraph of the <em>Resolve Git merge conflicts</em> page introduction (right under the article title) states the rule directly. A merge conflict happens when both branches edit the <em>same file line differently</em>, or when one branch modifies a file and another deletes it. The boundary is the <strong>line</strong>, not the <strong>file</strong>.</p>
+
+                <p>Reading that sentence after seeing my green-checked PR landed harder than I expected. My two branches did edit the same file. They didn't edit the same lines. By Microsoft's own description of when Git raises a conflict, the second PR was never going to fail.</p>
+
+                <p>The picture for my experiment specifically: Branch 001's edit landed inside the <code>Total Sales</code> measure block of <code>Internal Measures.tmdl</code>. Branch 002's edit landed inside the <code>SPLY Total Sales</code> measure block, a few lines further down in the same file. Two different measures, two different sets of changed lines, no overlap. Git compared both branches against <code>main</code>, found nothing competing for the same lines, and combined them into a single merged file.</p>
+
+                <p>This is the difference between <em>"same file"</em> (true for both branches) and <em>"same lines inside the file"</em> (false). The intuition that <em>same file equals conflict</em> persists even when you have lived in the PBIP world for two years. The reason it persists is that "same file" is the unit Power BI shows you. Power BI Desktop opens, edits, and saves at the file level. The PR view in GitHub or Azure DevOps shows the changed <em>files</em> in the left pane before you click into the line-by-line diff. Even Git itself names commits by which files changed. The file is the visible object in every tool we touch, so when we picture "two developers editing the same thing," the picture our brain reaches for is two writers fighting over the same file. The line-level reality is invisible until you look one layer deeper. Git always operated at that deeper layer; my intuition just had not caught up.</p>
+
+                <h2>4. The Aha Moment: Each TMDL Measure Sits in Its Own Block of Lines</h2>
+
+                <p>Here is the <em>aha</em> moment that finally rewired my intuition: <strong>inside a TMDL table file, every measure occupies its own clearly bounded block of lines.</strong></p>
+
+                <p>A useful way to picture a TMDL table file is as a list of measures laid out one after another, like rows in a notebook. Each measure starts with <code>measure 'Name' = ...</code> on its own line and continues until the next measure begins. That visual structure is what gives Git the anchor points it needs to tell two different edits apart.</p>
+
+                <p>In my experiment, the <code>Total Sales</code> block sits in the upper part of <code>Internal Measures.tmdl</code>. The <code>SPLY Total Sales</code> block sits below it. Branch 001 edited lines inside the <code>Total Sales</code> block. Branch 002 added one line inside the <code>SPLY Total Sales</code> block. The two edits live in two different blocks. From Git's perspective, the two changes are as independent as if they had been in two different files.</p>
+
+                <p>The reason TMDL has this shape (one file per table, one line block per measure inside the file) is not an accident. The <a href="https://learn.microsoft.com/en-us/analysis-services/tmdl/tmdl-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Tabular Model Definition Language (TMDL) overview</a> page on Microsoft Learn explains it directly. The fourth bullet of the <em>intro list</em> at the top of the article names TMDL's folder representation, with each model object getting its own file, as the reason TMDL is more source-control-friendly than the alternatives. The <em>TMDL folder structure</em> section of the same article shows the actual layout: <code>tables/Sales.tmdl</code>, <code>tables/Customer.tmdl</code>, <code>tables/Product.tmdl</code>, one file per table.</p>
+
+                <p>The <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-dataset?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Power BI Desktop project semantic model folder</a> page on Microsoft Learn is even more pointed about exactly the case my experiment ran into. The <em>TMDL format</em> section of that page opens by stating that the goal of TMDL is a better source-control and co-development experience. The second paragraph of the same <em>TMDL format</em> section contrasts TMDL against the older "big JSON file" representation (TMSL) and names the per-table, per-perspective, per-role, per-culture file split as the property that produces good Git diffs and clean merges.</p>
+
+                <p>That is Microsoft saying out loud the property my experiment quietly demonstrated. TMDL was <em>designed</em> for this case.</p>
+
+                <h2>5. When Did This Improve, and What Specifically?</h2>
+
+                <p>The improvement is the file format, not the merge tool. Two changes in Power BI Desktop made my experiment possible, and both are anchored in Microsoft's own documentation.</p>
+
+                <p>The first change is <strong>Power BI Project (PBIP)</strong>, the save format that turns a Power BI project from a single <code>.pbix</code> file into a folder of plain text files. The <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Power BI Desktop projects (PBIP) overview</a> page on Microsoft Learn carries an <em>Important</em> callout right at the top of the article that names PBIP as currently in preview. The <em>top benefits bullet list</em> immediately below that callout names PBIP as text files designed for Git, with version history and team collaboration as direct outcomes. A later bullet in the same list calls out CI/CD on top of source-control systems as a supported scenario.</p>
+
+                <p>The second change is <strong>TMDL as the semantic-model file format inside PBIP</strong>. The <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-dataset?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">PBIP semantic model folder</a> page on Microsoft Learn explains in its <em>Enable TMDL format Preview feature</em> sub-section that TMDL is opted in via <em>Preview features</em> in Desktop. So both PBIP and TMDL are still in preview at the time of writing, even though both have been usable in real projects for a while.</p>
+
+                <p>There is one practical detail that comes up the first time you run a real conflict test of your own, and it is worth separating from the measure-block point above. The line-block insight is about <em>which lines</em> you edit. The CRLF issue is about <em>how each line ends</em>. They are unrelated, but the second one can ruin the first.</p>
+
+                <p>Every text file ends each line with one or more invisible end-of-line characters. Windows tools (including Power BI Desktop) write <code>CR</code> + <code>LF</code> at the end of each line. Many Git workflows or non-Windows tools use <code>LF</code> only. If two systems touching the same file disagree on those invisible characters, Git can mark every line in the file as changed, even when the visible content is identical. That is not a TMDL or PBIP problem. It is a generic Git-on-Windows problem that hits any text file.</p>
+
+                <p>The PBIP overview's <em>Considerations and limitations</em> section flags this directly and recommends configuring Git's <code>autocrlf</code> setting so your diffs reflect actual edits rather than line-ending churn. If you skip that step, you may open a PR in your conflict test and see hundreds of "changed" lines that you never touched, which would mask the real measure-level changes you were trying to study. Worth setting once, at clone time, before you run any real test of your own.</p>
+
+                <p>The Fabric side of the story rounds out the picture for teams pushing into a workspace. The <a href="https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">overview of Fabric Git integration</a> page lists Semantic model and Report under its <em>Supported items &rarr; Power BI items</em> sub-list, both marked preview. The intro bullet list at the top of that page describes the goal plainly: collaborate with others or work alone using Git branches, and apply familiar source-control practices to Fabric items.</p>
+
+                <p>Putting the three layers together gets you to where my experiment landed. PBIP turns the project into text. TMDL splits the semantic model into one file per table with one block of lines per measure. Fabric Git integration syncs the workspace to and from a real Git branch. With those three in place, two developers editing two different measures of the same TMDL file is a clean merge by default.</p>
+
+                <h2>6. When You WOULD See a Conflict</h2>
+
+                <p>Knowing why my test merged cleanly only matters if I also know what it would take to make a real conflict happen. Here are the patterns that would have produced one.</p>
+
+                <p><strong>Same measure, same line, two different rewrites.</strong> If both branches had changed the formula of <code>Total Sales</code> to two different DAX expressions, Git would mark the line as conflicted and ask which version to keep.</p>
+
+                <p><strong>Same <code>lineageTag</code> regenerated to two different GUIDs.</strong> TMDL stores a <code>lineageTag</code> per object. If both branches regenerated the same tag to different values, the line is the same, the values differ, and Git stops to ask.</p>
+
+                <p><strong>Two new measures of the same name on the same table.</strong> Even if the two new measure declarations were inserted into different parts of the file, the second merge would land a duplicate-measure-name in <code>Internal Measures.tmdl</code>. Git might combine the text without complaint, but Power BI Desktop or the Fabric Git sync would refuse to load the resulting model.</p>
+
+                <p><strong>One shared <code>model.tmdl</code> setting changed two different ways.</strong> If two branches each set <code>defaultPowerBIDataSourceVersion</code> to different values in <code>model.tmdl</code>, that single line is owned by both branches. Conflict.</p>
+
+                <p>The pattern is consistent. Conflict is a same-line-region property; non-conflicting parallel work is the absence of line-region overlap. Knowing this lets a team plan their feature branches around different measures, different tables, different perspectives, and merge with confidence.</p>
+
+                <h2>7. From a DevOps Standpoint: This Is Foundational</h2>
+
+                <p>From a DevOps standpoint, this is foundational. The whole point of source-control-friendly file formats is that the practices software teams have used for two decades now apply to semantic models, too.</p>
+
+                <h3>Code Review</h3>
+
+                <p>Pull-request review on TMDL diffs is human-readable. The PBIP semantic model folder page's <em>TMDL format</em> section explicitly frames TMDL as designed for human-friendly reading and editing in any text editor. A reviewer can read a measure-level diff and approve, comment, or request changes the same way they would on backend code.</p>
+
+                <h3>Parallel Development</h3>
+
+                <p>My experiment is the example. Two developers, two measures, one file, two clean merges. The era of single-binary <code>.pbix</code>, when only one writer could touch the file at a time, required serialization of work even when the work was logically independent. PBIP plus TMDL removes that serialization for the cases where the edits don't overlap.</p>
+
+                <h3>Validation</h3>
+
+                <p>Because the model lives in text files, a CI hook on commit can run a Tabular Editor Best Practice Analyzer rule set, a custom validation script, or any line-aware linter. The PBIP overview's <em>top benefits bullet list, "CI/CD support"</em> bullet calls out CI/CD on top of the file representation as a first-class scenario. None of this was practical against a binary <code>.pbix</code>.</p>
+
+                <h3>Repository Hygiene</h3>
+
+                <p>TMDL emits a stable, deterministic ordering of objects so the same model, serialized twice, produces the same file. The TMDL overview's <em>Object references &rarr; Deterministic collection ordering</em> sub-section is what makes that guarantee. It is what stops your repo from filling up with churn diffs that have no semantic meaning.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>This experience left me with a new mental model: <strong>the file format is the source-control feature.</strong></p>
+
+                <p>PBIP turned a Power BI project from a binary into a folder of text. TMDL turned the semantic model from a big JSON document into a folder of per-object files. Together they are the reason my deliberate conflict test merged cleanly. Same Git, same provider, same workflow as before. Different file format. Different result.</p>
+
+                <p>Both PBIP and TMDL semantic-model format are still in preview at the time of writing, so the usual preview-feature caveats apply. I would still build real feature work on top of them today. The reason is simple. The only alternative is going back to the binary <code>.pbix</code> workflow, where there is no Git history, no parallel feature branches, no PR review of measure changes, and no clean merge of two developers' work. A preview feature with all of those is a better trade than a generally available format with none of them.</p>
+
+                <p>I hope this helps having fun in exploring PBIP and TMDL, and embracing this new era of Power BI source control where two developers can work on the same model file in parallel and trust the merge!</p>
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="PBIP">PBIP</span>
+                <span class="tag" data-tag="TMDL">TMDL</span>
+                <span class="tag" data-tag="Git">Git</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+                <span class="tag" data-tag="Power BI">Power BI</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: PBIP Lineage Explorer, PBIP Impact Analyzer, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="info-userdefinedfunctions-ishidden-preview-gap.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">INFO.USERDEFINEDFUNCTIONS and the isHidden Gap in DAX UDF Governance</span>
+                </a>
+                <div></div>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-rHwBHAxVvWblRZOkJc6/fI+iHFQjWFFGPA6COtU+nGANyEshLN8k+5+rBFFKKDE+UZsEmLoGvcC4hT/xfAtxOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-35RBtvuCKWANuRid6RXP2gYm4D5RMieVLfsMSzPu0Ry0jJFOqGcgJ/MXbSeRso89H12VqAjSH7RLx3tZnQIYGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>
