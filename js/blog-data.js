@@ -285,6 +285,7 @@
                     partnerCard.className = 'partner-card animate-in';
                     partnerCard.innerHTML =
                         '<img src="' + s.heroImage + '" alt="' + s.name + ' — ' + s.tagline + '" class="partner-card-image" loading="lazy">' +
+                        (s.animatedBanner ? '<img src="' + s.animatedBanner + '" alt="' + s.name + '" class="partner-card-gif">' : '') +
                         '<div class="partner-card-body">' +
                             '<span class="partner-label">Partner</span>' +
                             '<h3 class="partner-card-name">' + s.name + '</h3>' +

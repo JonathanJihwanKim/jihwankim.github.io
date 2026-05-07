@@ -21,6 +21,7 @@
             sidebarBanner: 'images/sponsors/seoulbites/banner-rows12.jpg',
             brandBanner: 'images/sponsors/seoulbites/banner-row1.jpg',
             showcaseBanner: 'images/sponsors/seoulbites/banner-rows1234.jpg',
+            animatedBanner: 'images/sponsors/seoulbites/20260507.gif',
             qrCode: 'images/sponsors/seoulbites/qrcode.png'
         }
     ];

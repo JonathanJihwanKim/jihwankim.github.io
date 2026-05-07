@@ -812,10 +812,20 @@
 }
 
 .partner-card-image {
-    width: 45%;
-    object-fit: cover;
+    width: 30%;
+    height: 240px;
+    object-fit: contain;
     border-right: 1px solid var(--border);
-    min-height: 220px;
+    background: var(--bg-elevated);
+}
+
+.partner-card-gif {
+    width: 30%;
+    height: 240px;
+    object-fit: contain;
+    border-right: 1px solid var(--border);
+    background: var(--bg-elevated);
+    display: block;
 }
 
 .partner-card-body {
@@ -872,6 +882,14 @@
     }
 
     .partner-card-image {
+        width: 100%;
+        min-height: auto;
+        aspect-ratio: 16 / 9;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .partner-card-gif {
         width: 100%;
         min-height: auto;
         aspect-ratio: 16 / 9;
@@ -969,6 +987,11 @@
 .partner-showcase-banner img {
     width: 100%;
     display: block;
+}
+
+.partner-showcase-banner-gif {
+    display: block;
+    margin-top: var(--space-3);
 }
 
 .partner-showcase-info {

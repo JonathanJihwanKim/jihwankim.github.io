@@ -31,10 +31,11 @@ jihwankim.github.io/
 │   ├── lightbox.js         Image zoom overlay (blog posts only)
 │   ├── reading-progress.js Scroll-based reading progress bar (blog posts only)
 │   └── toc.js              Table of contents generation + scroll spy (blog posts only)
-├── posts/                  Blog post HTML files (10 published)
+├── posts/                  Blog post HTML files
 ├── images/                 Profile images, badges, icons
 │   └── blog/<post-slug>/   Per-post images (featured images, screenshots)
 ├── CNAME                   Custom domain: powerbimvp.com
+├── .gitignore              Ignores tmpclaude-*-cwd harness scratch files
 └── robots.txt
 ```
 
@@ -105,6 +106,10 @@ python -m http.server 8000
 5. Set OG/Twitter meta tags in the new post's `<head>`
 6. Update the Content-Security-Policy meta tag if loading new external resources
 
+### Citation Style
+
+Every inline citation in a blog post should name the specific section, heading, or bullet of the source — not just link the article as a whole. This lets readers jump to the exact passage that backs the claim.
+
 ## Working with This Codebase
 
 - CSS changes go in the shared `css/` files — no page-specific stylesheets exist
@@ -112,3 +117,4 @@ python -m http.server 8000
 - For blog post content changes, edit the specific `posts/*.html` file
 - All JS files use the IIFE pattern; they don't import each other (nav.js exposes globals via `window.*`)
 - Windows environment: use `rm` not `del` in Bash (git bash shell)
+- The repo lives at `d:/github.io/jihwankim.github.io/` but Claude is often launched from the parent `d:/github.io/` — `cd` into the project dir or use absolute paths
