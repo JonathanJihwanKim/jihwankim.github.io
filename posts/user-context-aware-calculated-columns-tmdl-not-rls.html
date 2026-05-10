@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A TMDL walkthrough of the new expressionContext: userContext property in Power BI, showing why it should be read as per-user personalization rather than row-level security.">
+    <meta name="keywords" content="User Context, expressionContext, Calculated Columns, TMDL, Power BI, RLS, DevOps, DAX, Microsoft Fabric, Semantic Model">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="User-Context-Aware Calculated Columns: A Dynamic Calculated Column Pattern, Not Row-Level Security | Jihwan Kim">
+    <meta property="og:description" content="A TMDL walkthrough of the new expressionContext: userContext property in Power BI, showing why it should be read as per-user personalization rather than row-level security.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/user-context-aware-calculated-columns-tmdl-not-rls.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/user-context-aware-calculated-columns-tmdl-not-rls/featured.png">
+    <meta property="og:image:secure_url" content="https://powerbimvp.com/images/blog/user-context-aware-calculated-columns-tmdl-not-rls/featured.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="A user-context-aware calculated column rendering different brand labels per user in Power BI">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="User-Context-Aware Calculated Columns: A Dynamic Calculated Column Pattern, Not Row-Level Security">
+    <meta name="twitter:description" content="A TMDL walkthrough of the new expressionContext: userContext property in Power BI, showing why it should be read as per-user personalization rather than row-level security.">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/user-context-aware-calculated-columns-tmdl-not-rls/featured.png">
+    <meta name="twitter:image:alt" content="A user-context-aware calculated column rendering different brand labels per user in Power BI">
+
+    <title>User-Context-Aware Calculated Columns: A Dynamic Calculated Column Pattern, Not Row-Level Security | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 8 min read</span>
+                </div>
+                <h1 class="article-title">User-Context-Aware Calculated Columns: A Dynamic Calculated Column Pattern, Not Row-Level Security</h1>
+                <div class="article-meta">
+                    <time datetime="2026-05-09">
+                        <span class="material-symbols-outlined">calendar_month</span> May 9, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="TMDL">TMDL</span>
+                        <span class="tag" data-tag="DAX">DAX</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started May. 9, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/user-context-aware-calculated-columns-tmdl-not-rls/featured.png" alt="A user-context-aware calculated column rendering different brand labels per user in Power BI">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how the new <strong>Expression Context</strong> property unlocked a kind of calculated column I had not been able to create before, and how I want to make sure other Power BI developers do not mistake what it does for row-level security.</p>
+
+                <p>I didn't expect a single dropdown in the Properties pane to change what a calculated column is allowed to do. My plan was simple. Turn on the new April 2026 preview feature, drop <code>USERPRINCIPALNAME()</code> into a column on my Contoso Import model, and see what landed in the TMDL file. Instead, I ended up with two table visuals on the same report page, one showing every brand, the other showing only a curated subset, and seeing for the first time a calculated column that does not behave like calculated columns have ever behaved before.</p>
+
+                <p>The expression is re-evaluated per user session at query time, instead of being computed once at refresh and stored. Calculated columns have always been static. This one is not.</p>
+
+                <h2>1. The Switch I Had to Turn On First</h2>
+
+                <p>The April 2026 Power BI release introduced a Preview features toggle called <code>User-context-aware calculated columns</code>, sitting just below the new <code>Direct Lake calculated columns (unmaterialized)</code> switch in <a href="https://powerbi.microsoft.com/en-us/blog/power-bi-april-2026-feature-summary/?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Options and settings</a>. Both flip on independently. For this experiment I only needed the user-context one.</p>
+
+                <img src="../images/blog/user-context-aware-calculated-columns-tmdl-not-rls/image.png" alt="Power BI Desktop Options pane with the User-context-aware calculated columns preview feature checked" loading="lazy">
+
+                <p>The screenshot above shows the Preview features panel after I checked the <strong>User-context-aware calculated columns</strong> box. Nothing else changed visually until I went back to the model and tried to write a column expression that referenced <code>USERPRINCIPALNAME()</code>.</p>
+
+                <h2>2. The First Time I Wrote <code>USERPRINCIPALNAME()</code> Inside a Calculated Column</h2>
+
+                <p>I had not used <code>USERPRINCIPALNAME()</code> inside a calculated column before. Whenever a per-user behavior was needed in the past, I kept it in a measure. The functions that surface user identity were not part of my calculated-column toolkit, and I had never tested whether they were even allowed there.</p>
+
+                <p>The new preview feature was the reason to try. I added a calculated column on the <code>product</code> table called <code>Brand Name LogInAs</code> and wrote a <code>SWITCH</code> over <code>USERPRINCIPALNAME()</code> that returns either the brand name <code>Contoso</code>, the literal string <code>Others</code>, or the original brand name depending on who is asking.</p>
+
+                <img src="../images/blog/user-context-aware-calculated-columns-tmdl-not-rls/image-5.png" alt="A yellow warning bar appearing below the formula bar after USERPRINCIPALNAME is used inside a calculated column" loading="lazy">
+
+                <p>A yellow warning bar appeared below the formula bar with the exact text <em>"CUSTOMDATA, USERNAME, USERCULTURE and USERPRINCIPALNAME functions are not supported in calculated tables/columns. These functions may only be used in Measures or in the AllowedRowsExpression."</em> For me this was new information. The warning was the documented gate that the new property explicitly removes. I had been told what to do next without having to read about it. Open the Properties pane and find the property that lets these functions live in a column.</p>
+
+                <h2>3. The Property in the Properties Pane</h2>
+
+                <p>The Expression Context dropdown lives inside the Advanced section of the Properties pane in Model view. Its options are <strong>Standard</strong> (the default, materialized at refresh time) and <strong>User Context</strong> (evaluated at query time, with awareness of <code>USERPRINCIPALNAME</code>, <code>USERCULTURE</code>, <code>USEROBJECTID</code>, <code>USERNAME</code>, and <code>CUSTOMDATA</code> as documented in the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-calculated-columns?wt.mc_id=DP-MVP-5004989#expression-context" target="_blank" rel="noopener">Expression Context section of the Microsoft Learn calculated columns page</a>).</p>
+
+                <img src="../images/blog/user-context-aware-calculated-columns-tmdl-not-rls/image-6.png" alt="The Properties pane in Model view showing the Expression Context dropdown set to User Context" loading="lazy">
+
+                <p>I switched it to User Context, clicked the tick mark to confirm the formula, and noticed something small but worth flagging. The warning did not clear on the first apply. It cleared after a second click on the tick mark.</p>
+
+                <img src="../images/blog/user-context-aware-calculated-columns-tmdl-not-rls/image-8.png" alt="The same calculated column with the warning cleared after the second tick-mark click" loading="lazy">
+
+                <p>I am not sure whether that is intentional behavior or a UI quirk in the preview. Either way, the second click cleared the warning, and the column took.</p>
+
+                <h2>4. The TMDL Property That Got Written</h2>
+
+                <p>This is where I cared what got written to the file. The Microsoft Learn page documents the UI control and the storage-mode matrix, but it does not spell out the literal TMDL property name that gets written when you flip the dropdown. The only way to find out was to look.</p>
+
+                <p>Power BI Desktop ships a TMDL view that lets you read the current model definition without leaving Desktop. I opened it and looked at the <code>product</code> table.</p>
+
+                <img src="../images/blog/user-context-aware-calculated-columns-tmdl-not-rls/image-14.png" alt="The TMDL view in Power BI Desktop showing the new Brand Name LogInAs calculated column with the expressionContext: userContext property" loading="lazy">
+
+                <p>The screenshot above is the TMDL view of my new column as Power BI Desktop generates it. The new property is <code>expressionContext: userContext</code>. One line, sitting alongside the column's <code>lineageTag</code>, <code>summarizeBy</code>, and <code>annotation</code> lines. Direct, parseable, version-controllable. The column block reads:</p>
+
+                <pre><code>column 'Brand Name LogInAs' =
+
+    SWITCH (
+        USERPRINCIPALNAME (),
+        "data@123.com", IF ( 'product'[Brand] = "Contoso", 'product'[Brand], "Others" ),
+        'product'[Brand]
+    )
+    lineageTag: a1493612-e09a-42cd-9418-67af65c290bf
+    summarizeBy: none
+    expressionContext: userContext
+
+    annotation SummarizationSetBy = Automatic</code></pre>
+
+                <p>The expression itself is straightforward. If the logged-in user is <code>data@123.com</code>, the column returns the brand name when it equals <code>Contoso</code> and the literal string <code>"Others"</code> for everything else. For every other user, the column passes through the original brand name unchanged.</p>
+
+                <img src="../images/blog/user-context-aware-calculated-columns-tmdl-not-rls/image-13.png" alt="VS Code showing the Git diff of product.tmdl with the new calculated column added" loading="lazy">
+
+                <p>The diff above shows the column appearing as a clean addition to <code>product.tmdl</code>. The <code>expressionContext: userContext</code> line is the load-bearing piece. Without it, the same expression would not compile. With it, the expression compiles and behaves differently for different users at query time.</p>
+
+                <h2>5. The First Test: View as Roles, Without an Actual Role</h2>
+
+                <p>I needed to confirm the column was actually responding to the logged-in user before I went any further. Power BI Desktop has a Modeling tab feature called <code>View as</code>, which is normally used to test row-level security roles. Underneath the role-testing UI there is also an <code>Other user</code> checkbox that takes a free-text user principal name.</p>
+
+                <img src="../images/blog/user-context-aware-calculated-columns-tmdl-not-rls/image-9.png" alt="A table visual on the report page showing all eleven brand names from the product table" loading="lazy">
+
+                <p>The table visual above shows the eleven brand names from the <code>product</code> table when no role-or-user impersonation is active. The full list, just as it sits in the data.</p>
+
+                <img src="../images/blog/user-context-aware-calculated-columns-tmdl-not-rls/image-11.png" alt="The View as roles dialog with Other user checked and data@123.com entered" loading="lazy">
+
+                <p>I checked <code>Other user</code>, typed <code>data@123.com</code>, and clicked OK. A red banner appeared at the top of the canvas reading <code>Now viewing as: data@123.com</code>, and the same table visual reduced to two values.</p>
+
+                <img src="../images/blog/user-context-aware-calculated-columns-tmdl-not-rls/image-12.png" alt="The same table visual now showing only Contoso and Others while impersonating data@123.com" loading="lazy">
+
+                <p>The table visual now shows <code>Contoso</code> and <code>Others</code>. That is exactly what the SWITCH expression was supposed to produce when <code>USERPRINCIPALNAME()</code> returned <code>data@123.com</code>. The column is genuinely responding to the impersonated user. The user-context-aware calculated column works.</p>
+
+                <h2>6. The Aha: Dynamic Does Not Mean Secure</h2>
+
+                <p>This is the part I want every reader to internalize, because the surface behavior of <code>expressionContext: userContext</code> is going to be easy to mistake for a security feature.</p>
+
+                <p>I dropped the original <code>Brand</code> column from the <code>product</code> table onto a second table visual on the same page, kept the <code>View as</code> impersonation active, and looked at both visuals side by side.</p>
+
+                <img src="../images/blog/user-context-aware-calculated-columns-tmdl-not-rls/image-15.png" alt="Two table visuals side by side under the same impersonated user, the left showing all brands via the regular Brand column, the right showing only Contoso and Others via the user-context-aware calculated column" loading="lazy">
+
+                <p>On the left, the regular <code>Brand</code> column shows every brand in the dataset. A. Datum, Adventure Works, Contoso, Fabrikam, Litware, Northwind Traders, Proseware, Southridge Video, Tailspin Toys, The Phone Company, Wide World Importers. On the right, my new <code>Brand Name LogInAs</code> column shows just <code>Contoso</code> and <code>Others</code>. Both visuals share the same impersonated user, the same page, and the same model. Only the right one uses the user-context-aware calculated column. The left visual uses the underlying source column and reveals everything.</p>
+
+                <p>This is the <em>aha</em> moment of the post. <strong>A user-context-aware calculated column shapes how a column renders for a user; it does not gate what data the user can reach.</strong> Anyone who treats <code>expressionContext: userContext</code> as a security boundary is one drag-and-drop away from leaking the underlying data. The user-context behavior is real, but it is <strong>decoration, not access control</strong>.</p>
+
+                <p>The Microsoft Learn page itself signals this when it names the marquee scenario for the feature. In the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-calculated-columns?wt.mc_id=DP-MVP-5004989#expression-context" target="_blank" rel="noopener">Expression Context section</a>, Microsoft writes that user-context-aware calculated columns <em>"enable unique scenarios such as data translations for multi-lingual semantic models"</em> and links to the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/multiple-language-translation?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">data translations guidance</a>. Translations are a labeling concern. A French user and a Korean user looking at the same product should see the same product. Only the labels change. Microsoft's own framing tells me the feature was designed for label and category personalization, not for security.</p>
+
+                <p>That distinction is the whole story of this post. It is also the reason the next section matters more than I initially thought it would.</p>
+
+                <h2>7. From a DevOps Standpoint, Four Habits Have to Change</h2>
+
+                <p>From a DevOps standpoint, this is foundational, but in a counterintuitive direction. The new property does not enable a new security pattern. It introduces a new way to get fooled into thinking you have one, and that means review and validation habits need to catch up with the feature.</p>
+
+                <h3>Code Review: Treat <code>expressionContext: userContext</code> as a Personalization Marker, Not a Security Marker</h3>
+
+                <p>When a pull request adds a calculated column with <code>expressionContext: userContext</code>, the temptation is going to be to read <code>USERPRINCIPALNAME()</code> and assume the column is solving a security problem. It is not. The reviewer's job is to ask a different question. <em>"Is this column intended to render different labels per user, or is the author expecting it to hide data?"</em> If the answer is the second, the PR needs to be sent back with a request to add real RLS roles in the <code>roles</code> definition file and keep the calculated column only as a presentation layer.</p>
+
+                <p>I would go further. A repository convention worth adopting is that every PR introducing a column with <code>expressionContext: userContext</code> must include a <code>description</code> annotation on that column explaining the user-facing intent. The TMDL block is small. A one-line description is cheap to write and saves the next reviewer a long argument.</p>
+
+                <h3>Validation: A Best Practice Analyzer Rule Worth Writing</h3>
+
+                <p>Tabular Editor's <a href="https://docs.tabulareditor.com/te2/Best-Practice-Analyzer.html" target="_blank" rel="noopener"><strong>Best Practice Analyzer</strong></a> is the natural place to encode the question above as a rule. The rule worth writing flags any table that contains a column with <code>expressionContext: userContext</code> but has no associated row-level security role defined on the same table. That combination is the misuse pattern. It does not mean the model is broken. It means a human needs to confirm that the absence of RLS on the table is intentional.</p>
+
+                <p>I am not implementing the rule in this post. The exact Tabular Editor scripting API call to read the Expression Context property deserves its own walkthrough, and I would rather get it right separately than gesture at it here. The point for now is that the rule is straightforward to articulate, easy to enforce in CI as part of a BPA quality gate, and exactly the kind of validation that turns a subtle feature into a safe one.</p>
+
+                <h3>Capacity Planning: Materialization Just Quietly Moved</h3>
+
+                <p>This is the angle I would have missed if I had not read the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-calculated-columns?wt.mc_id=DP-MVP-5004989#materialization-and-performance" target="_blank" rel="noopener">Materialization and performance section of the Microsoft Learn calculated columns page</a>. The matrix in that section spells out which storage modes pair with which Expression Context settings, and what materializes versus what does not. For an Import-mode column, the default Standard expression context produces a <strong>materialized</strong> column, computed once at refresh and stored. Flip the same column to User Context, and the same column becomes <strong>unmaterialized</strong>, computed at query time for every user session.</p>
+
+                <p>Microsoft's own framing of the trade-off is short. The page states that <em>"unmaterialized calculated columns can negatively impact query performance because values need to be derived at query time"</em> and that <em>"materialized calculated columns can negatively impact refresh performance because values need to be derived at refresh time."</em> Two sentences in the same section.</p>
+
+                <p>From my own perspective, the practical implication is that the cost has moved across the refresh-versus-query boundary. The column you no longer need to materialize stops costing CU at refresh time. The expression you now evaluate per query starts costing CU at query time. Whether the model gets cheaper or more expensive overall depends on how often the report is queried versus how often the model refreshes, and I do not have a rule of thumb for that ratio. The first time a column with <code>expressionContext: userContext</code> lands on a high-traffic report, capacity monitoring is the safest place to find out.</p>
+
+                <h3>Documentation: The TMDL Diff Looks Innocent</h3>
+
+                <p>The last habit is the smallest and the most overlooked. A calculated column with <code>expressionContext: userContext</code> looks almost identical in TMDL to a calculated column without it. One extra line. A reviewer scanning a long diff is going to slide right over it.</p>
+
+                <p>The mitigation is documentation. Every column with <code>expressionContext: userContext</code> should have a <code>description</code> property explaining the user-facing intent. <em>"Renders the brand name as either Contoso or Others when viewed by partner accounts; otherwise passes through the original brand."</em> The description shows up in the Properties pane, in the TMDL diff, and in any documentation generated from the model. Without it, future maintainers will read the column, decide it duplicates <code>Brand</code>, and remove it. The line that prevents that mistake is one comment of plain prose.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>This experience left me with a new mental model. <strong><code>expressionContext: userContext</code> introduces a calculated column that re-evaluates per user session at query time, and that user-aware behavior is not the same as security.</strong></p>
+
+                <p>Calculated columns have been static for as long as Power BI has had them. Values were computed once at refresh and lived in the model file ready for retrieval. That world has a new neighbor now. A column whose value depends on who is asking, evaluated freshly per user session, kept in source control as a single one-line TMDL property. The use cases are real. Partner-facing reports where the partner sees their own brand prominently and competitors collapsed. Multi-language reports where the same fact tables drive different label sets. Persona-driven defaults where executives see one summary level and analysts see another, while both share the same underlying detail and the same RLS roles. None of those are security. All of them benefit from a column-level switch instead of a measure-shaped detour.</p>
+
+                <p>The four DevOps habits I came away with are small in isolation and load-bearing together. PR reviewers ask whether the column is a security column or a labeling column. BPA flags the misuse pattern. Capacity planners account for the materialization shift. Maintainers find a description sentence on every user-context column they encounter. None of those is exotic. All of them are easier to do on the day a feature lands than to retrofit later.</p>
+
+                <p>I hope this helps having fun in exploring user-context-aware calculated columns and embracing this new era of dynamic per-user rendering inside the semantic model itself!</p>
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="TMDL">TMDL</span>
+                <span class="tag" data-tag="DAX">DAX</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: PBIP Lineage Explorer, PBIP Impact Analyzer, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="tmdl-merge-conflict-experiment.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">I Expected a Merge Conflict and Got a Clean PR Instead: What Changed in Power BI Source Control</span>
+                </a>
+                <div></div>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-rHwBHAxVvWblRZOkJc6/fI+iHFQjWFFGPA6COtU+nGANyEshLN8k+5+rBFFKKDE+UZsEmLoGvcC4hT/xfAtxOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-35RBtvuCKWANuRid6RXP2gYm4D5RMieVLfsMSzPu0Ry0jJFOqGcgJ/MXbSeRso89H12VqAjSH7RLx3tZnQIYGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>

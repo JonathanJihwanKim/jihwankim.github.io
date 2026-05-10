@@ -8,6 +8,18 @@
     // Blog posts data — newest first
     var posts = [
         {
+            id: 13,
+            title: "User-Context-Aware Calculated Columns: A Dynamic Calculated Column Pattern, Not Row-Level Security",
+            preview: "The new April 2026 expressionContext: userContext property unlocks a calculated column that re-evaluates per user session at query time. A TMDL walkthrough showing why this is per-user personalization, not row-level security, plus four DevOps habits that have to change.",
+            date: "May 9, 2026",
+            sortDate: "2026-05-09",
+            tags: ["Power BI", "TMDL", "DAX", "DevOps"],
+            url: "posts/user-context-aware-calculated-columns-tmdl-not-rls.html",
+            featuredImage: "images/blog/user-context-aware-calculated-columns-tmdl-not-rls/featured.png",
+            readingTime: "8 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 12,
             title: "I Expected a Merge Conflict and Got a Clean PR Instead: What Changed in Power BI Source Control",
             preview: "A deliberate two-branch merge conflict experiment in a PBIP repository merged cleanly anyway. Walking through why TMDL's per-table, per-measure file shape is the reason, with Microsoft Learn citations on Git merge rules, PBIP, TMDL, and Fabric Git integration.",
