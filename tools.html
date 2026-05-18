@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free, open-source Power BI tools by Jihwan Kim — PBIP Impact Analyzer, PBIR Visual Manager, PBIP Documenter, and PBIP Lineage Explorer.">
-    <meta name="keywords" content="Power BI Tools, PBIP, PBIR, Open Source, Impact Analyzer, Visual Manager, Documenter">
+    <meta name="description" content="Free, open-source Power BI tools by Jihwan Kim — Model Lenz, PBIP Lineage Explorer, PBIP Documenter, PBIR Visual Manager, and PBIP Impact Analyzer.">
+    <meta name="keywords" content="Power BI Tools, PBIP, PBIR, Open Source, Model Lenz, Lineage Explorer, Impact Analyzer, Visual Manager, Documenter">
     <meta name="author" content="Jihwan Kim">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:title" content="Open Source Power BI Tools — Jihwan Kim">
-    <meta property="og:description" content="Free, open-source Power BI developer tools: PBIP Impact Analyzer, PBIR Visual Manager, PBIP Documenter, and PBIP Lineage Explorer.">
+    <meta property="og:description" content="Free, open-source Power BI developer tools: Model Lenz, PBIP Lineage Explorer, PBIP Documenter, PBIR Visual Manager, and PBIP Impact Analyzer.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://powerbimvp.com/tools.html">
     <title>Tools | Jihwan Kim — Open Source Power BI Tools</title>
@@ -26,7 +26,7 @@
 
     <main class="main-content" id="main">
         <div class="container">
-            <section class="blog-intro animate-in" style="padding:0;margin-bottom:var(--space-10);">
+            <section class="blog-intro animate-in" style="padding:0;margin-bottom:var(--space-6);">
                 <h1 class="blog-tagline">Open Source <span class="accent">Tools</span></h1>
                 <p class="blog-author-line">Free Power BI developer tools — used by developers worldwide</p>
             </section>
@@ -34,55 +34,83 @@
 
         <div class="tools-grid animate-in">
             <div class="tool-card">
-                <div class="tool-card-icon">
-                    <span class="material-symbols-outlined">analytics</span>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <span class="material-symbols-outlined">hub</span>
+                    </div>
+                    <h3>Model Lenz</h3>
                 </div>
-                <h3>PBIP Impact Analyzer</h3>
-                <p>Analyze the impact of changes across your Power BI project. Trace dependencies between measures, columns, tables, and visuals — both upstream and downstream. Understand what breaks before you deploy.</p>
-                <a href="https://github.com/JonathanJihwanKim/pbip-impact-analyzer" target="_blank" rel="noopener" class="tool-card-link">
+                <p class="tool-card-audience"><strong>Best for:</strong> Developers and data engineers reviewing DAX lineage with business and source names side-by-side.</p>
+                <p>Static analyzer for PBIP semantic models that maps DAX measure dependencies on a dual-name graph — business identifiers and source-system names on the same view.</p>
+                <a href="https://github.com/JonathanJihwanKim/pbip_model_lenz" target="_blank" rel="noopener" class="tool-card-link">
                     View on GitHub <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
             </div>
 
             <div class="tool-card">
-                <div class="tool-card-icon">
-                    <span class="material-symbols-outlined">visibility</span>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <span class="material-symbols-outlined">account_tree</span>
+                    </div>
+                    <h3>PBIP Lineage Explorer</h3>
                 </div>
-                <h3>PBIR Visual Manager</h3>
-                <p>Manage the <code>isHiddenInViewMode</code> property across all visuals in your PBIR report. Bulk-toggle visual visibility, review hidden elements, and maintain clean report layouts through code.</p>
-                <a href="https://github.com/JonathanJihwanKim/isHiddenInViewMode" target="_blank" rel="noopener" class="tool-card-link">
+                <p class="tool-card-audience"><strong>Best for:</strong> Anyone tracing visuals → semantic model → source columns interactively in the browser.</p>
+                <p>Visualize PBIP data lineage in the browser. Trace visuals to source columns, explore DAX measure chains, and run impact analysis — client-side with D3.js graphs.</p>
+                <a href="https://github.com/JonathanJihwanKim/pbip-lineage-explorer" target="_blank" rel="noopener" class="tool-card-link">
                     View on GitHub <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
             </div>
 
             <div class="tool-card">
-                <div class="tool-card-icon">
-                    <span class="material-symbols-outlined">description</span>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <span class="material-symbols-outlined">description</span>
+                    </div>
+                    <h3>PBIP Documenter</h3>
                 </div>
-                <h3>PBIP Documenter</h3>
-                <p>Automatically generate documentation for your PBIP projects. Traces from report visuals to semantic model definitions, revealing hidden connections that PBIR JSON alone doesn't capture — including field parameters and calculation groups.</p>
+                <p class="tool-card-audience"><strong>Best for:</strong> Teams handing off PBIP projects or auditing field parameters and calculation groups.</p>
+                <p>Auto-generate docs for PBIP projects. Traces visuals to semantic model definitions, surfacing hidden connections PBIR JSON misses — field parameters and calculation groups included.</p>
                 <a href="https://github.com/JonathanJihwanKim/pbip-documenter" target="_blank" rel="noopener" class="tool-card-link">
                     View on GitHub <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
             </div>
 
             <div class="tool-card">
-                <div class="tool-card-icon">
-                    <span class="material-symbols-outlined">account_tree</span>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </div>
+                    <h3>PBIR Visual Manager</h3>
                 </div>
-                <h3>PBIP Lineage Explorer</h3>
-                <p>Visualize data lineage across your PBIP project in the browser. Trace dependencies from visuals to source columns, explore DAX measure chains, and run impact analysis — all client-side with interactive D3.js graphs.</p>
-                <a href="https://github.com/JonathanJihwanKim/pbip-lineage-explorer" target="_blank" rel="noopener" class="tool-card-link">
+                <p class="tool-card-audience"><strong>Best for:</strong> Report builders managing <code>isHiddenInViewMode</code> across many visuals at once.</p>
+                <p>Bulk-toggle the <code>isHiddenInViewMode</code> property across all visuals in your PBIR report, review hidden elements, and keep layouts clean through code.</p>
+                <a href="https://github.com/JonathanJihwanKim/isHiddenInViewMode" target="_blank" rel="noopener" class="tool-card-link">
+                    View on GitHub <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <span class="material-symbols-outlined">analytics</span>
+                    </div>
+                    <h3>PBIP Impact Analyzer</h3>
+                </div>
+                <p class="tool-card-audience"><strong>Best for:</strong> Developers planning refactors and running pre-deploy "what breaks?" checks.</p>
+                <p>Analyze change impact across your Power BI project. Trace dependencies between measures, columns, tables, and visuals — upstream and downstream — before you deploy.</p>
+                <a href="https://github.com/JonathanJihwanKim/pbip-impact-analyzer" target="_blank" rel="noopener" class="tool-card-link">
                     View on GitHub <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
             </div>
         </div>
 
-        <div class="container" style="margin-top:var(--space-12);">
+        <div class="container" style="margin-top:var(--space-6);">
             <div class="sponsor-cta">
                 <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
-                <h3>Support These Tools</h3>
-                <p>These tools are free and open source. Your sponsorship keeps them maintained, updated, and free for the entire Power BI community.</p>
+                <div class="sponsor-cta-text">
+                    <h3>Support These Tools</h3>
+                    <p>Free and open source. Your sponsorship keeps them maintained for the Power BI community.</p>
+                </div>
                 <div class="sponsor-cta-buttons">
                     <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
                         <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
