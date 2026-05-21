@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 730" width="680" height="730"
+     font-family="system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
+
+  <defs>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#00000015"/>
+    </filter>
+    <marker id="arr-blue"  markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#2471A3"/></marker>
+    <marker id="arr-red"   markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#C0392B"/></marker>
+    <marker id="arr-green" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1E8449"/></marker>
+    <marker id="arr-gray"  markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7F8C8D"/></marker>
+  </defs>
+
+  <!-- Canvas background -->
+  <rect width="680" height="730" rx="14" fill="#F8F9FA"/>
+
+  <!-- ══════════════════════════════════════
+       ARROWS  (drawn first, boxes sit on top)
+       ══════════════════════════════════════ -->
+
+  <!-- UI → Switch Measure -->
+  <line x1="340" y1="87" x2="340" y2="146" stroke="#2471A3" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+
+  <!-- Switch → trunk → branch junction -->
+  <line x1="340" y1="237" x2="340" y2="263" stroke="#555" stroke-width="1.8"/>
+
+  <!-- Left branch  (junction → Detail Path) -->
+  <path d="M 340,263 H 153 V 314" fill="none" stroke="#C0392B" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+  <!-- Right branch (junction → Aggregated Path) -->
+  <path d="M 340,263 H 527 V 314" fill="none" stroke="#1E8449" stroke-width="1.8" marker-end="url(#arr-green)"/>
+
+  <!-- Detail Path → Fact Table -->
+  <line x1="153" y1="391" x2="153" y2="453" stroke="#C0392B" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+  <!-- Aggregated Path → Metric AGG -->
+  <line x1="527" y1="391" x2="527" y2="453" stroke="#1E8449" stroke-width="1.8" marker-end="url(#arr-green)"/>
+
+  <!-- Fact Table → Dimension Tables -->
+  <line x1="153" y1="522" x2="153" y2="598" stroke="#7F8C8D" stroke-width="1.8" marker-end="url(#arr-gray)"/>
+
+  <!-- Metric AGG → Dimension Tables -->
+  <line x1="527" y1="522" x2="527" y2="598" stroke="#7F8C8D" stroke-width="1.8" marker-end="url(#arr-gray)"/>
+
+  <!-- Branch junction dot -->
+  <circle cx="340" cy="263" r="4.5" fill="#555"/>
+
+
+  <!-- ══════════════════════════════════════
+       BOXES
+       ══════════════════════════════════════ -->
+
+  <!-- ① User Interaction -->
+  <rect x="200" y="22" width="280" height="65" rx="10" fill="#E8F4FD" stroke="#2471A3" stroke-width="2" filter="url(#shadow)"/>
+  <text x="340" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A5276" letter-spacing="0.6">USER INTERACTION</text>
+  <text x="340" y="66" text-anchor="middle" font-size="11" fill="#2471A3">Filters · Slicers · Visuals</text>
+
+  <!-- ② Conditional Switch Measure -->
+  <rect x="68" y="148" width="544" height="89" rx="9" fill="#FEF9E7" stroke="#E67E22" stroke-width="2" filter="url(#shadow)"/>
+  <text x="340" y="174" text-anchor="middle" font-size="12.5" font-weight="700" fill="#784212" letter-spacing="0.6">CONDITIONAL SWITCH MEASURE</text>
+  <text x="340" y="197" text-anchor="middle" font-size="11" fill="#6E2F1A" font-family="'Courier New',Courier,monospace">[Metric] = IF( [_IsOnDetailLevel],</text>
+  <text x="340" y="218" text-anchor="middle" font-size="11" fill="#6E2F1A" font-family="'Courier New',Courier,monospace">               [Metric Detail], [Metric Agg] )</text>
+
+  <!-- ③ Detail Path -->
+  <rect x="48" y="317" width="210" height="74" rx="9" fill="#FDEDEC" stroke="#C0392B" stroke-width="2" filter="url(#shadow)"/>
+  <text x="153" y="346" text-anchor="middle" font-size="12.5" font-weight="700" fill="#922B21" letter-spacing="0.6">DETAIL PATH</text>
+  <text x="153" y="368" text-anchor="middle" font-size="11" fill="#922B21" font-family="'Courier New',Courier,monospace">[Metric Detail]</text>
+
+  <!-- ④ Aggregated Path -->
+  <rect x="422" y="317" width="210" height="74" rx="9" fill="#EAFAF1" stroke="#1E8449" stroke-width="2" filter="url(#shadow)"/>
+  <text x="527" y="346" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1E8449" letter-spacing="0.6">AGGREGATED PATH</text>
+  <text x="527" y="368" text-anchor="middle" font-size="11" fill="#1E8449" font-family="'Courier New',Courier,monospace">[Metric Agg]</text>
+
+  <!-- ⑤ Fact Table -->
+  <rect x="48" y="456" width="210" height="66" rx="9" fill="#F4F6F7" stroke="#7F8C8D" stroke-width="2" filter="url(#shadow)"/>
+  <text x="153" y="479" text-anchor="middle" font-size="12.5" font-weight="700" fill="#4D5656" letter-spacing="0.6">FACT TABLE</text>
+  <text x="153" y="496" text-anchor="middle" font-size="10.5" fill="#717D7E" font-family="'Courier New',Courier,monospace">'Fact Table'</text>
+  <text x="153" y="513" text-anchor="middle" font-size="10.5" fill="#717D7E">~100M rows</text>
+
+  <!-- ⑥ Metric AGG -->
+  <rect x="422" y="456" width="210" height="66" rx="9" fill="#F0FFF8" stroke="#1ABC9C" stroke-width="2" filter="url(#shadow)"/>
+  <text x="527" y="479" text-anchor="middle" font-size="12.5" font-weight="700" fill="#117A65" letter-spacing="0.6">AGGREGATED TABLE</text>
+  <text x="527" y="496" text-anchor="middle" font-size="10.5" fill="#148F77" font-family="'Courier New',Courier,monospace">'Metric AGG'</text>
+  <text x="527" y="513" text-anchor="middle" font-size="10.5" fill="#148F77">~10K rows</text>
+
+  <!-- ⑦ Dimension Tables (dashed border) -->
+  <rect x="90" y="601" width="500" height="66" rx="9" fill="#F0F0F0" stroke="#AAB7B8" stroke-width="1.5" stroke-dasharray="6 3" filter="url(#shadow)"/>
+  <text x="340" y="628" text-anchor="middle" font-size="12.5" font-weight="700" fill="#616A6B" letter-spacing="0.6">DIMENSION TABLES</text>
+  <text x="340" y="649" text-anchor="middle" font-size="11" fill="#7F8C8D">Region · Category · Period · …</text>
+
+
+  <!-- ══════════════════════════════════════
+       BRANCH CONDITION LABELS
+       ══════════════════════════════════════ -->
+
+  <!-- Left label (centered on the left horizontal arm: x 153→340, midpoint 246) -->
+  <rect x="163" y="245" width="166" height="35" rx="5" fill="#FDFEFE" stroke="#C0392B" stroke-width="1.2"/>
+  <text x="246" y="260" text-anchor="middle" font-size="10" font-weight="700" fill="#C0392B">_IsOnDetailLevel = TRUE</text>
+  <text x="246" y="274" text-anchor="middle" font-size="9.5" fill="#7B241C">⚠  Slow · Always accurate</text>
+
+  <!-- Right label (centered on the right horizontal arm: x 340→527, midpoint 433) -->
+  <rect x="350" y="245" width="166" height="35" rx="5" fill="#FDFEFE" stroke="#1E8449" stroke-width="1.2"/>
+  <text x="433" y="260" text-anchor="middle" font-size="10" font-weight="700" fill="#1E8449">_IsOnDetailLevel = FALSE</text>
+  <text x="433" y="274" text-anchor="middle" font-size="9.5" fill="#1D6A39">✓  Fast · Always safe</text>
+
+</svg>

@@ -1,12 +1,30 @@
 /**
- * blog-data.js — Posts data, rendering, search, pagination, and tag filtering
+ * blog-data.js - Posts data, rendering, search, pagination, and tag filtering
  * Used on the homepage (index.html) only.
  */
 (function () {
     'use strict';
 
-    // Blog posts data — newest first
+    // Blog posts data - newest first
     var posts = [
+        {
+            id: 14,
+            title: "Aggregated Table Performance Optimization Pattern",
+            preview: "A guest post by Sven Boekhoven (Senior Data Analyst). A dual-path DAX design pattern that routes calculations through a pre-aggregated table when safe, and falls back to the fact table otherwise - built for hierarchical Power BI models with hundreds of millions of rows where standard aggregation tables can't handle weighted averages and conditional logic.",
+            date: "May 21, 2026",
+            sortDate: "2026-05-21",
+            tags: ["DAX", "Power BI", "Performance", "Aggregations"],
+            url: "posts/aggregated-table-performance-pattern.html",
+            featuredImage: "images/blog/aggregated-table-performance-pattern/featured.svg",
+            readingTime: "15 min read",
+            difficulty: "Advanced",
+            author: {
+                name: "Sven Boekhoven",
+                role: "Senior Data Analyst",
+                linkedin: "https://www.linkedin.com/in/sven-boekhoven/",
+                isGuest: true
+            }
+        },
         {
             id: 13,
             title: "User-Context-Aware Calculated Columns: A Dynamic Calculated Column Pattern, Not Row-Level Security",
@@ -34,7 +52,7 @@
         {
             id: 11,
             title: "INFO.USERDEFINEDFUNCTIONS and the isHidden Gap in DAX UDF Governance",
-            preview: "Running INFO.USERDEFINEDFUNCTIONS against my Contoso model surfaced one metadata column I wasn't expecting. Setting isHidden in TMDL updated the metadata but didn't actually hide the function — a documented preview limitation that reframes how DAX UDFs are governable today.",
+            preview: "Running INFO.USERDEFINEDFUNCTIONS against my Contoso model surfaced one metadata column I wasn't expecting. Setting isHidden in TMDL updated the metadata but didn't actually hide the function - a documented preview limitation that reframes how DAX UDFs are governable today.",
             date: "April 26, 2026",
             sortDate: "2026-04-26",
             tags: ["DAX", "Power BI", "TMDL", "DevOps"],
@@ -268,11 +286,20 @@
                 ? '<span class="reading-time"><span class="material-symbols-outlined">schedule</span>' + post.readingTime + '</span>'
                 : '';
 
+            var guestBadgeHtml = (post.author && post.author.isGuest)
+                ? '<span class="guest-badge">Guest Post</span>'
+                : '';
+
+            var cardBylineHtml = (post.author && post.author.name)
+                ? '<div class="card-byline"><span class="material-symbols-outlined">person</span>By ' + post.author.name + '</div>'
+                : '';
+
             card.innerHTML =
                 imageHtml +
                 '<div class="post-card-body">' +
-                    '<div class="post-card-meta-top">' + difficultyHtml + readingTimeHtml + '</div>' +
+                    '<div class="post-card-meta-top">' + guestBadgeHtml + difficultyHtml + readingTimeHtml + '</div>' +
                     '<h3 class="post-card-title">' + post.title + '</h3>' +
+                    cardBylineHtml +
                     '<p class="post-card-preview">' + post.preview + '</p>' +
                     '<div class="post-card-tags">' + tagsHtml + '</div>' +
                     '<div class="post-card-footer">' +
@@ -296,7 +323,7 @@
                     partnerCard.rel = 'noopener';
                     partnerCard.className = 'partner-card animate-in';
                     partnerCard.innerHTML =
-                        '<img src="' + s.heroImage + '" alt="' + s.name + ' — ' + s.tagline + '" class="partner-card-image" loading="lazy">' +
+                        '<img src="' + s.heroImage + '" alt="' + s.name + ' - ' + s.tagline + '" class="partner-card-image" loading="lazy">' +
                         (s.animatedBanner ? '<img src="' + s.animatedBanner + '" alt="' + s.name + '" class="partner-card-gif">' : '') +
                         '<div class="partner-card-body">' +
                             '<span class="partner-label">Partner</span>' +
