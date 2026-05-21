@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A guest post by Sven Boekhoven (Senior Data Analyst). The Aggregated Table Performance Optimization Pattern is a dual-path DAX design pattern that routes calculations through a pre-aggregated table when safe, and falls back to the fact table otherwise.">
+    <meta name="keywords" content="DAX, Power BI, Aggregations, Performance, Aggregated Tables, Tabular Model, Sven Boekhoven, Guest Post, Microsoft Fabric, Semantic Model">
+    <meta name="author" content="Sven Boekhoven">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="Aggregated Table Performance Optimization Pattern | Guest post by Sven Boekhoven">
+    <meta property="og:description" content="A dual-path DAX design pattern by Sven Boekhoven that routes calculations through a pre-aggregated table when safe, and falls back to the fact table otherwise.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/aggregated-table-performance-pattern.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/aggregated-table-performance-pattern/featured.svg">
+    <meta property="og:image:secure_url" content="https://powerbimvp.com/images/blog/aggregated-table-performance-pattern/featured.svg">
+    <meta property="og:image:type" content="image/svg+xml">
+    <meta property="og:image:width" content="680">
+    <meta property="og:image:height" content="730">
+    <meta property="og:image:alt" content="High-level architecture of the Aggregated Table Performance Optimization Pattern in DAX">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Aggregated Table Performance Optimization Pattern | Guest post by Sven Boekhoven">
+    <meta name="twitter:description" content="A dual-path DAX design pattern that routes calculations through a pre-aggregated table when safe, and falls back to the fact table otherwise.">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/aggregated-table-performance-pattern/featured.svg">
+    <meta name="twitter:image:alt" content="High-level architecture of the Aggregated Table Performance Optimization Pattern in DAX">
+
+    <title>Aggregated Table Performance Optimization Pattern | Guest post by Sven Boekhoven</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="guest-badge">Guest Post</span>
+                    <span class="difficulty-badge difficulty-badge--advanced">Advanced</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 15 min read</span>
+                </div>
+                <h1 class="article-title">Aggregated Table Performance Optimization Pattern</h1>
+                <div class="article-byline">
+                    <div class="byline-avatar" aria-hidden="true">SB</div>
+                    <div class="byline-text">
+                        <div class="byline-main">By <strong>Sven Boekhoven</strong>, Senior Data Analyst</div>
+                        <div class="byline-sub">
+                            <span class="byline-role">Guest Author</span>
+                            <a class="byline-link" href="https://www.linkedin.com/in/sven-boekhoven/" target="_blank" rel="noopener">
+                                <span class="material-symbols-outlined">link</span> LinkedIn
+                            </a>
+                        </div>
+                        <p class="byline-bio">Sven Boekhoven is a Senior Data Analyst at IKEA with a deep background in enterprise data work. His specialties include Power BI engineering, data model architecture, Power BI / Fabric capacity governance, information analysis, and data science - informed by years as an ETL architect, database designer, and analytics coach.</p>
+                    </div>
+                </div>
+                <div class="article-meta">
+                    <time datetime="2026-05-21">
+                        <span class="material-symbols-outlined">calendar_month</span> May 21, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="DAX">DAX</span>
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="Performance">Performance</span>
+                        <span class="tag" data-tag="Aggregations">Aggregations</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">-</span> readers
+                        <span class="counter-since">counter started May 21, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <div class="article-content">
+
+                <h2>Overview</h2>
+
+                <h3>What is This Pattern?</h3>
+
+                <p>The Aggregated Table Performance Optimization Pattern is a DAX design pattern that improves query performance in Power BI and Analysis Services tabular models by routing calculations through a pre-aggregated table when safe to do so.</p>
+
+                <p>The pattern implements a <strong>dual-path calculation strategy</strong>: when a user's filter context is compatible with a pre-aggregated table, the query reads from that smaller table instead of scanning the full fact table. An automatic detection measure examines the current filter context on every query and selects the fastest path that still produces accurate results. When there is any doubt about accuracy, the pattern falls back to the fact table.</p>
+
+                <ul>
+                    <li><strong>Detail Path</strong> - queries the fact table directly. Always accurate, but can be slow on large datasets.</li>
+                    <li><strong>Aggregated Path</strong> - reads from a pre-computed Aggregated Summary Table (AGG) that contains summarized data at a fixed granularity. Significantly faster, but only valid for specific dimension combinations.</li>
+                </ul>
+
+                <h3>Why Was This Pattern Developed?</h3>
+
+                <p>Traditional Power BI aggregations work well for simple SUM or COUNT operations, but they break down when your business logic involves multiple calculation steps, conditional logic, or custom hierarchical aggregations - for example, a weighted average fulfillment factor that must roll up correctly from store &rarr; country &rarr; global. Standard aggregation tables cannot pre-compute these results because the aggregation itself is part of the formula.</p>
+
+                <p>This pattern was built for exactly that scenario. It applies in enterprise BI environments where:</p>
+
+                <ul>
+                    <li>Your fact table contains tens or hundreds of millions of rows</li>
+                    <li>Users drill through hierarchies (global &rarr; region &rarr; country &rarr; store) on the same KPI</li>
+                    <li>The same complex calculation is used at multiple aggregation levels</li>
+                    <li>Performance at aggregated levels is unacceptably slow (&gt;3 seconds)</li>
+                </ul>
+
+                <h2>Architecture</h2>
+
+                <h3>High-Level Architecture</h3>
+
+                <p>The pattern has five main components:</p>
+
+                <img src="../images/blog/aggregated-table-performance-pattern/featured.svg" alt="High-level architecture diagram of the Aggregated Table Performance Optimization Pattern" loading="lazy">
+
+                <h3>Component Descriptions</h3>
+
+                <p><strong>User Interaction Layer</strong><br>
+                Filters, slicers, and visuals that the user interacts with. Each selection creates a filter context that the detection measure evaluates on every query.</p>
+
+                <p><strong>Conditional Switch Measure</strong><br>
+                The measure exposed in visuals. It contains a single <code>IF</code> statement that delegates to the Detail or Aggregated version of each measure based on what <code>[_IsOnDetailLevel]</code> returns. Keeping this measure thin isolates all routing logic in one place, making future maintenance straightforward.</p>
+
+                <p><strong>Context Detection Logic (<code>[_IsOnDetailLevel]</code>)</strong><br>
+                The measure that determines which path is safe. It evaluates the filter context against a set of rules and returns <code>TRUE</code> (use Detail Path) or <code>FALSE</code> (Aggregated Path is safe). See the Data Flow section for the full logic.</p>
+
+                <p><strong>Detail Path Measures</strong><br>
+                Query the fact table directly. They work with any dimension combination but scan potentially hundreds of millions of rows.</p>
+
+                <p><strong>Aggregated Path Measures</strong><br>
+                Query the pre-computed AGG table, which contains only thousands of rows. Extremely fast, but only correct when the filter context is limited to the dimensions that were used when building the AGG table.</p>
+
+                <p><strong>Data Layer</strong></p>
+                <ul>
+                    <li><em>Fact Table</em>: your primary transactional data</li>
+                    <li><em>AGG Table</em>: the pre-aggregated summary table populated during model refresh</li>
+                    <li><em>Dimension Tables</em>: Region, Category, Product, etc.</li>
+                </ul>
+
+                <h3>Data Flow</h3>
+
+                <p>Step-by-step walkthrough of a single query.</p>
+
+                <p><strong>Step 1 - User applies filters</strong></p>
+
+                <p>The user selects, for example:</p>
+
+                <ul>
+                    <li>Region = North</li>
+                    <li>Category = Electronics</li>
+                    <li>Period = 2024-Q1</li>
+                </ul>
+
+                <p><strong>Step 2 - DAX evaluation begins</strong></p>
+
+                <p>Power BI evaluates the Conditional Switch Measure in the current filter context.</p>
+
+                <p><strong>Step 3 - Context detection</strong></p>
+
+                <p><code>[_IsOnDetailLevel]</code> runs the following checks in order:</p>
+
+<pre><code class="language-sql">-- Check 1: parameter override
+IF [_ForceDetailCalculations] THEN
+    -> Return TRUE  (Detail Path)
+
+-- Check 2: any detail-level dimension is filtered
+IF ISFILTERED('Location') THEN
+    -> Return TRUE  (Detail Path)
+
+-- Check 3: no aggregation dimensions are filtered
+IF NOT (
+    ISFILTERED('Region') OR
+    ISFILTERED('Category') OR
+    ...
+) THEN
+    -> Return TRUE  (Detail Path -- no agg dimensions active)
+
+-- All checks passed: AGG path is safe
+-> Return FALSE  (Aggregated Path)</code></pre>
+
+                <blockquote><strong>Implementation note:</strong> The pseudo-code above uses plain-English syntax for readability. The full DAX implementation is in the <a href="#context-detection-logic">Context Detection Logic</a> section below.</blockquote>
+
+                <p><strong>Step 4A - Detail Path execution</strong> <em>(if <code>[_IsOnDetailLevel]</code> = TRUE)</em></p>
+
+                <p><code>[Metric Detail]</code> evaluates against the full Fact Table in the current filter context. This is standard DAX execution - every row that passes the filter is scanned, which guarantees accuracy but is potentially slow on large datasets.</p>
+
+                <p><strong>Step 4B - Aggregated Path execution</strong> <em>(if <code>[_IsOnDetailLevel]</code> = FALSE)</em></p>
+
+                <p><code>[Metric Agg]</code> evaluates against <code>Metric AGG</code>, which holds pre-summed totals at the chosen granularity. Power BI scans thousands of rows instead of hundreds of millions, returning the result in a fraction of the time - with identical output to the Detail Path for the same filter context.</p>
+
+                <p><strong>Step 5 - Result display</strong></p>
+
+                <p>The final value is returned to the visual.</p>
+
+                <h2>When Should You Use This Pattern?</h2>
+
+                <h3>Ideal Scenarios</h3>
+
+                <ul>
+                    <li>Large fact tables where complex calculations take &gt;3 seconds at aggregated levels</li>
+                    <li>Hierarchical reporting where users drill from global &rarr; country &rarr; business unit</li>
+                    <li>Stable dimension structures where aggregation dimensions don't change frequently</li>
+                    <li>Predictable usage patterns where most users view aggregated data, not transaction details</li>
+                    <li>Complex business logic (weighted averages, fulfillment factors, compliance percentages) that standard Power BI aggregations cannot pre-compute</li>
+                </ul>
+
+                <h3>Not Recommended For</h3>
+
+                <ul>
+                    <li>Small datasets where query performance is already acceptable</li>
+                    <li>Rapidly changing dimension structures that would require frequent AGG table rebuilds</li>
+                    <li>Real-time dashboards where pre-aggregation introduces unacceptable data latency</li>
+                    <li>Simple SUM or COUNT aggregations - use standard Power BI aggregation tables instead</li>
+                    <li>Models requiring DirectQuery without an Import-mode layer</li>
+                </ul>
+
+                <h2>Expected Benefits</h2>
+
+                <p>When properly implemented, this pattern typically delivers:</p>
+
+                <table>
+                    <thead>
+                        <tr><th>Metric</th><th>Observed Range</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Performance improvement on aggregated queries</td><td>70&ndash;90%</td></tr>
+                        <tr><td>Performance impact on detail-level queries</td><td>None</td></tr>
+                        <tr><td>Model size increase</td><td>5&ndash;15%</td></tr>
+                        <tr><td>Additional refresh time</td><td>2&ndash;10 minutes</td></tr>
+                    </tbody>
+                </table>
+
+                <blockquote>These figures are observed ranges from production implementations. Actual results depend on model design, hardware, data distribution, and the complexity of your business logic. Benchmark your specific model before committing to this pattern.</blockquote>
+
+                <p><strong>Trade-offs to budget for:</strong></p>
+
+                <ul>
+                    <li>Increased development complexity - dual-path measures require careful implementation and testing</li>
+                    <li>Ongoing maintenance when adding new dimensions or metrics to the AGG table</li>
+                    <li>Data latency at the AGG granularity (AGG data is as fresh as the last refresh, not real-time)</li>
+                </ul>
+
+                <h2 id="context-detection-logic">Context Detection Logic</h2>
+
+                <p><code>[_IsOnDetailLevel]</code> is the measure that drives every routing decision. It evaluates five conditions in order and returns <code>TRUE</code> (use the Detail Path) or <code>FALSE</code> (use the Aggregated Path). The failsafe default is <code>TRUE</code> - when in doubt, the measure falls back to the fact table rather than risking an incorrect result from the AGG table.</p>
+
+                <blockquote><em>Note: The <code>MEASURE 'Table'[Name] =</code> prefix throughout this guide is <a href="https://tabulareditor.com/" target="_blank" rel="noopener">Tabular Editor</a> and DAX Query view in PowerBI Desktop syntax.</em></blockquote>
+
+<pre><code class="language-sql">MEASURE 'Measure'[_IsOnDetailLevel] =
+
+    // STEP 0: Manual override (highest priority)
+    IF(
+        '_ForceDetailCalculations'[_ForceDetailCalculations Value],
+        TRUE,   -- Parameter forces Detail path; skip all other checks
+
+        // STEP 1: Check for detail-level dimension filters
+        VAR _HasDetailFilters =
+            ISFILTERED('Location')
+            -- Add any other detail-level dimensions specific to your model
+
+        // STEP 2: Check for aggregation-level dimension filters
+        VAR _IsAtAggregationLevel =
+            ISFILTERED('Region') ||
+            ISFILTERED('Period')
+            -- Add any other dimensions included in your AGG table
+
+        // STEP 3: Confirm the AGG table contains data
+        VAR _HasAGGData = [_Agg_fct] &gt; 0
+
+        // STEP 4: Combine conditions
+        VAR _UseAggregated =
+            NOT _HasDetailFilters   &amp;&amp;   -- No detail dimensions in context
+            _IsAtAggregationLevel   &amp;&amp;   -- At least one AGG dimension active
+            _HasAGGData                  -- AGG table is populated
+
+        // STEP 5: Return decision (TRUE = Detail, FALSE = AGG)
+        RETURN
+            NOT _UseAggregated
+    )</code></pre>
+
+                <p><strong>Key implementation notes:</strong></p>
+
+                <ul>
+                    <li><strong><code>'_ForceDetailCalculations'</code></strong> is a table created from a semantic model parameter. That way the semantic model has an 'off' switch that allows to force the detailed path.</li>
+                    <li><strong><code>[_Agg_fct]</code></strong> returns the row count of the AGG table in the current filter context. When it returns <code>BLANK</code> or <code>0</code>, <code>_HasAGGData</code> is <code>FALSE</code> and the pattern falls back to the Detail Path.</li>
+                    <li><strong>Extend Steps 1 and 2</strong> by adding more <code>ISFILTERED()</code> calls as your model grows. Step 1 lists dimensions whose presence forces the Detail path; Step 2 lists dimensions that are pre-computed in your AGG table.</li>
+                    <li><strong>The <code>RETURN NOT _UseAggregated</code> inversion</strong> is intentional - the measure is named from the Detail path perspective, so <code>TRUE</code> means "we are at detail level" (use Detail Path).</li>
+                </ul>
+
+                <h2>Implementation Guide</h2>
+
+                <p>The implementation has seven steps. Work through them in order - each builds on the previous one.</p>
+
+                <h3>Step 1 - Create the Semantic model parameter and expose as table in the datamodel</h3>
+
+                <p><code>[_ForceDetailCalculations]</code> is a toggle that forces all measures onto the Detail Path . Create it in Power BI Desktop via <strong>PowerQuery &rarr; Manage Parameters &gt; New Parameter</strong><br>
+                Then create a referenced table from the parameters and expose that to PowerBI Desktop. Set the parameter to <strong>1</strong> to force the Detail Path on every query, or leave it at <strong>0</strong> for normal operation.</p>
+
+                <h3>Step 2 - Create the AGG table</h3>
+
+                <p>The AGG table stores pre-computed component totals at your chosen aggregation granularity. It must include:</p>
+
+                <ul>
+                    <li>Every <strong>key column</strong> used in <code>_IsAtAggregationLevel</code> (the aggregation dimensions)</li>
+                    <li>Every <strong>numeric column</strong> that your Aggregated Path measures will read</li>
+                </ul>
+
+                <p>Add a new <strong>Calculated Table</strong> in Power BI Desktop:</p>
+
+<pre><code class="language-sql">Metric AGG =
+SUMMARIZECOLUMNS(
+    'Region'[Region Key],
+    'Category'[Category Key],
+    'Period'[Period Key],
+    "Numerator", SUM('Fact Table'[Numerator]),
+    "Denominator",   SUM('Fact Table'[Denominator])
+)</code></pre>
+
+                <p>After creating the table, open <strong>Model view</strong> and draw relationships from <code>Metric AGG</code> to each dimension table on its key column - the same way you would relate any fact table.</p>
+
+                <blockquote>If the model is too large for a calculated table, populate the AGG table from a pre-aggregated SQL view or a Power Query dataflow instead. The DAX measures are identical either way - only the refresh mechanism differs.</blockquote>
+
+                <h3>Step 3 - Create the AGG data check helper</h3>
+
+                <p>This single-line measure tells <code>[_IsOnDetailLevel]</code> whether the AGG table contains any rows in the current filter context:</p>
+
+<pre><code class="language-sql">MEASURE 'Measure'[_Agg_fct] =
+    COUNTROWS('Metric AGG')</code></pre>
+
+                <p>When <code>COUNTROWS</code> returns <code>BLANK</code> or <code>0</code>, <code>_HasAGGData</code> in <code>[_IsOnDetailLevel]</code> becomes <code>FALSE</code>, and the pattern falls back to the Detail Path. This protects against a scenario where the AGG table fails to populate during refresh.</p>
+
+                <h3>Step 4 - Create [_IsOnDetailLevel]</h3>
+
+                <p>Paste the measure from the <a href="#context-detection-logic">Context Detection Logic</a> section above. Then extend the two <code>ISFILTERED</code> blocks to match your model:</p>
+
+                <ul>
+                    <li><strong><code>_HasDetailFilters</code></strong> - add a line for every dimension that, when filtered, means the user is viewing data at a granularity finer than your AGG table (e.g., individual stores, SKUs, transactions).</li>
+                    <li><strong><code>_IsAtAggregationLevel</code></strong> - add a line for every dimension column that exists in the AGG table.</li>
+                </ul>
+
+                <h3>Step 5 - Create the Detail Path measures</h3>
+
+                <p>Detail Path measures query the fact table directly. Write them as standard measures with no AGG awareness:</p>
+
+<pre><code class="language-sql">MEASURE 'Measure'[Metric Detail] =
+    DIVIDE(
+        SUM('Fact Table'[Numerator]),
+        SUM('Fact Table'[Denominator])
+    )</code></pre>
+
+                <p>These are your existing business measures, unchanged. If you already have them, you can reuse them as-is - just reference them in the Switch Measure in Step 7.</p>
+
+                <h3>Step 6 - Create the Aggregated Path measures</h3>
+
+                <p>Aggregated Path measures read the same logical columns from the AGG table instead of the fact table. The formula shape mirrors the Detail measure exactly - only the table reference changes:</p>
+
+<pre><code class="language-sql">MEASURE 'Measure'[Metric Agg] =
+    DIVIDE(
+        SUM('Metric AGG'[Numerator]),
+        SUM('Metric AGG'[Denominator])
+    )</code></pre>
+
+                <p>Because the AGG table stores pre-summed totals, <code>SUM</code> here scans thousands of rows rather than hundreds of millions - that's where the performance gain comes from.</p>
+
+                <h3>Step 7 - Create the Conditional Switch Measure</h3>
+
+                <p>The Switch Measure is the only measure report authors should place in visuals. It delegates to one of the two path measures based on <code>[_IsOnDetailLevel]</code>:</p>
+
+<pre><code class="language-sql">MEASURE 'Measure'[Metric] =
+    IF(
+        [_IsOnDetailLevel],
+        [Metric Detail],
+        [Metric Agg]
+    )</code></pre>
+
+                <p>Keep this measure thin. Any business logic placed here executes on every query regardless of which path is active, bypassing the optimization entirely.</p>
+
+                <p><strong>Naming convention:</strong> Use the plain name (<code>Metric</code>) for the Switch Measure and suffix the internal measures with <code>Detail</code> and <code>Agg</code>. Hide the <code>Detail</code> and <code>Agg</code> variants from report view so authors can't place them directly in visuals by mistake.</p>
+
+                <h2>Testing &amp; Validation</h2>
+
+                <p>Before releasing any dual-path measure to production, verify that both paths return identical results across every dimension combination. A silent discrepancy in the Aggregated Path will corrupt reports for every user who triggers it - and because the switching is automatic, it can be very difficult to spot after the fact.</p>
+
+                <h3>Step 1 - Run a path comparison</h3>
+
+                <p>Create a temporary comparison measure that evaluates both paths simultaneously and flags any divergence:</p>
+
+<pre><code class="language-sql">MEASURE 'Measure'[_Path Comparison] =
+    VAR _Detail = [Metric Detail]
+    VAR _Agg    = [Metric Agg]
+    VAR _Diff   = ABS( _Detail - _Agg )
+    RETURN
+        IF( _Diff &gt; 0.0001, "MISMATCH: " &amp; FORMAT(_Diff, "0.0000"), "Match" )</code></pre>
+
+                <p>Drop this into a table visual alongside <code>[Metric Detail]</code> and <code>[Metric Agg]</code>, then slice by every AGG dimension (Region, Category, Period). Every row must show <strong>&#x2713; Match</strong>. Any <strong>&#x26A0; MISMATCH</strong> row tells you exactly which dimension combination diverges - start your investigation there.</p>
+
+                <p>Delete this measure before publishing.</p>
+
+                <h3>Step 2 - Verify path switching</h3>
+
+                <p>Confirm that <code>[_IsOnDetailLevel]</code> routes correctly for each expected context. Create a second temporary measure:</p>
+
+<pre><code class="language-sql">MEASURE 'Measure'[_Active Path] =
+    IF( [_IsOnDetailLevel], "Detail", "Aggregated" )</code></pre>
+
+                <p>Add it to a table visual and step through these cases manually:</p>
+
+                <table>
+                    <thead>
+                        <tr><th>Filter context</th><th>Expected</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>No filters</td><td>Detail - no AGG dimension is active</td></tr>
+                        <tr><td>Region only</td><td>Aggregated</td></tr>
+                        <tr><td>Region + Category</td><td>Aggregated</td></tr>
+                        <tr><td>Location</td><td>Detail - detail-level dimension present</td></tr>
+                        <tr><td>Region + Location</td><td>Detail - detail overrides AGG</td></tr>
+                        <tr><td><code>_ForceDetailCalculations</code> slicer = 1</td><td>Detail - parameter override</td></tr>
+                    </tbody>
+                </table>
+
+                <p>If any row shows the wrong path, see <a href="#troubleshooting">Troubleshooting</a> below.</p>
+
+                <p>Delete this measure before publishing.</p>
+
+                <h3>Step 3 - Full cross join in DAX Studio</h3>
+
+                <p>For a rigorous final check, use <a href="https://daxstudio.org/" target="_blank" rel="noopener">DAX Studio</a> to query both paths across the complete dimension space and surface any hidden mismatches:</p>
+
+<pre><code class="language-sql">EVALUATE
+SUMMARIZECOLUMNS(
+    'Region'[Region Name],
+    'Category'[Category Name],
+    'Period'[Year Month],
+    "Detail",      [Metric Detail],
+    "Aggregated",  [Metric Agg],
+    "Difference",  ABS( [Metric Detail] - [Metric Agg] )
+)
+ORDER BY [Difference] DESC</code></pre>
+
+                <p>Any rows with a non-zero <code>Difference</code> at the top of the result indicate a granularity or relationship problem. Review those rows against the AGG table contents to determine which component column is misaligned.</p>
+
+                <h2 id="troubleshooting">Troubleshooting</h2>
+
+                <h3>AGG path returns wrong results</h3>
+
+                <p><strong>Symptom:</strong> <code>[_Path Comparison]</code> shows mismatches at certain dimension combinations.</p>
+
+                <p><strong>Missing relationship.</strong> Open Model view and confirm every key column in <code>Metric AGG</code> has an active relationship to its dimension table. A missing or inactive relationship causes the AGG table to return totals without the expected filter, producing values that are too high.</p>
+
+                <p><strong>Wrong AGG granularity.</strong> The AGG table was built at a coarser level than the current filter. If the AGG table is at Category level but the user filters by Sub-Category, the AGG rows won't filter down correctly. Either add Sub-Category to the AGG table's <code>SUMMARIZECOLUMNS</code>, or add <code>ISFILTERED('Sub-Category')</code> to <code>_HasDetailFilters</code> in <code>[_IsOnDetailLevel]</code> to push those contexts back to the Detail Path.</p>
+
+                <p><strong>Pre-aggregated ratio.</strong> The AGG table stores a pre-calculated ratio (e.g., <code>Ratio = 0.87</code>) rather than its components (<code>Numerator</code>, <code>Denominator</code>). When the Aggregated Path sums this column across rows, the result is an average of percentages - not the correct weighted ratio. Store components only; calculate ratios at read time.</p>
+
+                <h3>Detection measure always uses the Detail Path</h3>
+
+                <p><strong>Symptom:</strong> <code>[_Active Path]</code> shows "Detail" in every context, even when you expect "Aggregated." Performance is unchanged from not having the pattern at all.</p>
+
+                <p><strong><code>ISFILTERED</code> table name mismatch.</strong> Table names in DAX are case-sensitive and must match the exact name in the Fields pane, including spaces. Open <code>[_IsOnDetailLevel]</code> and check each <code>ISFILTERED('...')</code> call. A common mistake is writing <code>'SalesRegion'</code> when the table is named <code>'Sales Region'</code> (note the space).</p>
+
+                <p><strong><code>_ForceDetailCalculations</code> stuck at 1.</strong> The parameter is set to 1 forcing detail path. Reset it to 0.</p>
+
+                <p><strong>AGG table is empty.</strong> <code>[_Agg_fct]</code> returns BLANK or 0, so <code>_HasAGGData</code> is FALSE and <code>_UseAggregated</code> never becomes TRUE. In DAX Studio, run <code>EVALUATE 'Metric AGG'</code> and confirm it returns rows. If the table is empty, the calculated table may have failed to refresh - check the refresh history in Power BI Service.</p>
+
+                <h3>AGG path returns BLANK</h3>
+
+                <p><strong>Symptom:</strong> The Switch Measure returns BLANK at levels where the Aggregated Path should be active.</p>
+
+                <p>The AGG table has data, but no rows survive the current filter context. This almost always means the AGG table is missing a relationship to a dimension that a slicer is filtering. In Model view, verify that every dimension used in any slicer on the report has an active relationship to <code>Metric AGG</code> - not just to the fact table. The AGG table and the fact table need parallel relationship sets.</p>
+
+                <h3>Performance improvement is lower than expected</h3>
+
+                <p><strong>Symptom:</strong> Queries are faster but not by the expected 70&ndash;90%.</p>
+
+                <p><strong>AGG table is too large.</strong> If the aggregation granularity is too fine, the AGG table can approach the fact table in row count and the read advantage shrinks. Aim for a table at least two orders of magnitude smaller than the fact table (e.g., 100K rows vs. 100M rows). If the AGG table is above ~1M rows, coarsen the granularity or remove low-cardinality dimensions that are not driving the performance problem.</p>
+
+                <p><strong>The bottleneck is not the calculation.</strong> Open Performance Analyzer in Power BI Desktop and capture query timings. If most of the elapsed time is in the "Other" category - rendering, network transfer, or visual data reduction - the DAX execution time is already acceptable and this pattern will not help. Investigate the visual or data model layer instead.</p>
+
+                <h2>Conclusion &amp; Next Steps</h2>
+
+                <p>The Aggregated Table Performance Optimization Pattern addresses a narrow but common problem: complex DAX calculations that are too expensive to run against a full fact table at aggregated levels, yet too intricate for standard Power BI aggregation tables to handle. The dual-path approach keeps everything in DAX - no DirectQuery aggregations, no external caching - which means it works with any Import-mode data source and is fully maintainable by any developer who knows DAX.</p>
+
+                <p><strong>Recommended rollout sequence:</strong></p>
+
+                <ol>
+                    <li><strong>Start with one slow measure.</strong> Pick the single KPI causing the most pain at aggregated levels. Investigate the most common dimension used by users related to the measre. Implement the full pattern for that measure, run the validation suite, and ship it. Don't try to convert an entire model in one pass.</li>
+                    <li><strong>Benchmark before and after.</strong> Capture DAX Studio server timings before building the AGG table so you have a baseline. If the improvement is below 50% after implementation, work through the troubleshooting checklist before expanding to more measures.</li>
+                    <li><strong>Add metrics incrementally.</strong> Each new metric needs its own Detail and Aggregated path measures and its component columns in the AGG table. Add one at a time and run the path comparison test before moving to the next.</li>
+                    <li><strong>Document your dimension lists.</strong> Add a comment block at the top of <code>[_IsOnDetailLevel]</code> listing which dimensions are in <code>_HasDetailFilters</code>, which are in <code>_IsAtAggregationLevel</code>, and why each is classified that way. When someone inherits the model in six months, this is the context that's hardest to reconstruct from code alone.</li>
+                </ol>
+
+            </div>
+
+            <section class="guest-author-card">
+                <div class="guest-author-card__header">
+                    <div class="guest-author-card__avatar" aria-hidden="true">SB</div>
+                    <div class="guest-author-card__title">
+                        <h3>About the Guest Author</h3>
+                        <p class="guest-author-card__role">Sven Boekhoven &middot; Senior Data Analyst</p>
+                    </div>
+                </div>
+                <p>Sven is a Senior Data Analyst at IKEA with a career stretching back to 1999. He specializes in Power BI engineering, data visualization, business intelligence, and data warehousing - having worked across roles including information analyst, ETL architect, and database designer.</p>
+                <p>Outside of his analytics work, Sven is a cycling trainer and coach across road, track, and para-cycling, and serves as general manager of the Ronde van West-Nederland - a six-day amateur stage race.</p>
+                <p class="guest-author-card__personal-note"><em>Sven and I worked closely together at IKEA for three years and four months - he was a senior colleague who shaped how I think about DAX performance. I'm honored he chose powerbimvp.com to share this pattern. - Jihwan</em></p>
+                <a class="guest-author-card__cta btn btn-primary" href="https://www.linkedin.com/in/sven-boekhoven/" target="_blank" rel="noopener">
+                    <span class="material-symbols-outlined">link</span> Connect with Sven on LinkedIn
+                </a>
+            </section>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="DAX">DAX</span>
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="Performance">Performance</span>
+                <span class="tag" data-tag="Aggregations">Aggregations</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: PBIP Lineage Explorer, PBIP Impact Analyzer, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="user-context-aware-calculated-columns-tmdl-not-rls.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">User-Context-Aware Calculated Columns: A Dynamic Calculated Column Pattern, Not Row-Level Security</span>
+                </a>
+                <div></div>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-rHwBHAxVvWblRZOkJc6/fI+iHFQjWFFGPA6COtU+nGANyEshLN8k+5+rBFFKKDE+UZsEmLoGvcC4hT/xfAtxOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-35RBtvuCKWANuRid6RXP2gYm4D5RMieVLfsMSzPu0Ry0jJFOqGcgJ/MXbSeRso89H12VqAjSH7RLx3tZnQIYGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>

@@ -1412,3 +1412,52 @@
         padding: var(--space-6);
     }
 }
+
+/* ============================================
+   Guest Post — Homepage Card Variant
+   - "Guest Post" badge inside .post-card-meta-top
+   - Author byline between title and preview
+   ============================================ */
+.post-card .guest-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    background: var(--accent-500);
+    color: #ffffff;
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.post-card .guest-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ffffff;
+    opacity: 0.9;
+}
+
+.card-byline {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.card-byline .material-symbols-outlined {
+    font-size: 14px;
+    color: var(--accent-500);
+}
+
+.post-card--featured .card-byline {
+    font-size: var(--text-base);
+}
