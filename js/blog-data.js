@@ -15,7 +15,7 @@
             sortDate: "2026-05-21",
             tags: ["DAX", "Power BI", "Performance", "Aggregations"],
             url: "posts/aggregated-table-performance-pattern.html",
-            featuredImage: "images/blog/aggregated-table-performance-pattern/featured.svg",
+            featuredImage: "images/blog/aggregated-table-performance-pattern/featured.png",
             readingTime: "15 min read",
             difficulty: "Advanced",
             author: {
