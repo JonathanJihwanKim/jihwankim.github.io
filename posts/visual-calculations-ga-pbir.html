@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A deliberate walkthrough of adding a Visual Calculation to a table that already has a model measure for the same year-over-year variance, then reading what the visual.json diff actually shows. Visual Calculations reached General Availability in the May 2026 Power BI release; the storage location in visual.json was true throughout Preview as well.">
+    <meta name="keywords" content="Visual Calculations, Power BI, PBIR, visual.json, DAX, TMDL, DevOps, May 2026, General Availability, NativeVisualCalculation, queryRef, TimeIntel">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="Adding a Visual Calculation Next to a Model Measure: Reading the visual.json Diff | Jihwan Kim">
+    <meta property="og:description" content="A deliberate walkthrough of adding a Visual Calculation to a table that already has a model measure for the same year-over-year variance, then reading what the visual.json diff actually shows. Visual Calculations reached General Availability in the May 2026 Power BI release.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/visual-calculations-ga-pbir.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/visual-calculations-ga-pbir/featured.png">
+    <meta property="og:image:secure_url" content="https://powerbimvp.com/images/blog/visual-calculations-ga-pbir/featured.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="An illustration of two figures standing on either side of a stack of layered blocks, representing the comparison between a Visual Calculation in the report layer and a model measure in the semantic model layer">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Adding a Visual Calculation Next to a Model Measure: Reading the visual.json Diff">
+    <meta name="twitter:description" content="A deliberate walkthrough of adding a Visual Calculation to a table that already has a model measure for the same year-over-year variance, then reading what the visual.json diff actually shows. Visual Calculations reached General Availability in the May 2026 Power BI release.">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/visual-calculations-ga-pbir/featured.png">
+    <meta name="twitter:image:alt" content="An illustration of two figures standing on either side of a stack of layered blocks, representing the comparison between a Visual Calculation in the report layer and a model measure in the semantic model layer">
+
+    <title>Adding a Visual Calculation Next to a Model Measure: Reading the visual.json Diff | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 10 min read</span>
+                </div>
+                <h1 class="article-title">Adding a Visual Calculation Next to a Model Measure: Reading the <code>visual.json</code> Diff</h1>
+                <div class="article-meta">
+                    <time datetime="2026-05-22">
+                        <span class="material-symbols-outlined">calendar_month</span> May 22, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="PBIR">PBIR</span>
+                        <span class="tag" data-tag="DAX">DAX</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started May. 22, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/visual-calculations-ga-pbir/featured.png" alt="An illustration of two figures standing on either side of a stack of layered blocks, representing the comparison between a Visual Calculation in the report layer and a model measure in the semantic model layer">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how I added a Visual Calculation called <code>YoY_vc</code> next to a model measure already displayed on the same table visual and read what the <code>visual.json</code> diff actually said about where each one lives, now that Visual Calculations reached <strong>General Availability</strong> in the May 2026 Power BI release.</p>
+
+                <p>The plan was deliberate. The Contoso semantic model I was working with already had a measure called <code>Number of Orders YoY</code> projected onto a table visual under the display alias <code>YoY_measure</code>. I wanted to author a Visual Calculation called <code>YoY_vc</code> that computed the same year-over-year variance directly on the visual, view both columns side by side, then open the source files and read the diff. The whole exercise was a concrete question. When both calculations land on one visual, what does each one look like in the PBIR JSON, and what does that tell me about where they belong?</p>
+
+                <p>The diff was short, single-file, and quietly informative.</p>
+
+                <h2>1. The Setup: <code>YoY_vc</code> and <code>YoY_measure</code> on One Table Visual</h2>
+
+                <p>The table visual already projected four fields before I touched it. <code>Brand</code> from the <code>product</code> table, <code>Gender</code> from the <code>customer</code> table, and two measures: <code>Number of Orders</code> and <code>SPLY Number of Orders</code> (SPLY stands for Same Period Last Year). A fifth projection bound the model measure <code>Number of Orders YoY</code> into the visual with a per-visual <strong><code>displayName</code></strong> of <code>YoY_measure</code>, so the column header on the visual read <code>YoY_measure</code> while the underlying measure on the semantic model stayed named <code>Number of Orders YoY</code>. The plan was to add one more projection, the new Visual Calculation, alongside this lineup.</p>
+
+                <img src="../images/blog/visual-calculations-ga-pbir/visual-side-by-side.png" alt="A Power BI table visual showing Brand, Gender, Number of Orders, SPLY Number of Orders, YoY_vc and YoY_measure as the column headers, with a column chart on the right" loading="lazy">
+
+                <p>The screenshot above shows the table visual after both year-over-year columns are in place. The green callout points at the new <code>YoY_vc</code> column, which is the Visual Calculation. The red callout points at <code>YoY_measure</code>, which is the model measure <code>Number of Orders YoY</code> wearing its per-visual display alias. The two columns sit next to each other and produce the same number for every row, formatted as signed integers with thousands separators (the underlying <code>formatString</code> is <code>#,0</code> for both, not a percentage).</p>
+
+                <h2>2. Writing <code>YoY_vc</code> in the Visual Calculations Editor</h2>
+
+                <p>The Microsoft Learn page on <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-visual-calculations-overview?wt.mc_id=DP-MVP-5004989#adding-a-visual-calculation" target="_blank" rel="noopener">Adding a visual calculation</a> describes what opens when I click the <strong>New visual calculation</strong> button in the ribbon. The editor takes over the lower half of the screen with a visual preview at the top, a formula bar in the middle, and the visual matrix at the bottom that previews values as I type.</p>
+
+                <img src="../images/blog/visual-calculations-ga-pbir/visual-calculation-editor.png" alt="The Visual Calculations editor open below the table visual, showing the YoY_vc formula in the formula bar and a row of computed signed-integer values in the visual matrix" loading="lazy">
+
+                <p>The expression I typed is short and unambiguous:</p>
+
+                <pre><code class="language-sql">YoY_vc = [Number of Orders] - [SPLY Number of Orders]</code></pre>
+
+                <p>One subtraction. Two operands, both already projected on the visual. The Microsoft Learn <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-visual-calculations-overview?wt.mc_id=DP-MVP-5004989#adding-a-visual-calculation" target="_blank" rel="noopener">Adding a visual calculation</a> section notes that <em>most</em> visual calculations are evaluated row-by-row across the visual matrix by default, like a calculated column. In this case that default behavior is what I want: the subtraction resolves at each row of the matrix using the same <code>Number of Orders</code> and <code>SPLY Number of Orders</code> values the visual is already displaying.</p>
+
+                <h2>3. Reading the <code>visual.json</code> Diff</h2>
+
+                <p>Saving the report and opening the Source Control panel in VS Code is where the deliberate part of the plan paid off.</p>
+
+                <img src="../images/blog/visual-calculations-ga-pbir/visual-json-diff.png" alt="VS Code Source Control panel showing visual.json as the only changed file, with the visual calculation NativeVisualCalculation block in a green-highlighted addition and the existing Number of Orders YoY measure-reference block visible just below it" loading="lazy">
+
+                <p>One file changed. The <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-report?wt.mc_id=DP-MVP-5004989#pbir-folder-and-files" target="_blank" rel="noopener">PBIR folder and files section of the Power BI Desktop project report folder documentation</a> describes the structure: every visual lives at <code>definition/pages/[pageName]/visuals/[visualName]/visual.json</code>. My change showed up under the page-folder GUID and the table-visual-folder GUID that VS Code surfaces in the screenshot above. The diff was the addition of one new projection block alongside the existing five.</p>
+
+                <p>The new projection block, verbatim from the file:</p>
+
+                <pre><code class="language-json">{
+  "field": {
+    "NativeVisualCalculation": {
+      "Language": "dax",
+      "Expression": "[Number of Orders] - [SPLY Number of Orders]",
+      "Name": "YoY_vc",
+      "DataType": "Integer"
+    }
+  },
+  "queryRef": "select",
+  "nativeQueryRef": "YoY_vc",
+  "format": "#,0"
+}</code></pre>
+
+                <p>For comparison, the projection block sitting right next to it for the model measure (which was already on the visual before I started, unchanged in this diff):</p>
+
+                <pre><code class="language-json">{
+  "field": {
+    "Measure": {
+      "Expression": {
+        "SourceRef": {
+          "Entity": "Measure"
+        }
+      },
+      "Property": "Number of Orders YoY"
+    }
+  },
+  "queryRef": "Measure.Number of Orders YoY",
+  "nativeQueryRef": "YoY_measure",
+  "displayName": "YoY_measure"
+}</code></pre>
+
+                <p>Both blocks live inside the same <code>query.queryState.Values.projections</code> array of the same <code>visual.json</code> file. One block carries the full DAX expression as a string. The other block carries a pointer to a model object by name. The contrast is the entire story of the diff.</p>
+
+                <h2>4. Decoding the <code>NativeVisualCalculation</code> Block</h2>
+
+                <p>The visual calculation block uses <strong><code>NativeVisualCalculation</code></strong> as its inner field shape, which is the PBIR schema's way of saying <em>"this field is authored on the visual itself, not bound to a model object."</em> The <code>visual.json</code> file declares its schema at the top of the document.</p>
+
+                <img src="../images/blog/visual-calculations-ga-pbir/visual-json-schema-line.png" alt="VS Code Explorer panel showing import_contoso_sales.Report > definition > pages > 2640d576d17f0ef0b676 > visuals > 9844efbb902347c7567c > visual.json open, with the $schema URL on line 2 highlighted in a green box" loading="lazy">
+
+                <p>The screenshot above shows line 2 of the file with the <code>$schema</code> URL highlighted. That URL points to a JSON Schema document that Microsoft publishes. The Microsoft Learn <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-report?wt.mc_id=DP-MVP-5004989#pbir-json-schemas" target="_blank" rel="noopener">PBIR JSON Schemas section</a> explains that the schema URL at the top of each PBIR file is publicly accessible and lets a code editor like VS Code validate the property names and values while editing. In plain terms, every property the file uses is defined by Microsoft in a document the editor can reach, which is what makes the file self-describing. The schemas themselves live in the public <a href="https://github.com/microsoft/json-schemas/tree/main/fabric/item/report/definition" target="_blank" rel="noopener">microsoft/json-schemas repository on GitHub</a>.</p>
+
+                <p>Five properties inside the <code>NativeVisualCalculation</code> and its surrounding projection are worth naming, because they answered the practical questions I had walking into the diff:</p>
+
+                <ul>
+                    <li><strong><code>Language</code></strong> set to <code>"dax"</code> declares the expression language formally. The schema property exists so the file does not have to rely on convention or file extension to describe what the expression string contains. The conceptual anchor for this property is the Microsoft Learn <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-visual-calculations-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Visual Calculations Overview</a>, which opens with <em>"A visual calculation is a DAX calculation defined and executed directly on a visual."</em> DAX is the language of visual calculations, and <code>Language</code> is where the file records that.</li>
+                    <li><strong><code>Expression</code></strong> is the literal DAX as a string. My expression is <code>[Number of Orders] - [SPLY Number of Orders]</code>, which references two measures already on the visual. The same MS Learn overview reminds me in its <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-visual-calculations-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">opening list comparing visual calculations to other DAX surfaces</a> that <em>"visual calculations can only refer to what's on the visual."</em> Both operands here qualify.</li>
+                    <li><strong><code>Name</code></strong> is <code>YoY_vc</code>, the identifier the visual uses to refer to this calculation in subsequent positions, sorts, or formatting. It's also the column header that ends up on the table visual.</li>
+                    <li><strong><code>DataType</code></strong> is <code>Integer</code>. This drives the data-type handling for the resulting column.</li>
+                    <li><strong><code>queryRef</code></strong> at the outer projection level is <code>"select"</code> (lowercase) for this visual calculation. The property is defined in the published <a href="https://github.com/microsoft/json-schemas/blob/main/fabric/item/report/definition/visualConfiguration/2.3.0/schema-embedded.json" target="_blank" rel="noopener">visualConfiguration/2.3.0/schema-embedded.json</a> file under the <code>RoleProjection</code> definition, where its description reads <em>"A unique name for this field - unique per visual."</em> Worth noting that the schema describes the constraint (a unique name per visual) but does not enumerate accepted values or document a specific convention for visual calculations. What I can report from my own <code>visual.json</code> is that the model-measure projection right next door uses <code>"Measure.Number of Orders YoY"</code>, while the visual calculation projection uses <code>"select"</code>. I have not found a Microsoft Learn or schema citation that explains the <code>"select"</code> string itself, so I would describe this as an observation in my file rather than a documented convention.</li>
+                </ul>
+
+                <img src="../images/blog/visual-calculations-ga-pbir/queryref-schema.png" alt="The microsoft/json-schemas repository on GitHub showing visualConfiguration/2.3.0/schema-embedded.json open, with the RoleProjection definition visible and the queryRef property highlighted, including its description A unique name for this field - unique per visual" loading="lazy">
+
+                <p>The screenshot above shows the <code>RoleProjection</code> schema definition with <code>queryRef</code> highlighted. The schema documents the property as a unique-per-visual string and stops there. The visible neighbors <code>nativeQueryRef</code>, <code>displayName</code>, <code>format</code>, <code>active</code>, and <code>hidden</code> have their own descriptions in the same block, but none of them enumerates accepted values for <code>queryRef</code> either.</p>
+
+                <p>Two more properties round out the visual calculation projection. <code>nativeQueryRef</code> repeats the calculation name as the engine reference, and <code>format</code> carries the format string <code>#,0</code>. The format string is in plain sight in the file, and that is why both <code>YoY_vc</code> and <code>YoY_measure</code> render as signed integers on the table even though their column names sound like they could be percentages.</p>
+
+                <h2>5. Visual-Scoped Storage Is the Design, in Preview and at GA</h2>
+
+                <p>The first time a colleague reads this diff over my shoulder, the question I expect is whether it's a good idea that the business logic for <code>YoY_vc</code> lives only inside one visual's JSON. The MS Learn overview answers this directly. In the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-visual-calculations-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">opening list comparing visual calculations to other DAX surfaces</a>, the documentation states: <em>"Visual calculations aren't stored in the model, and instead are stored on the visual. This means visual calculations can only refer to what's on the visual."</em> The two sentences are two halves of one design choice. If the calculation can only see the visual, then storing it outside the visual would couple it to nothing useful.</p>
+
+                <p>Reading further into the same overview, the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-visual-calculations-overview?wt.mc_id=DP-MVP-5004989#unsupported-features" target="_blank" rel="noopener">Unsupported features list</a> includes <em>"Copy/paste or reuse across visuals"</em> as a documented limitation. Read in context, it is a statement about scope. Visual-grain patterns such as running totals, percent of parent, percent of grand total, and year-over-year on a specific date axis are visual-grain by their nature. The eleven <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-visual-calculations-overview?wt.mc_id=DP-MVP-5004989#using-templates" target="_blank" rel="noopener">built-in templates</a> all sit comfortably inside that scope.</p>
+
+                <p>Worth being precise about what the May 2026 General Availability milestone <strong>did</strong> change and what it did <strong>not</strong>. The storage location was already on the visual throughout the Preview period. The architectural sentence quoted above is not a May 2026 addition to the documentation. What General Availability changed is production stability and tier availability. The preview flag is no longer required, and the feature is available across Pro, Premium Per User, Premium Per Capacity, and Fabric F-SKU tiers. That is the legitimate "what is new" story to tell about GA. It is not a change to the JSON shape.</p>
+
+                <h2>6. How the Two Calculations Are Written in the Sample</h2>
+
+                <p>Worth looking at the two expressions side by side, because they reach the same number through very different shapes of DAX.</p>
+
+                <p>The Visual Calculation, written inside the visual:</p>
+
+                <pre><code class="language-sql">YoY_vc = [Number of Orders] - [SPLY Number of Orders]</code></pre>
+
+                <p>The model measure, written in TMDL inside the semantic model:</p>
+
+                <img src="../images/blog/visual-calculations-ga-pbir/measure-tmdl-yoy.png" alt="VS Code Explorer showing import_contoso_sales.SemanticModel > definition > tables > Measure.tmdl with the Number of Orders YoY measure highlighted, whose body calls TimeIntel.PeriodVariance" loading="lazy">
+
+                <p>The screenshot above shows the <code>Number of Orders YoY</code> measure inside <code>Measure.tmdl</code>. Its body is a single call to <code>TimeIntel.PeriodVariance</code>, which is a <strong>DAX User-Defined Function (UDF)</strong>. I walked through how this UDF library is built in <a href="https://powerbimvp.com/posts/building-portable-time-intelligence-library-dax-udf.html" target="_blank" rel="noopener">Building a Portable Time Intelligence Library with DAX User-Defined Functions</a> earlier this year. The function takes a measure, a date column, an interval, a grain, and a variance flavor, and returns the period-over-period variance. In this case, year-over-year, absolute.</p>
+
+                <p>The Visual Calculation under the name <code>YoY_vc</code> reaches the same year-over-year number with a single subtraction over two measures already on the visual. Both produce the same value with the same <code>#,0</code> format. They get there differently because they live at different layers and answer at different scopes.</p>
+
+                <h2>7. From a DevOps Standpoint, What the GA Milestone Gives the Diff</h2>
+
+                <p>From a DevOps standpoint, the same diff surface that Visual Calculations have been producing in <code>visual.json</code> throughout the Preview period is now production-stable across all Power BI licensing tiers. The shape of the diff has not changed at GA. What GA gives a team is the freedom to treat that diff shape as a stable target wherever Power BI is licensed.</p>
+
+                <h3>Version Control: One Schema-Validated JSON Block Per Calculation</h3>
+
+                <p>Each Visual Calculation is a single <code>NativeVisualCalculation</code> block inside one <code>visual.json</code> file, declared against a public JSON schema (<code>visualContainer/2.9.0</code> at the time of this writing). A reviewer can read the DAX as plain text, see the field-binding context around it, and pick up the format string from the same projection. The <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-report?wt.mc_id=DP-MVP-5004989#pbir-format" target="_blank" rel="noopener">PBIR format section</a> on Microsoft Learn calls out batch-edit-across-visuals as one of the explicit format benefits. A Visual Calculation rename or formula tweak is exactly that kind of edit at GA scale.</p>
+
+                <h3>Code Review: Local-by-Construction Scope</h3>
+
+                <p>A Visual Calculation edit touches one <code>visual.json</code>. A reviewer can scope the conversation to one chart on one page. Compared to a model measure change, which can propagate to every report that connects, the visual calculation change is <strong>local by construction</strong>. The folder path itself names the page and the visual the edit affects.</p>
+
+                <h3>Clean Separation of Concerns: Model Owners and Report Authors</h3>
+
+                <p>The audience separation surfaced earlier in the post lands cleanly in the review process. Semantic model owners curate the measure layer in TMDL, where DAX User-Defined Functions like <code>TimeIntel.PeriodVariance</code> and other shared building blocks live. Report authors iterate on visual-grain patterns inside <code>visual.json</code>. Both populations leave a Git history that reflects the kind of change they were making, with no mixing of layers in the same diff.</p>
+
+                <h3>Documentation: The PBIP Documenter Hook</h3>
+
+                <p>One follow-up for my own tooling. <a href="https://jonathanjihwankim.github.io/pbip-documenter" target="_blank" rel="noopener">PBIP Documenter</a> surfaces TMDL-driven artifacts such as tables, measures, calculated columns, and relationships. With Visual Calculations now production-stable, treating <code>NativeVisualCalculation</code> blocks as a first-class artifact class in generated documentation is a sensible next step. The schema is public, the property names are stable, and the discovery is the same as for any other PBIR JSON entity.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>This experience left me with a new mental model. <strong>Visual Calculations and DAX measures answer different layer-ownership questions, and the May 2026 General Availability of Visual Calculations means the visual-layer answer is now production-stable to depend on across all licensing tiers.</strong></p>
+
+                <p>The visual-layer storage in <code>visual.json</code> was true throughout the Preview period and continues to be true at GA. The same diff shape has been there all along. What I am thinking about now is what it means for a piece of business logic to live inside one visual rather than inside the model. The single-subtraction <code>YoY_vc</code> on this one table is a comfortable case, because the answer is the same as the model measure sitting next to it and the audience for the visual is the only audience that needs that calculation. The boundary is less obvious when the logic gets longer, when the visual-grain pattern is genuinely different from any existing model measure, or when more than one visual on the same page wants the same shape and is not allowed to share.</p>
+
+                <p>This is one snapshot from one experiment in one sample. I still want to try Visual Calculations on a few more patterns before I am confident I know where the per-chart scope is a benefit and where it becomes a constraint. The plan is to keep adding small Visual Calculations next to model measures and to keep reading the <code>visual.json</code> diff after each one.</p>
+
+                <p>I hope this inspires you to add a Visual Calculation next to one of your model measures and read what your own <code>visual.json</code> diff says about where each one lives.</p>
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="PBIR">PBIR</span>
+                <span class="tag" data-tag="DAX">DAX</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: PBIP Lineage Explorer, PBIP Impact Analyzer, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="aggregated-table-performance-pattern.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">Aggregated Table Performance Optimization Pattern</span>
+                </a>
+                <a href="../index.html" class="post-nav-link post-nav-link--next">
+                    <span class="post-nav-label">Back to</span>
+                    <span class="post-nav-title">All posts</span>
+                </a>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-rHwBHAxVvWblRZOkJc6/fI+iHFQjWFFGPA6COtU+nGANyEshLN8k+5+rBFFKKDE+UZsEmLoGvcC4hT/xfAtxOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-35RBtvuCKWANuRid6RXP2gYm4D5RMieVLfsMSzPu0Ry0jJFOqGcgJ/MXbSeRso89H12VqAjSH7RLx3tZnQIYGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>

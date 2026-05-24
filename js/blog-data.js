@@ -8,6 +8,18 @@
     // Blog posts data - newest first
     var posts = [
         {
+            id: 15,
+            title: "Adding a Visual Calculation Next to a Model Measure: Reading the visual.json Diff",
+            preview: "A deliberate walkthrough of adding a Visual Calculation to a table that already has a model measure for the same year-over-year variance, then reading what the visual.json diff actually shows. Visual Calculations reached General Availability in the May 2026 Power BI release; the storage location in visual.json was true throughout Preview as well.",
+            date: "May 22, 2026",
+            sortDate: "2026-05-22",
+            tags: ["Power BI", "PBIR", "DAX", "DevOps"],
+            url: "posts/visual-calculations-ga-pbir.html",
+            featuredImage: "images/blog/visual-calculations-ga-pbir/featured.png",
+            readingTime: "10 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 14,
             title: "Aggregated Table Performance Optimization Pattern",
             preview: "A guest post by Sven Boekhoven (Senior Data Analyst). A dual-path DAX design pattern that routes calculations through a pre-aggregated table when safe, and falls back to the fact table otherwise - built for hierarchical Power BI models with hundreds of millions of rows where standard aggregation tables can't handle weighted averages and conditional logic.",
