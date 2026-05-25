@@ -201,7 +201,8 @@
     var postsContainer = document.getElementById('posts-container');
     var noResults = document.getElementById('no-results');
     var paginationContainer = document.getElementById('pagination');
-    var postsPerPage = 6;
+    var firstPageSize = 7;
+    var otherPageSize = 6;
     var currentPage = 1;
     var activeTag = 'all';
     var searchQuery = '';
@@ -273,8 +274,11 @@
 
         if (noResults) noResults.style.display = 'none';
 
-        var startIndex = (currentPage - 1) * postsPerPage;
-        var paginatedPosts = filteredPosts.slice(startIndex, startIndex + postsPerPage);
+        var startIndex = currentPage === 1
+            ? 0
+            : firstPageSize + (currentPage - 2) * otherPageSize;
+        var pageSize = currentPage === 1 ? firstPageSize : otherPageSize;
+        var paginatedPosts = filteredPosts.slice(startIndex, startIndex + pageSize);
 
         paginatedPosts.forEach(function (post, index) {
             var isFeatured = (index === 0 && currentPage === 1 && !searchQuery);
@@ -355,7 +359,9 @@
 
     function renderPagination(totalPosts) {
         if (!paginationContainer) return;
-        var totalPages = Math.ceil(totalPosts / postsPerPage);
+        var totalPages = totalPosts <= firstPageSize
+            ? 1
+            : 1 + Math.ceil((totalPosts - firstPageSize) / otherPageSize);
         paginationContainer.innerHTML = '';
 
         if (totalPages <= 1) return;
