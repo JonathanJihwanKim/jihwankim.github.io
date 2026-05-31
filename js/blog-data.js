@@ -8,6 +8,18 @@
     // Blog posts data - newest first
     var posts = [
         {
+            id: 16,
+            title: "Scoping Power BI Explore with a Perspective Authored in TMDL",
+            preview: "Exploration perspectives arrived in the May 2026 Power BI release. Scoping the Explore field list with a perspective authored in TMDL, then watching the semantic model hand every field back, drew a clear line between curating a self-service surface and securing it with object-level and row-level security. A walkthrough across the model TMDL, report.json, and page.json, with the Git diff.",
+            date: "May 31, 2026",
+            sortDate: "2026-05-31",
+            tags: ["Power BI", "PBIR", "TMDL", "DevOps"],
+            url: "posts/exploration-perspectives-tmdl.html",
+            featuredImage: "images/blog/exploration-perspectives-tmdl/featured.png",
+            readingTime: "9 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 15,
             title: "Adding a Visual Calculation Next to a Model Measure: Reading the visual.json Diff",
             preview: "A deliberate walkthrough of adding a Visual Calculation to a table that already has a model measure for the same year-over-year variance, then reading what the visual.json diff actually shows. Visual Calculations reached General Availability in the May 2026 Power BI release; the storage location in visual.json was true throughout Preview as well.",

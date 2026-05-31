@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Exploration perspectives arrived in the May 2026 Power BI release. Scoping the Explore field list with a perspective authored in TMDL, then watching the semantic model hand every field back, drew a clear line between curating a self-service surface and securing it with object-level and row-level security. A walkthrough across the model TMDL, report.json, and page.json, with the Git diff.">
+    <meta name="keywords" content="Exploration perspective, Explore perspective, Power BI, TMDL, perspective, report.json, page.json, Personalize visuals, object-level security, row-level security, OLS, RLS, DevOps, May 2026, Contoso">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="Scoping Power BI Explore with a Perspective Authored in TMDL | Jihwan Kim">
+    <meta property="og:description" content="Scoping the Explore field list with a perspective authored in TMDL, then watching the semantic model hand every field back, drew a clear line between curating a self-service surface and securing it with object-level and row-level security.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/exploration-perspectives-tmdl.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/exploration-perspectives-tmdl/featured.png">
+    <meta property="og:image:secure_url" content="https://powerbimvp.com/images/blog/exploration-perspectives-tmdl/featured.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1600">
+    <meta property="og:image:height" content="900">
+    <meta property="og:image:alt" content="An illustration of a figure standing beside a long open-fronted building with several bays, some showing their contents and others left bare, representing how a perspective curates which fields a report consumer sees in Explore">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Scoping Power BI Explore with a Perspective Authored in TMDL">
+    <meta name="twitter:description" content="Scoping the Explore field list with a perspective authored in TMDL, then watching the semantic model hand every field back, drew a clear line between curating a self-service surface and securing it.">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/exploration-perspectives-tmdl/featured.png">
+    <meta name="twitter:image:alt" content="An illustration of a figure beside a long open-fronted building with several bays, some shown and some bare, representing how a perspective curates the visible field surface">
+
+    <title>Scoping Power BI Explore with a Perspective Authored in TMDL | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 9 min read</span>
+                </div>
+                <h1 class="article-title">Scoping Power BI Explore with a Perspective Authored in TMDL</h1>
+                <div class="article-meta">
+                    <time datetime="2026-05-31">
+                        <span class="material-symbols-outlined">calendar_month</span> May 31, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="PBIR">PBIR</span>
+                        <span class="tag" data-tag="TMDL">TMDL</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started May 31, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/exploration-perspectives-tmdl/featured.png" alt="An illustration of a figure standing beside a long open-fronted building with several bays, some showing their contents and others left bare, representing how an Exploration perspective curates which fields a report consumer sees in Explore">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how scoping the field list in Power BI Explore with a perspective I wrote in TMDL (Tabular Model Definition Language) taught me a sharper line between tidying what a model shows and actually securing it.</p>
+
+                <p>My plan was deliberate. <strong>Exploration perspectives</strong> arrived in the <a href="https://community.fabric.microsoft.com/t5/Power-BI-Updates-Blog/Power-BI-May-2026-Feature-Summary/ba-p/5182174?wt.mc_id=DP-MVP-5004989#_Toc230033625" target="_blank" rel="noopener">Power BI May 2026 release</a>, listed under the Explore Improvements item, and I wanted to scope what report consumers see when they open Explore on one of my Contoso models. The reason was already clear to me. When I open Explore on the report and expand the <code>customer</code> table, Power BI offers <code>Birthday</code>, <code>StreetAddress</code>, <code>Occupation</code>, even <code>Latitude</code> and <code>Longitude</code>. Anyone who can open that report can start dragging a customer's home address onto a canvas.</p>
+
+                <p>That is a lot of personal detail to hand to a self-service surface, and trimming it down was exactly what I set out to do.</p>
+
+                <h2>1. The Field List I Did Not Want to Hand Out</h2>
+
+                <p>The model itself is tidy where it counts. The <code>date</code>, <code>product</code>, and <code>store</code> tables hold clean analytical attributes, and a <code>Measure</code> table carries the numbers people actually ask for. But <code>customer</code> is a different story. Next to <code>Gender</code> and <code>CountryFull</code>, it exposes <code>GivenName</code>, <code>Surname</code>, <code>Title</code>, <code>StreetAddress</code>, <code>City</code>, <code>ZipCode</code>, <code>Birthday</code>, <code>Occupation</code>, <code>Company</code>, <code>Vehicle</code>, and a pair of geographic coordinates. That is personally identifiable information (PII), and Explore presents all of it by default.</p>
+
+                <p>To see it the way a consumer would, I opened the workspace, found the <code>import_contoso_sales</code> report, and chose "Explore this data."</p>
+
+                <img src="../images/blog/exploration-perspectives-tmdl/service-report-explore-menu-before.png" alt="Power BI Service workspace context menu on the import_contoso_sales report with Explore this data (preview) highlighted" loading="lazy">
+
+                <img src="../images/blog/exploration-perspectives-tmdl/explore-before-customer-full.png" alt="The Explore data pane with the customer table expanded, listing Birthday, City, Company, CountryFull, Gender, GivenName, Latitude, Longitude, Occupation, StateFull, StreetAddress, Surname, Title, Vehicle, and ZipCode" loading="lazy">
+
+                <p>It was not only the personal columns. The list also carried two field-parameter tables, <code>prm_dimensions</code> and <code>prm_measures</code>, that exist to drive report authoring, plus a calculation group and an internal documentation table. None of that helps someone who just wants to slice sales by brand. The surface was both sensitive and noisy.</p>
+
+                <h2>2. Why the Model View Could Not Help Me</h2>
+
+                <p>My first instinct was to look for a perspective editor in the Desktop modeling UI. There isn't one. The <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-tmdl-view?wt.mc_id=DP-MVP-5004989#common-use-cases-for-tmdl-view" target="_blank" rel="noopener">Common use cases for TMDL view section</a> of the Power BI Desktop documentation lists creating a perspective as a scenario, precisely because, in its words, you can't create or edit one using the graphical interface of Power BI Desktop. The recommended path is to open TMDL view and script it.</p>
+
+                <p>That suited me. A perspective I write as code is a perspective I can read in a diff later.</p>
+
+                <h2>3. Writing the Perspective in TMDL</h2>
+
+                <p>In TMDL view I wrote a <code>createOrReplace</code> script, the scripting verb documented in the <a href="https://learn.microsoft.com/en-us/analysis-services/tmdl/tmdl-scripts?wt.mc_id=DP-MVP-5004989#createorreplace-command" target="_blank" rel="noopener">createOrReplace command section of the TMDL scripts reference</a>, and named the perspective <code>Sales Explore</code>. Each table I wanted on the surface became a <code>perspectiveTable</code>, and under it I listed only the <code>perspectiveColumn</code> and <code>perspectiveMeasure</code> entries that belong in self-service.</p>
+
+<pre><code class="language-tmdl">createOrReplace
+
+	perspective 'Sales Explore'
+
+		perspectiveTable date
+			perspectiveColumn Year
+			perspectiveColumn YearMonth
+			perspectiveColumn Month
+			perspectiveColumn DayofWeek
+			perspectiveColumn 'Year-Week Number'
+
+		perspectiveTable product
+			perspectiveColumn Brand
+			perspectiveColumn CategoryName
+			perspectiveColumn SubCategoryName
+			perspectiveColumn ProductName
+			perspectiveColumn Manufacturer
+			perspectiveColumn Color
+
+		perspectiveTable store
+			perspectiveColumn CountryName
+			perspectiveColumn State
+			perspectiveColumn StoreCode
+			perspectiveColumn Status
+			perspectiveColumn SquareMeters
+
+		perspectiveTable customer
+			perspectiveColumn Gender
+			perspectiveColumn CountryFull
+
+		perspectiveTable Measure
+			perspectiveMeasure 'Number of Orders'
+			perspectiveMeasure 'Total Quantity'
+			perspectiveMeasure 'Number of Customers'
+			perspectiveMeasure 'Total Cost'
+			perspectiveMeasure 'Number of Stores'
+			perspectiveMeasure 'Number of Products Sold'
+			perspectiveMeasure 'Number of Orders YoY'
+			perspectiveMeasure 'SPLY Number of Orders'
+
+		perspectiveTable 'Internal Measures'
+			perspectiveMeasure 'Total Sales'
+			perspectiveMeasure 'SPLY Total Sales'</code></pre>
+
+                <p>The <code>customer</code> block is the whole point. It lists <code>Gender</code> and <code>CountryFull</code> and nothing else, so <code>Birthday</code> and <code>StreetAddress</code> are not excluded by a rule, they are simply never named. I kept the eight measures people ask for (including <code>SPLY Number of Orders</code>, where SPLY stands for Same Period Last Year) and left out scratch measures like <code>Test</code> and <code>Count of brand v1</code>. The field-parameter tables, the calculation group, the documentation table, and the hidden fact table never enter the script at all.</p>
+
+                <img src="../images/blog/exploration-perspectives-tmdl/tmdl-script-perspectives-0.png" alt="Power BI Desktop TMDL view showing the createOrReplace perspective Sales Explore script, with the Model pane on the right still showing Perspectives (0)" loading="lazy">
+
+                <p>Then I selected Apply.</p>
+
+                <img src="../images/blog/exploration-perspectives-tmdl/tmdl-script-applied.png" alt="The TMDL view showing a Changes applied to the model banner, and the Model pane now listing Perspectives (1) with Sales Explore" loading="lazy">
+
+                <h2>4. Pointing Explore at the Perspective</h2>
+
+                <p>A perspective in the model does nothing for Explore on its own. You have to tell the report to use it. In Desktop that lives under File &gt; Options and settings &gt; Options &gt; Current File &gt; Report settings, in a section called "Explore perspective," which the documentation lays out in its <a href="https://learn.microsoft.com/en-us/power-bi/explore-reports/explore-data-service?wt.mc_id=DP-MVP-5004989#set-an-explore-perspective" target="_blank" rel="noopener">Set an Explore perspective steps</a>. I set it to <code>Sales Explore</code>.</p>
+
+                <img src="../images/blog/exploration-perspectives-tmdl/report-settings-explore-perspective.png" alt="The Report settings dialog in Power BI Desktop with the Explore perspective dropdown open and Sales Explore selected, alongside help text noting perspectives are not a security feature" loading="lazy">
+
+                <p>The help text inside that very dialog is worth reading slowly. It says a page-level perspective set in the formatting pane will override this setting, and it states plainly that perspectives "aren't a security feature," because users "can access all fields by opening Explore from the semantic model." I noted that and moved on, not yet appreciating how literally it would play out.</p>
+
+                <h2>5. The Scoped Surface, and What the Consumer Gains</h2>
+
+                <p>I published the report and opened Explore on it again.</p>
+
+                <img src="../images/blog/exploration-perspectives-tmdl/service-report-explore-menu-after.png" alt="The Power BI Service context menu on the import_contoso_sales report with Explore this data (preview) highlighted" loading="lazy">
+
+                <img src="../images/blog/exploration-perspectives-tmdl/explore-after-customer-scoped.png" alt="The Explore data pane showing a banner that reads You are viewing a subset of your data called Sales Explore, with the customer table now showing only CountryFull and Gender" loading="lazy">
+
+                <p>The banner, "You're viewing a subset of your data called Sales Explore," confirmed it. The <code>customer</code> table now offered two fields instead of fifteen. The field-parameter tables and the documentation table were gone.</p>
+
+                <p>This is the benefit a report consumer actually feels. The Microsoft documentation frames the goal in its <a href="https://learn.microsoft.com/en-us/power-bi/explore-reports/explore-data-service?wt.mc_id=DP-MVP-5004989#perspectives" target="_blank" rel="noopener">Perspectives section</a> as giving consumers a more focused list of tables and fields when a model is large. Someone opening Explore now lands on the analytical fields and the blessed measures, not a wall of columns where the right one is three scrolls down next to a customer's birthday. Fewer wrong-field detours, less cognitive load, and the personal columns are off the default surface by design. For a self-service audience, that focus is the difference between a usable experience and an intimidating one.</p>
+
+                <h2>6. The Semantic Model Handed It All Back</h2>
+
+                <p>Then I tested the sentence from that dialog. Instead of opening Explore on the report, I opened it on the semantic model.</p>
+
+                <img src="../images/blog/exploration-perspectives-tmdl/service-model-explore-menu.png" alt="The Power BI Service context menu on the import_contoso_sales semantic model with Explore this data (preview) highlighted, alongside semantic-model-specific options like Open semantic model and Security" loading="lazy">
+
+                <img src="../images/blog/exploration-perspectives-tmdl/explore-from-model-customer-full.png" alt="The Explore data pane launched from the semantic model, with the customer table expanded showing the full list again, including Birthday and StreetAddress" loading="lazy">
+
+                <p>Every field was back. <code>Birthday</code>, <code>StreetAddress</code>, <code>Vehicle</code>, the coordinates, all of it. The perspective I had set on the report had no say here, because this Explore session started from the model, not from the report that carries the setting.</p>
+
+                <p>This was my <em>aha</em> moment: <strong>a perspective scopes the surface, but it does not secure it.</strong> The product had told me so in the settings dialog, and the <a href="https://learn.microsoft.com/en-us/power-bi/create-reports/power-bi-personalize-visuals?wt.mc_id=DP-MVP-5004989#use-perspectives-for-a-more-focused-view" target="_blank" rel="noopener">Use Perspectives for a more focused view section</a> of the personalize-visuals documentation says it in writing: perspectives "aren't meant to be used as a security mechanism," and all security is inherited from the underlying model.</p>
+
+                <p>If the goal is to actually keep <code>Birthday</code> away from a viewer, the mechanism is <strong>object-level security (OLS)</strong>, not a perspective. The <a href="https://learn.microsoft.com/en-us/fabric/security/service-admin-object-level-security?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">object-level security documentation</a> describes exactly this case, securing a column that holds personal data so only certain viewers can see and interact with it. <strong>Row-level security (RLS)</strong> does not cover it either; the <a href="https://learn.microsoft.com/en-us/fabric/security/service-admin-row-level-security?wt.mc_id=DP-MVP-5004989#faq" target="_blank" rel="noopener">RLS FAQ</a> answers the question "Can I use RLS to limit the columns or measures accessible by my users?" with a plain no, because a user who has access to a row can see all the columns for that row, and it points to object-level security for column restriction. I had drawn the same line in an earlier post on <a href="https://powerbimvp.com/posts/user-context-aware-calculated-columns-tmdl-not-rls.html" target="_blank" rel="noopener">a calculated-column pattern that is not row-level security</a>, and it held here too.</p>
+
+                <h2>7. One Word, Two Settings, Different Files</h2>
+
+                <p>There is a second place the word perspective shows up, and it caught me out. <strong>Personalize visuals</strong>, the reading-view feature that lets consumers tweak a visual, also scopes its field list with a perspective. But that one is a per-page setting, not a report-level one. You set it in the Format pane, under Report-reader perspective for a page, as the same <a href="https://learn.microsoft.com/en-us/power-bi/create-reports/power-bi-personalize-visuals?wt.mc_id=DP-MVP-5004989#use-perspectives-for-a-more-focused-view" target="_blank" rel="noopener">Use Perspectives for a more focused view section</a> explains, and you have to choose "Apply to all pages" to cover the whole report.</p>
+
+                <img src="../images/blog/exploration-perspectives-tmdl/report-settings-explore-and-personalize.png" alt="The Report settings dialog showing the Explore perspective section and the Personalize visuals section directly beneath it" loading="lazy">
+
+                <img src="../images/blog/exploration-perspectives-tmdl/format-pane-report-reader-perspective.png" alt="The Power BI Desktop Format pane open on a report page, with the Report-reader perspective dropdown set to Sales Explore" loading="lazy">
+
+                <p>I set it on a single page to see what happened. Only that page picked up the perspective; the others kept their full field list. That is the page-level override the Explore dialog had warned me about, made concrete. So in one report I now had a model-level perspective object, a report-level Explore setting that points at it, and a page-level personalize setting that points at it again, each living in a different place and each scoping a different experience. Keeping straight which one governs what, and where each is stored, is genuinely the fiddly part of this feature.</p>
+
+                <h2>8. From a DevOps Standpoint: One Decision, Several Diffs</h2>
+
+                <p>Because I wrote the perspective as TMDL and the model is a Power BI Project (PBIP), every part of this decision is now text in source control. After I saved, Git showed me the full footprint of one governance choice.</p>
+
+                <img src="../images/blog/exploration-perspectives-tmdl/vscode-perspective-tmdl-file.png" alt="VS Code Explorer showing a new file definition/perspectives/Sales Explore.tmdl under the import_contoso_sales semantic model, with its perspective content open" loading="lazy">
+
+                <img src="../images/blog/exploration-perspectives-tmdl/vscode-model-tmdl-ref-perspective.png" alt="VS Code showing model.tmdl with a newly added ref perspective Sales Explore line among the ref table entries" loading="lazy">
+
+                <img src="../images/blog/exploration-perspectives-tmdl/vscode-report-json-explore-perspective.png" alt="VS Code showing report.json with defaultDataExplorePerspective set to Sales Explore inside the settings block" loading="lazy">
+
+                <p>The perspective itself landed as a new <code>definition/perspectives/Sales Explore.tmdl</code> file, and <code>model.tmdl</code> gained a single <code>ref perspective 'Sales Explore'</code> line. On the report side, in my <code>report.json</code>, the Explore choice wrote itself as <code>defaultDataExplorePerspective</code>. When I enabled Personalize visuals, the same settings block gained <code>allowInlineExploration</code>, and the per-page choice landed in that page's <code>page.json</code> as <code>personalizeVisual.perspectiveRef</code>. I am describing these property names as I observed them in my own files; I have not found a Microsoft Learn page that enumerates each string, so I would read them as the report definition's stored shape rather than documented contract.</p>
+
+                <img src="../images/blog/exploration-perspectives-tmdl/vscode-report-json-allow-inline-exploration.png" alt="VS Code showing report.json settings with allowInlineExploration set to true" loading="lazy">
+
+                <img src="../images/blog/exploration-perspectives-tmdl/vscode-page-json-personalize-perspectiveref.png" alt="VS Code showing a page.json diff that adds an objects personalizeVisual perspectiveRef set to Sales Explore for a single page" loading="lazy">
+
+                <h3>Version Control</h3>
+
+                <p>Every one of those changes is a readable diff. The old way of curating a field list, clicking through a tool and hoping you remembered, left nothing behind. Here, the exact set of fields I exposed to self-service is a file, and the wiring that activates it is two more lines I can point at.</p>
+
+                <h3>Code Review</h3>
+
+                <p>This is the part I find most useful. A reviewer opening the pull request can see the <code>customer</code> block lists only <code>Gender</code> and <code>CountryFull</code>, and can ask the right question if a sensitive column ever shows up in that list. A perspective that quietly adds <code>StreetAddress</code> would be obvious in review, instead of invisible until a consumer stumbles onto it.</p>
+
+                <h3>Governance</h3>
+
+                <p>The diff also keeps me honest about what the change is and is not. The perspective tidies and focuses the surface; it sits next to object-level and row-level security, not in place of them. Reviewing the perspective and the security roles together, as code, is a far calmer conversation than discovering the difference in production.</p>
+
+                <h2>A Note on Working with AI</h2>
+
+                <p>I want to be transparent about one part of this, because it runs against the usual story. The word perspective lives in at least four places here: the model perspective object in TMDL, the report-level Explore setting (<code>defaultDataExplorePerspective</code>), the per-page Personalize visuals setting (<code>personalizeVisual.perspectiveRef</code>), and the <code>allowInlineExploration</code> flag that turns the latter on. Finding all four is genuinely hard, and this is the part where AI did not really help me.</p>
+
+                <p>When I asked Claude (AI) where a perspective is wired in a report, it did not hand me that list. I found the places myself, by clicking through Report settings and the Format pane, and then reading the actual <code>report.json</code> and <code>page.json</code>. My honest take is that the surface area is scattered enough that a general assistant does not have it mapped. The improvement I would want is grounding. If the assistant learned from the official documentation and the report definition schema instead of guessing, it could point at every place a perspective shows up, not just the obvious one. That is the kind of help I would trust, because it comes from the source rather than from a confident guess.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>This experience left me with a new mental model: <strong>an Exploration perspective curates what self-service users see by default, but the lock on the door is still object-level and row-level security.</strong></p>
+
+                <p>The more I treat these settings as code, the easier it is to see, right there in a diff, the difference between tidying a surface and securing it. A perspective written in TMDL gives me the first; a few lines in <code>report.json</code> and <code>page.json</code> wire it to the right experience; and when I need the second, OLS and RLS are waiting, also as part of the model I can review.</p>
+
+                <p>I hope this helps having fun in exploring perspectives, Explore, and TMDL, and embracing this new era of treating governance decisions as reviewable code!</p>
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="PBIR">PBIR</span>
+                <span class="tag" data-tag="TMDL">TMDL</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: PBIP Lineage Explorer, PBIP Impact Analyzer, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="visual-calculations-ga-pbir.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">Adding a Visual Calculation Next to a Model Measure: Reading the visual.json Diff</span>
+                </a>
+                <a href="../index.html" class="post-nav-link post-nav-link--next">
+                    <span class="post-nav-label">Back to</span>
+                    <span class="post-nav-title">All posts</span>
+                </a>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-rHwBHAxVvWblRZOkJc6/fI+iHFQjWFFGPA6COtU+nGANyEshLN8k+5+rBFFKKDE+UZsEmLoGvcC4hT/xfAtxOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-35RBtvuCKWANuRid6RXP2gYm4D5RMieVLfsMSzPu0Ry0jJFOqGcgJ/MXbSeRso89H12VqAjSH7RLx3tZnQIYGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>
