@@ -13,17 +13,17 @@
    CSS Custom Properties — "Microsoft Technical"
    ============================================ */
 :root {
-    /* COLOR — MVP Red (primary accent) */
-    --mvp-900: #5c0a0e;
-    --mvp-800: #7a0d13;
-    --mvp-700: #9e1118;
-    --mvp-600: #c31722;
-    --mvp-500: #E4222E;
-    --mvp-400: #ef4a54;
-    --mvp-300: #f37982;
-    --mvp-200: #f8aeb4;
-    --mvp-100: #fcd9dc;
-    --mvp-50:  #fef2f3;
+    /* COLOR — Magenta (primary accent) */
+    --mvp-900: #520842;
+    --mvp-800: #7a0c61;
+    --mvp-700: #9c0a7b;
+    --mvp-600: #c40699;
+    --mvp-500: #EC04B7;
+    --mvp-400: #f23ec8;
+    --mvp-300: #f274d4;
+    --mvp-200: #f7a8e3;
+    --mvp-100: #fbd4f1;
+    --mvp-50:  #fdf0fa;
 
     /* Back-compat: --accent-* → MVP red */
     --accent-900: var(--mvp-900);
@@ -37,39 +37,39 @@
     --accent-100: var(--mvp-100);
     --accent-50:  var(--mvp-50);
 
-    /* COLOR — Power BI Yellow */
-    --powerbi-700: #9a6a00;
-    --powerbi-600: #c28200;
-    --powerbi-500: #F2C811;
-    --powerbi-400: #f5d43a;
-    --powerbi-300: #f8e173;
-    --powerbi-200: #fbedaa;
-    --powerbi-100: #fdf6d8;
-    --powerbi-50:  #fffbea;
+    /* COLOR — Power BI (Orange) */
+    --powerbi-700: #9c5000;
+    --powerbi-600: #cc6900;
+    --powerbi-500: #FE8404;
+    --powerbi-400: #fe9b32;
+    --powerbi-300: #feb463;
+    --powerbi-200: #fdcd96;
+    --powerbi-100: #fde3c6;
+    --powerbi-50:  #fff5ea;
 
-    /* COLOR — Microsoft Fabric Teal */
-    --fabric-900: #003b44;
-    --fabric-800: #004f5c;
-    --fabric-700: #006b7d;
-    --fabric-600: #00879c;
-    --fabric-500: #0ea5be;
-    --fabric-400: #33bcd4;
-    --fabric-300: #67d0e3;
-    --fabric-200: #a5e4ee;
-    --fabric-100: #d4f2f7;
-    --fabric-50:  #ecfafd;
+    /* COLOR — Fabric (Teal) */
+    --fabric-900: #033f39;
+    --fabric-800: #04574e;
+    --fabric-700: #047468;
+    --fabric-600: #059C8B;
+    --fabric-500: #05D9C8;
+    --fabric-400: #36ddcf;
+    --fabric-300: #6de9de;
+    --fabric-200: #a4f1ea;
+    --fabric-100: #d2f8f4;
+    --fabric-50:  #ecfdfb;
 
-    /* COLOR — Microsoft Blue */
-    --msblue-900: #004578;
-    --msblue-800: #005a9e;
-    --msblue-700: #0078d4;
-    --msblue-600: #0091f2;
-    --msblue-500: #00A4EF;
-    --msblue-400: #40bcf7;
-    --msblue-300: #72d0fa;
-    --msblue-200: #a7e1fc;
-    --msblue-100: #d6f0fe;
-    --msblue-50:  #edf8ff;
+    /* COLOR — Navy (links / blue) */
+    --msblue-900: #1a2c46;
+    --msblue-800: #223a5d;
+    --msblue-700: #2B4974;
+    --msblue-600: #335487;
+    --msblue-500: #3d6299;
+    --msblue-400: #5a7eb0;
+    --msblue-300: #84a1c8;
+    --msblue-200: #b0c3dd;
+    --msblue-100: #d6e0ee;
+    --msblue-50:  #eef2f8;
 
     /* Back-compat: --blue-* → Microsoft blue */
     --blue-700: var(--msblue-700);
@@ -107,10 +107,10 @@
     /* COLOR — Tag palette */
     --tag-powerbi:  var(--powerbi-500);
     --tag-pbir:     var(--mvp-500);
-    --tag-dax:      #7c3aed;
-    --tag-fabric:   var(--fabric-500);
-    --tag-devops:   #107c10;
-    --tag-tmdl:     #ca8a04;
+    --tag-dax:      #CF65F9;
+    --tag-fabric:   var(--fabric-600);
+    --tag-devops:   #2D8E27;
+    --tag-tmdl:     #FE6101;
     --tag-default:  var(--grey-600);
 
     /* COLOR — Brand wordmarks */

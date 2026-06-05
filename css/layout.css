@@ -383,9 +383,24 @@
    Site Footer
    ============================================ */
 .site-footer {
-    border-top: 1px solid var(--border);
-    background: var(--bg-alt);
+    border-top: 3px solid var(--accent-500);
+    background: var(--msblue-900);
     padding: var(--space-8) 0;
+}
+
+/* Footer sits on a dark navy surface — lighten its text for contrast */
+.site-footer .footer-copyright {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.site-footer .footer-tagline,
+.site-footer .footer-partners .partner-footer-link,
+.site-footer .footer-sponsor-text {
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.site-footer .footer-partners .partner-footer-link:hover {
+    color: var(--accent-300);
 }
 
 .footer-inner {

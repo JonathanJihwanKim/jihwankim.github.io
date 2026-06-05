@@ -12,7 +12,7 @@
     top: 0;
     left: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--accent-500), var(--accent-300));
+    background: linear-gradient(90deg, var(--accent-500), var(--fabric-500), var(--msblue-700));
     z-index: 1100;
     width: 0%;
     transition: width 80ms linear;
@@ -643,7 +643,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--accent-500), var(--accent-300), var(--accent-500));
+    background: linear-gradient(90deg, var(--accent-500), var(--fabric-500), var(--accent-500));
 }
 
 .sponsor-cta-icon {
@@ -693,7 +693,7 @@
 .sponsor-cta .btn-outline:hover {
     border-color: var(--accent-500);
     color: var(--accent-300);
-    background: rgba(228, 34, 46, 0.1);
+    background: rgba(236, 4, 183, 0.1);
 }
 
 /* ============================================

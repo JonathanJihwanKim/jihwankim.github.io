@@ -23,17 +23,17 @@
     max-width: 36rem;
 }
 
-/* Brand word colors in tagline */
+/* Brand word colors in tagline — kept at the original Microsoft-native palette */
 .blog-tagline .brand-powerbi {
-    color: var(--brand-powerbi);
+    color: #c28200;
 }
 
 .blog-tagline .brand-microsoft {
-    color: var(--brand-microsoft);
+    color: #00A4EF;
 }
 
 .blog-tagline .brand-fabric {
-    color: var(--brand-fabric);
+    color: #00879c;
     font-style: italic;
 }
 
@@ -314,8 +314,8 @@
 .tag[data-tag="DAX"],
 .tag[data-tag="UDF"],
 .tag--dax {
-    background: #ede9fe;
-    color: #5b21b6;
+    background: #f6e7fd;
+    color: #7d1aa8;
 }
 
 .tag[data-tag="Fabric"],
@@ -328,21 +328,21 @@
 .tag[data-tag="DevOps"],
 .tag[data-tag="Git"],
 .tag--devops {
-    background: #dcfce7;
-    color: #15803d;
+    background: #e2f3e0;
+    color: #1c6a17;
 }
 
 .tag[data-tag="TMDL"],
 .tag[data-tag="Tabular Editor"],
 .tag--tmdl {
-    background: #fef3c7;
-    color: #a16207;
+    background: #ffe6d9;
+    color: #b53d00;
 }
 
 .tag[data-tag="JSON"],
 .tag--json {
-    background: #fef3c7;
-    color: #92400e;
+    background: #ffe6d9;
+    color: #8a2f00;
 }
 
 .tag--default {
@@ -374,19 +374,19 @@
 }
 
 .difficulty-badge--beginner {
-    background: #dcfce7;
-    color: #15803d;
+    background: #e2f3e0;
+    color: #1c6a17;
 }
 .difficulty-badge--beginner::before {
-    background: #16a34a;
+    background: #2D8E27;
 }
 
 .difficulty-badge--intermediate {
-    background: #fef3c7;
-    color: #a16207;
+    background: #fde3c6;
+    color: #a55400;
 }
 .difficulty-badge--intermediate::before {
-    background: #ca8a04;
+    background: #FE8404;
 }
 
 .difficulty-badge--advanced {
@@ -437,12 +437,12 @@
 }
 
 .btn-primary {
-    background: var(--accent-500);
+    background: linear-gradient(135deg, var(--accent-500), var(--accent-700));
     color: white;
 }
 
 .btn-primary:hover {
-    background: var(--accent-600);
+    background: linear-gradient(135deg, var(--accent-600), var(--accent-800));
     color: white;
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
