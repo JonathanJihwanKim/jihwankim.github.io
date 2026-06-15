@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fabric Apps and the Rayfin CLI entered preview at Microsoft Build 2026. I built my first Fabric App, a Semantic Model Analyzer that reads metadata, relationships, and DAX measures from a model in my workspace, scaffolded with npm create rayfin, planned and coded with Claude, run locally on Vite, and deployed to the workspace with npx rayfin up.">
+    <meta name="keywords" content="Fabric Apps, Rayfin, Rayfin CLI, Microsoft Fabric, Power BI, semantic model, GraphQL, OneLake, Fabric SSO, npm create rayfin, npx rayfin up, June 2026, Microsoft Build 2026, DevOps, Contoso">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="Building My First Fabric App with the Rayfin CLI to Analyze a Semantic Model | Jihwan Kim">
+    <meta property="og:description" content="Fabric Apps and the Rayfin CLI reached preview at Microsoft Build 2026. I scaffolded a Fabric App, had Claude build a Semantic Model Analyzer from my plan, ran it on Vite, and shipped it into my workspace with one command.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/fabric-app-rayfin-semantic-model-analyzer.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/fabric-app-rayfin-semantic-model-analyzer/featured.png">
+    <meta property="og:image:secure_url" content="https://powerbimvp.com/images/blog/fabric-app-rayfin-semantic-model-analyzer/featured.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1600">
+    <meta property="og:image:height" content="900">
+    <meta property="og:image:alt" content="An illustration of a figure standing between a finished building that holds a star-schema model diagram and a second building still under construction with scaffolding, representing reading an existing semantic model while building a new Fabric App">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Building My First Fabric App with the Rayfin CLI to Analyze a Semantic Model">
+    <meta name="twitter:description" content="Fabric Apps and Rayfin reached preview at Build 2026. I scaffolded a Fabric App, had Claude build a Semantic Model Analyzer from my plan, and shipped it into my workspace with one command.">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/fabric-app-rayfin-semantic-model-analyzer/featured.png">
+    <meta name="twitter:image:alt" content="An illustration of a figure between a finished building holding a star-schema model and a building under construction, representing analyzing an existing model while building a new Fabric App">
+
+    <title>Building My First Fabric App with the Rayfin CLI to Analyze a Semantic Model | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 9 min read</span>
+                </div>
+                <h1 class="article-title">Building My First Fabric App with the Rayfin CLI to Analyze a Semantic Model</h1>
+                <div class="article-meta">
+                    <time datetime="2026-06-14">
+                        <span class="material-symbols-outlined">calendar_month</span> June 14, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="Microsoft Fabric">Microsoft Fabric</span>
+                        <span class="tag" data-tag="Fabric Apps">Fabric Apps</span>
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started June 14, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/featured.png" alt="An illustration of a figure standing between a finished building that holds a star-schema model diagram and a second building still under construction with scaffolding, representing reading an existing semantic model while building a new Fabric App">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how building my first <strong>Fabric App</strong> with the new Rayfin CLI turned an idea I had been carrying as a browser tool into something that lives inside my Fabric workspace, reads a live semantic model, and ships with one command.</p>
+
+                <p>My plan was deliberate. Fabric Apps and the Rayfin toolchain entered public preview at Microsoft Build, announced on June 2, 2026 in the <a href="https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Introducing-Rayfin-A-new-AI-first-way-to-build-deploy-and-govern/ba-p/5191676?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Introducing Rayfin announcement</a>, framed there as an open-source SDK and CLI that lets developers and coding agents define and deploy a complete application backend in code. I wanted to build one thing with it: an app that reads the metadata, relationships, and DAX measures of a semantic model in my workspace and shows me an analysis report. That is a job I already do by hand, so it was the right first target.</p>
+
+                <p>What I did not have a feel for yet was how short the path from a New item dialog to a deployed, governed app would actually be.</p>
+
+                <h2>1. The Setting That Had to Be Switched On First</h2>
+
+                <p>Nothing about Fabric Apps shows up until a tenant administrator turns it on. The <a href="https://learn.microsoft.com/en-us/fabric/apps/overview?wt.mc_id=DP-MVP-5004989#tenant-admin-settings" target="_blank" rel="noopener">Tenant admin settings section</a> of the Fabric Apps overview spells out the steps: open the Fabric admin portal, go to Tenant settings, and enable the Fabric Apps preview. In my admin portal the toggle reads "Enable Fabric App Items (preview)," and I enabled it for the entire organization.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/tenant-setting-fabric-apps.png" alt="The Fabric admin portal Tenant settings page with Enable Fabric App Items (preview) toggled to Enabled for the entire organization" loading="lazy">
+
+                <p>A few minutes later the new item type appeared. In my Contoso workspace I chose New item, searched for "app," and there it was: <strong>App (preview)</strong>, described as a way to build modern cloud apps that scale on an intelligent, fully managed database.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/new-item-app-preview.png" alt="The New item panel in the Contoso workspace filtered to app, with the App (preview) tile highlighted" loading="lazy">
+
+                <p>I named it <code>contoso_fabric_app</code>, kept the location on my Contoso workspace, and selected Create.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/new-app-dialog.png" alt="The New App dialog with the name contoso_fabric_app entered and the Contoso workspace selected as the location" loading="lazy">
+
+                <h2>2. One Command, and an Invitation to an AI Agent</h2>
+
+                <p>The app item opened on a Getting Started screen with four steps: open a terminal, scaffold the project, edit it locally, and publish. The scaffolding step is a single line, exactly the command the <a href="https://learn.microsoft.com/en-us/fabric/apps/create-app-with-cli?wt.mc_id=DP-MVP-5004989#step-1-create-a-new-project" target="_blank" rel="noopener">Step 1: Create a new project section</a> of the Rayfin CLI tutorial documents, pre-filled with my app name and workspace.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/getting-started-cli-steps.png" alt="The Fabric App Getting Started screen showing four numbered steps and the npm create rayfin scaffold command, with a banner offering to copy a prompt for an AI coding agent" loading="lazy">
+
+                <p>One detail at the top of that screen told me where this product is aimed. A banner read "Using an AI coding agent? Skip the steps below," with a Copy prompt button next to it. The whole workflow assumes a coding agent might be the one running it, which matches how the announcement describes coding agents driving the build end to end.</p>
+
+                <p>I opened the folder in VS Code and ran the scaffold command in the terminal.</p>
+
+<pre><code class="language-bash">npm create @microsoft/rayfin@latest -- "contoso_fabric_app" --workspace "Contoso"</code></pre>
+
+                <p>The CLI installed <code>@microsoft/create-rayfin</code>, resolved my Contoso workspace by its GUID, found the <code>contoso_fabric_app</code> backend item it would hydrate, and then asked how I wanted to start: from a built-in template, from an external git template, or from scratch.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/cli-start-template.png" alt="The Rayfin CLI output resolving the Contoso workspace and AppBackend item, then prompting how would you like to start with three options" loading="lazy">
+
+                <p>I picked the built-in templates, and the choices made the intent obvious. There was a Blank App, two flavors of Todo app, and the one I wanted: a <strong>Data App</strong>, described as building a data analytics app based on your data in Fabric. I chose that one.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/cli-select-template.png" alt="The Rayfin CLI listing four built-in templates, with option 2, the Data App for building a data analytics app on Fabric data, indicated" loading="lazy">
+
+                <p>The project scaffolded successfully, and the CLI printed the next steps: change into the folder and start the dev server.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/cli-project-created.png" alt="The Rayfin CLI showing Project created successfully with next steps to cd into the project and run npm run dev" loading="lazy">
+
+                <h2>3. Handing the Plan to Claude</h2>
+
+                <p>A template is a starting point, not the app. The Data App template gave me a React and Vite frontend wired to a Rayfin backend, but it did not know anything about semantic models. So I described what I actually wanted to Claude (AI), in plan mode, and asked it to ground itself first: learn how to build a Fabric App from the Microsoft documentation and the Rayfin open source, then plan an app that analyzes the metadata, relationships, and DAX measures of a selected semantic model in the workspace and visualizes the analysis as a report.</p>
+
+                <p>Claude came back with a plan titled <strong>Semantic Model Analyzer</strong>, built on the Rayfin data-app template, and a task list to match.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/claude-plan-analyzer.png" alt="Claude in plan mode presenting a plan titled Semantic Model Analyzer built as a Fabric App on the Rayfin data-app template" loading="lazy">
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/claude-plan-tasks.png" alt="Claude showing an update task list for building the Semantic Model Analyzer, covering environment, data layer, and the analysis views" loading="lazy">
+
+                <p>The structure it produced followed the shape the documentation describes for Fabric Apps. The <a href="https://learn.microsoft.com/en-us/fabric/apps/create-app-with-cli?wt.mc_id=DP-MVP-5004989#step-2-review-the-generated-project" target="_blank" rel="noopener">Step 2: Review the generated project section</a> lays out where things live: a <code>rayfin/rayfin.yml</code> for services and deployment settings, a <code>rayfin/data/</code> folder for the data model, and the frontend in the project root.</p>
+
+                <h2>4. Running It Local, Then Deploying It to the Workspace</h2>
+
+                <p>Local iteration is one command. I changed into the project folder and started the dev server.</p>
+
+<pre><code class="language-bash">cd contoso_fabric_app
+npm run dev</code></pre>
+
+                <p>The script detected the Rayfin project root, wrote a local environment file, and brought Vite up on <code>http://localhost:5173/</code>. The <a href="https://learn.microsoft.com/en-us/fabric/apps/create-app-with-cli?wt.mc_id=DP-MVP-5004989#step-3-run-the-app-locally" target="_blank" rel="noopener">Step 3: Run the app locally section</a> describes this command as starting the frontend dev server while the backend runs against Fabric, so I was editing on my machine with the backend already wired to Fabric.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/npm-run-dev-vite.png" alt="The terminal showing npm run dev detecting the Rayfin project root, writing env.local, and starting Vite on localhost port 5173" loading="lazy">
+
+                <p>When the analyzer worked the way I wanted on localhost, I deployed it.</p>
+
+<pre><code class="language-bash">npx rayfin up</code></pre>
+
+                <p>The CLI found the project root, read the project name from <code>rayfin.yml</code>, recognized that the <code>contoso_fabric_app</code> item already existed, and ran a redeployment against the Fabric API, targeting my tenant, workspace, and item, and printing the workload endpoint at the end. The <a href="https://learn.microsoft.com/en-us/fabric/apps/overview?wt.mc_id=DP-MVP-5004989#how-it-works" target="_blank" rel="noopener">How it works section</a> of the overview explains what that one command sets in motion: based on the <code>rayfin.yml</code> configuration, Fabric creates the child services that make up the backend, and they appear as child items under the app.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/rayfin-up-deploy.png" alt="The terminal output of npx rayfin up deploying the project to Fabric, detecting a redeployment, and printing the tenant, workspace, item, and workload endpoint" loading="lazy">
+
+                <h2>5. Reading My Own Model Back</h2>
+
+                <p>Then the part I had been building toward. The deployed app opened in the Fabric portal as Semantic Model Analyzer, pointed at my <code>import_contoso_sales</code> model, with an Overview that counted the model back to me: 12 tables, 110 columns, 17 measures, 4 relationships, 53 hidden objects, and 6 calculated items, alongside a breakdown of column data types and visible-versus-hidden columns.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/app-overview.png" alt="The Semantic Model Analyzer Overview tab analyzing import_contoso_sales, showing counts for tables, columns, measures, relationships, hidden objects, and calculated items, plus a table list and data-type distribution" loading="lazy">
+
+                <p>The Relationships tab drew the star schema I know is in that model: the <code>sales</code> fact in the middle, with <code>customer</code>, <code>store</code>, <code>date</code>, and <code>product</code> around it, four active relationships and none inactive.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/app-relationships.png" alt="The Relationships tab of the analyzer showing a schema diagram with the sales fact table joined to customer, store, date, and product dimension tables" loading="lazy">
+
+                <p>The Measures tab listed all seventeen measures, and selecting one showed its DAX and its description. <code>Number of Customers</code> resolved to <code>DISTINCTCOUNT(sales[CustomerKey])</code>, with the description carried straight through from the model.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/app-measures.png" alt="The Measures tab of the analyzer with Number of Customers selected, showing its DAX expression DISTINCTCOUNT of sales CustomerKey and its description" loading="lazy">
+
+                <p>Here is the <em>aha</em> moment that reframed the whole exercise for me: <strong>this is the same analysis I publish as a browser-based tool, except now it lives inside the workspace, reads the live model instead of static files, and is governed by Fabric.</strong> My PBIP Documenter reads the TMDL and JSON a developer hands it. This app, deployed through Rayfin, is an item in the workspace that any permitted colleague can open against the model that is actually there.</p>
+
+                <p>That governance is not something I bolted on. It comes with the platform.</p>
+
+                <h2>6. From a DevOps Standpoint: The App Is Code, the Backend Is Managed</h2>
+
+                <p>From a DevOps standpoint, this is foundational, because the entire app is text I can put in source control, and the parts I would normally have to stand up and secure myself are handled by Fabric.</p>
+
+                <h3>Version Control</h3>
+
+                <p>The app is just a project folder. When I open it in VS Code I can see the whole thing: the <code>rayfin</code> folder with its configuration, the <code>fabric.yaml</code> file, the <code>src</code> frontend, and the usual <code>package.json</code>, <code>tsconfig.json</code>, and a <code>.gitignore</code>.</p>
+
+                <img src="../images/blog/fabric-app-rayfin-semantic-model-analyzer/vscode-project-tree.png" alt="The VS Code Explorer showing the contoso_fabric_app project tree, including the rayfin and src folders, fabric.yaml, package.json, tsconfig.json, and a .gitignore file" loading="lazy">
+
+                <p>Every one of those files is plain text, so the entire app can go into a Git repository like any other code. The deployment is not a manual click that leaves nothing behind; it is <code>npx rayfin up</code> run against the code I committed.</p>
+
+                <h3>Automation</h3>
+
+                <p>Deploying is a single command, so a script or a pipeline can do it instead of a person clicking through screens. Before I deploy, I can run <code>npx rayfin up --dry-run</code> to see what would change without actually changing anything, which the <a href="https://learn.microsoft.com/en-us/fabric/apps/create-app-with-cli?wt.mc_id=DP-MVP-5004989#step-4-deploy-the-app-to-fabric" target="_blank" rel="noopener">Step 4: Deploy the app to Fabric section</a> of the tutorial shows. And if I only changed the data model, or only the frontend, there are separate commands to push just that part. So I can check first, then deploy only what really changed.</p>
+
+                <h3>Governance</h3>
+
+                <p>This is the part I would normally spend days setting up myself. When I deploy, Fabric builds the pieces the app needs for me: a database, an API, sign-in, and web hosting, all listed in the <a href="https://learn.microsoft.com/en-us/fabric/apps/overview?wt.mc_id=DP-MVP-5004989#key-features" target="_blank" rel="noopener">Key features section</a> of the overview. People open the app with their normal Microsoft work account, and to let a colleague in I just give them Run and interact permission, as the overview's item-permissions table explains. The data the app uses sits in OneLake, right next to the rest of my Fabric data. A small analysis app got enterprise sign-in and storage without me building any of it.</p>
+
+                <h2>7. From Discovery to Open Source</h2>
+
+                <p>Building this answered a question and immediately raised a better one. I already maintain free, open-source tools that read Power BI Projects from the files a developer exports: <strong>Model Lenz</strong> for exploring a semantic model, <strong>PBIP Documenter</strong> for generating documentation, and <strong>PBIP Lineage Explorer</strong> for tracing how visuals connect back to their fields and measures. They run in the browser, with no installation or sign-up.</p>
+
+                <p>What I built here reads the other end of the same pipeline: the live model sitting in the workspace, not the exported files. So the natural next step is to bring the two together. The logic these tools already use to walk a model's tables, columns, measures, and relationships is the same logic a Fabric App could run against the deployed model, with the sign-in and storage handled by the platform. One set of tools reads the source files in the browser; a Fabric App could read the published model inside the workspace. Same analysis, two surfaces.</p>
+
+                <p>That is the direction I want to take this next, and I will write it up when I have it working.</p>
+
+                <h2>A Note on Working with AI</h2>
+
+                <p>I want to be honest about the division of labor here, because it was not a case of AI doing the whole thing. The domain direction was mine: I decided the app should analyze metadata, relationships, and DAX measures, because that is the analysis I do by hand and the shape of the report I wanted. What Claude did, and did well, was take that direction plus the Rayfin docs and the data-app template and write the React and GraphQL code that turns it into a working app, faster than I would have wired the frontend myself.</p>
+
+                <p>Where it needed me was grounding. I asked it to learn the platform from the official documentation and the open source first, rather than guess, and that instruction mattered, because Fabric Apps and Rayfin are days old and the model would otherwise be working from a vague prior. The useful pattern was the same one I keep landing on: I bring the Power BI judgment about what is worth analyzing, the assistant brings the speed of assembling the code, and the documentation keeps it from inventing how the platform behaves.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>This experience left me with a new mental model: <strong>a Fabric App is not a report, it is an application that happens to live where my data and identity already are, so the analysis I used to ship as a standalone tool can become a governed item in the workspace.</strong></p>
+
+                <p>The distance from a New item dialog to a deployed app that reads my own semantic model was a few commands and one good plan. The frontend is mine to design, the backend is managed, and every part of it is code I can review and redeploy. My first Fabric App is still young, and that is exactly why it feels worth pushing further.</p>
+
+                <p>I hope this helps having fun in exploring Fabric Apps and the Rayfin CLI, and embracing this new era of building data applications that sit right next to your data!</p>
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="Microsoft Fabric">Microsoft Fabric</span>
+                <span class="tag" data-tag="Fabric Apps">Fabric Apps</span>
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: Model Lenz, PBIP Lineage Explorer, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="exploration-perspectives-tmdl.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">Scoping Power BI Explore with a Perspective Authored in TMDL</span>
+                </a>
+                <a href="../index.html" class="post-nav-link post-nav-link--next">
+                    <span class="post-nav-label">Back to</span>
+                    <span class="post-nav-title">All posts</span>
+                </a>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-rHwBHAxVvWblRZOkJc6/fI+iHFQjWFFGPA6COtU+nGANyEshLN8k+5+rBFFKKDE+UZsEmLoGvcC4hT/xfAtxOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-35RBtvuCKWANuRid6RXP2gYm4D5RMieVLfsMSzPu0Ry0jJFOqGcgJ/MXbSeRso89H12VqAjSH7RLx3tZnQIYGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>

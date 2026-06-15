@@ -8,6 +8,18 @@
     // Blog posts data - newest first
     var posts = [
         {
+            id: 17,
+            title: "Building My First Fabric App with the Rayfin CLI to Analyze a Semantic Model",
+            preview: "Fabric Apps and the Rayfin CLI entered preview at Microsoft Build 2026. I built my first Fabric App, a Semantic Model Analyzer that reads the metadata, relationships, and DAX measures of a model in my workspace. Scaffolded with npm create rayfin, planned and coded with Claude, run locally on Vite, and shipped to the tenant with npx rayfin up, governed by Fabric SSO and OneLake from day one.",
+            date: "June 14, 2026",
+            sortDate: "2026-06-14",
+            tags: ["Microsoft Fabric", "Fabric Apps", "Power BI", "DevOps"],
+            url: "posts/fabric-app-rayfin-semantic-model-analyzer.html",
+            featuredImage: "images/blog/fabric-app-rayfin-semantic-model-analyzer/featured.png",
+            readingTime: "9 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 16,
             title: "Scoping Power BI Explore with a Perspective Authored in TMDL",
             preview: "Exploration perspectives arrived in the May 2026 Power BI release. Scoping the Explore field list with a perspective authored in TMDL, then watching the semantic model hand every field back, drew a clear line between curating a self-service surface and securing it with object-level and row-level security. A walkthrough across the model TMDL, report.json, and page.json, with the Git diff.",
