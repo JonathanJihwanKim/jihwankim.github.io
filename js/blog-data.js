@@ -8,6 +8,18 @@
     // Blog posts data - newest first
     var posts = [
         {
+            id: 18,
+            title: "Letting AI Author a Live Power BI Desktop Report Through the Desktop Bridge",
+            preview: "The Power BI Desktop Bridge reached preview in June 2026. I opened contoso_project in Desktop, pointed Claude at the documentation through the Skills for Fabric powerbi-authoring plugin, and discovered the bridge has no write API at all. Authoring happens by editing the on-disk TMDL and PBIR files; the bridge's three methods only reload the open session and screenshot it. The edit-on-disk, reload, verify loop turned six measures and an Overview page into a reviewable Git diff.",
+            date: "June 28, 2026",
+            sortDate: "2026-06-28",
+            tags: ["Power BI", "PBIR", "DevOps", "AI"],
+            url: "posts/power-bi-desktop-bridge-claude-edit-verify.html",
+            featuredImage: "images/blog/power-bi-desktop-bridge-claude-edit-verify/featured.png",
+            readingTime: "10 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 17,
             title: "Building My First Fabric App with the Rayfin CLI to Analyze a Semantic Model",
             preview: "Fabric Apps and the Rayfin CLI entered preview at Microsoft Build 2026. I built my first Fabric App, a Semantic Model Analyzer that reads the metadata, relationships, and DAX measures of a model in my workspace. Scaffolded with npm create rayfin, planned and coded with Claude, run locally on Vite, and shipped to the tenant with npx rayfin up, governed by Fabric SSO and OneLake from day one.",

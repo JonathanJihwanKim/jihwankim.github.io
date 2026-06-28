@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The Power BI Desktop Bridge entered preview in June 2026. I let Claude wire up bridge-driven authoring against an open contoso_project, discovered the bridge has no write API, and watched the edit-on-disk, reload, screenshot loop turn report authoring into a reviewable diff.">
+    <meta name="keywords" content="Power BI Desktop Bridge, agentic Power BI, PBIR, PBIP, TMDL, JSON-RPC, named pipe, Skills for Fabric, powerbi-authoring, Claude, DevOps, edit-verify loop, June 2026, Contoso">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="Letting AI Author a Live Power BI Desktop Report Through the Desktop Bridge | Jihwan Kim">
+    <meta property="og:description" content="The Power BI Desktop Bridge has no write API. I let an AI agent set up bridge-driven authoring against an open PBIP, and the edit-on-disk, reload loop made every change a reviewable diff.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/power-bi-desktop-bridge-claude-edit-verify.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/power-bi-desktop-bridge-claude-edit-verify/featured.png">
+    <meta property="og:image:alt" content="A Starry Night style illustration of a stack of report files on the left connected by a glowing thread to a glowing report on the right, showing four KPI cards, two bar charts, and a donut chart, suggesting files on disk becoming a live report">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Letting AI Author a Live Power BI Desktop Report Through the Desktop Bridge">
+    <meta name="twitter:description" content="The Desktop Bridge has no write API. The edit-on-disk, reload loop turned live report authoring into a reviewable diff.">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/power-bi-desktop-bridge-claude-edit-verify/featured.png">
+    <meta name="twitter:image:alt" content="A Starry Night style illustration of a stack of report files connected by a glowing thread to a glowing report with KPI cards, bar charts, and a donut chart">
+
+    <title>Letting AI Author a Live Power BI Desktop Report Through the Desktop Bridge | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 10 min read</span>
+                </div>
+                <h1 class="article-title">Letting AI Author a Live Power BI Desktop Report Through the Desktop Bridge</h1>
+                <div class="article-meta">
+                    <time datetime="2026-06-28">
+                        <span class="material-symbols-outlined">calendar_month</span> June 28, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="PBIR">PBIR</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                        <span class="tag" data-tag="AI">AI</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started June 28, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/power-bi-desktop-bridge-claude-edit-verify/featured.png" alt="A Starry Night style illustration of a stack of report files on the left connected by a glowing thread to a glowing report on the right, showing four KPI cards, two bar charts, and a donut chart, suggesting files on disk becoming a live report">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how letting AI (in this case, Claude) reach into a running Power BI Desktop session through the new <strong>Power BI Desktop Bridge</strong> let an agent build a report by editing the project files on disk, while the open Desktop window reloaded to show me the result.</p>
+
+                <p>My plan was deliberate. The Desktop Bridge reached preview in the June 2026 wave that Microsoft framed, in its <a href="https://community.fabric.microsoft.com/t5/Power-BI-Updates-Blog/Power-BI-at-Microsoft-Build-2026-The-Agentic-Era-of-analytics/ba-p/5191671?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Power BI at Microsoft Build 2026 announcement</a>, as the agentic era of analytics with Agent Skills for end-to-end development, and I wanted to put it on a real project: open my <code>contoso_project</code> in Desktop, point an AI coding agent at the documentation, and have it set up an authoring workflow that edits the model and report while the file stays open. An agent changing a semantic model in place is not the new part; the <a href="https://learn.microsoft.com/en-us/power-bi/developer/agentic/power-bi-agentic-overview?wt.mc_id=DP-MVP-5004989#tools" target="_blank" rel="noopener">Power BI Modeling MCP server in the Tools list</a> has done that for months. Authoring the report itself against a live session is what felt new. What I did not expect was how little the bridge itself does, and how that smallness turned out to be the whole point.</p>
+
+                <h2>1. The Preview Toggle and an Empty Report</h2>
+
+                <p>The bridge is gated behind a preview feature, and the <a href="https://learn.microsoft.com/en-us/power-bi/developer/agentic/power-bi-desktop-bridge-overview?wt.mc_id=DP-MVP-5004989#how-the-bridge-communicates-with-power-bi-desktop" target="_blank" rel="noopener">How the bridge communicates with Power BI Desktop section</a> of the overview lists the path to turn it on: File, then Options and settings, then Options, then Preview features, then the checkbox labeled "Enable external tool access to Power BI Desktop through secure local APIs."</p>
+
+                <img src="../images/blog/power-bi-desktop-bridge-claude-edit-verify/enable-external-tool-access-preview.png" alt="The Power BI Desktop Options dialog on the Preview features page, with the checkbox Enable external tool access to Power BI Desktop through secure local APIs highlighted" loading="lazy">
+
+                <p>I opened <code>contoso_project</code> in Desktop and left it on an empty Page 1. This is a Power BI Project, so the report is stored as PBIR (the Power BI enhanced report format) and the model as TMDL, with the data coming through a Direct Lake partition on a Contoso lakehouse. The point of the experiment was never to click anything in this window. It was to see whether an agent could change what this window shows without me touching it.</p>
+
+                <img src="../images/blog/power-bi-desktop-bridge-claude-edit-verify/contoso-project-open-desktop.png" alt="Power BI Desktop with contoso_project open on an empty Page 1, the Data pane listing customer, date, product, sales, and store tables" loading="lazy">
+
+                <h2>2. Handing the Documentation to Claude</h2>
+
+                <p>The agent side comes from Skills for Fabric. As the <a href="https://learn.microsoft.com/en-us/power-bi/developer/agentic/power-bi-agentic-overview?wt.mc_id=DP-MVP-5004989#get-started" target="_blank" rel="noopener">Get started section</a> of the Power BI Agentic overview explains, the recommended path is installing the <code>powerbi-authoring</code> plugin from the Skills for Fabric marketplace, which bundles the authoring skills and registers the Power BI Modeling MCP server. A note in that same section says the plugin is optimized for GitHub Copilot CLI and ships compatibility shims for other agents, Claude Code among them. That detail is what made this a continuation of how I already work rather than a new toolchain.</p>
+
+                <p>I enabled the <code>powerbi-authoring</code> plugin locally in my editor.</p>
+
+                <img src="../images/blog/power-bi-desktop-bridge-claude-edit-verify/powerbi-authoring-plugin-enabled.png" alt="The Agent Customizations Plugins panel showing powerbi-authoring enabled locally, described as developer skills for authoring Microsoft Power BI solutions" loading="lazy">
+
+                <p>To check that the skills had actually loaded into the project, I asked the agent a plain question: could it see the Power BI authoring skills here? It listed them back, the same family the <a href="https://learn.microsoft.com/en-us/power-bi/developer/agentic/power-bi-agentic-overview?wt.mc_id=DP-MVP-5004989#skills" target="_blank" rel="noopener">Skills section</a> of the overview documents, including model authoring and the report skills. The ones that mattered for me were <code>power-bi-modeling</code> for tables, columns, and measures, and <code>power-bi-dax</code> for writing the DAX itself.</p>
+
+                <img src="../images/blog/power-bi-desktop-bridge-claude-edit-verify/copilot-authoring-skills-list.png" alt="The agent chat answering that it can see five core Power BI authoring skills in the project, including power-bi-modeling, power-bi-dax, power-bi-security, power-bi-deployment, and power-bi-docs" loading="lazy">
+
+                <p>Then I gave it the real instruction. Learn from the Desktop Bridge documentation, I told it, and make the project ready to author the open <code>contoso_project</code> file. I deliberately did not hand it a how-to. I wanted to see what it would conclude the bridge was for once it read the spec.</p>
+
+                <h2>3. Asking the Pipe What It Can Do</h2>
+
+                <p>The agent built a small PowerShell client and verified it against my live session, and the first thing it reported back reframed the whole exercise. The bridge is a local server hosted inside the running Desktop process, reachable over a named pipe called <code>pbi-desktop-bridge-&lt;processId&gt;</code>, speaking JSON-RPC 2.0 with Content-Length framing, local only, one operation at a time. All of that matches the <a href="https://learn.microsoft.com/en-us/power-bi/developer/agentic/power-bi-desktop-bridge-overview?wt.mc_id=DP-MVP-5004989#how-the-bridge-communicates-with-power-bi-desktop" target="_blank" rel="noopener">How the bridge communicates with Power BI Desktop section</a>. The <a href="https://learn.microsoft.com/en-us/power-bi/developer/agentic/power-bi-desktop-bridge-overview?wt.mc_id=DP-MVP-5004989#api-discovery" target="_blank" rel="noopener">API discovery section</a> is firm that the method surface changes between Desktop versions, so the agent called <code>bridge.manifest</code> first, exactly as that section advises.</p>
+
+                <p>My version of Desktop exposed three methods. Three.</p>
+
+<pre><code>application.state.get/v1      returns { currentFilePath, hasUnsavedChanges }
+file.reload/v1                reloads the open PBIP/PBIR from disk
+report.snapshot.capture/v1    captures a PNG of a report page ({ pageId, scale })</code></pre>
+
+                <p>Not one of them writes a measure, moves a visual, or changes a property. There is no model or report write API over the bridge at all. Here is the <em>aha</em> moment that reorganized my thinking: <strong>the bridge is not a remote control for Desktop, it is the reload-and-verify half of a loop whose source of truth is the files on disk.</strong> You author by editing the PBIP files, and the bridge exists to make the open window pick those edits up and confirm the result. The <a href="https://learn.microsoft.com/en-us/power-bi/developer/agentic/power-bi-desktop-bridge-overview?wt.mc_id=DP-MVP-5004989#integration-with-the-report-authoring-skill" target="_blank" rel="noopener">Integration with the Report Authoring Skill section</a> describes this same shape as a fast edit-verify loop: read the report, apply changes, capture the result, iterate.</p>
+
+                <img src="../images/blog/power-bi-desktop-bridge-claude-edit-verify/bridge-manifest-verification.png" alt="The agent summarizing what it learned and built, and a live verification against PID 6396: pipe discovery, manifest returning three methods, app state, save-first guard, and a valid PNG snapshot of Page 1" loading="lazy">
+
+                <p>The agent wrapped the three methods in helper functions so the loop is one or two lines at a time. The reference for the whole workflow lived in a README it wrote, with the manifest confirmed against my own session.</p>
+
+                <img src="../images/blog/power-bi-desktop-bridge-claude-edit-verify/bridge-three-methods-readme.png" alt="A README describing what the bridge is and is not, with a table of the three methods and a note that there is no model or report write API over the bridge" loading="lazy">
+
+                <h2>4. The Guard That Refused to Reload</h2>
+
+                <p>The reload method is where the loop can quietly destroy work, and this is the part I want other people to slow down on. <code>file.reload/v1</code> reloads the report from disk. If Desktop is holding unsaved in-app changes, reloading throws those changes away and replaces them with whatever the files say. The on-disk files win.</p>
+
+                <p>The agent's helper made that rule explicit instead of leaving it to chance. Before reloading, it calls <code>application.state.get/v1</code> and reads <code>hasUnsavedChanges</code>. When that flag is true, the reload aborts with a warning and tells you to save in Desktop first, unless you pass an explicit override. In the live verification my session genuinely had unsaved changes, and the guard correctly stopped the reload rather than silently discarding them.</p>
+
+                <p>That is a save-first rule, and it is the kind of safety I would normally have to remember on my own. Reloading from disk is not undo. If the window has edits the files do not, a reload erases them.</p>
+
+                <p>The usable surface ended up being four calls, dot-sourced into the session.</p>
+
+<pre><code>. .\tools\pbi-bridge\PbiBridge.ps1
+
+Get-PbiBridgeManifest          # list supported methods (always do this first)
+Get-PbiAppState                # { currentFilePath, hasUnsavedChanges }
+Sync-PbiReload                 # apply on-disk edits (save-first guarded; -Force to override)
+Get-PbiSnapshot -OutFile .\page1.png   # screenshot the active page</code></pre>
+
+                <p>One caveat the <a href="https://learn.microsoft.com/en-us/power-bi/developer/agentic/power-bi-desktop-bridge-overview?wt.mc_id=DP-MVP-5004989#api-discovery" target="_blank" rel="noopener">API discovery section</a> calls out is worth keeping in muscle memory: ask for a method this Desktop version does not have and you get a <code>-32601 MethodNotFound</code> error. The manifest is the source of truth, and it is the reason the first call is always <code>bridge.manifest</code>.</p>
+
+                <h2>5. Six Measures and an Overview Page, Authored on Disk</h2>
+
+                <p>With the loop in place, I asked the agent to do something real: analyze the model, write a set of base measures, and build a one-page overview, then name the page Overview. None of that work happens through the bridge. The agent wrote TMDL into the semantic model folder and PBIR JSON into the report folder, then used the bridge only to reload and screenshot.</p>
+
+                <p>The six measures it wrote landed in <code>sales.tmdl</code>, and they are the ordinary backbone of a sales model.</p>
+
+                <img src="../images/blog/power-bi-desktop-bridge-claude-edit-verify/sales-tmdl-measures.png" alt="The sales.tmdl file open in VS Code, with the six measures Sales Amount, Total Cost, Gross Margin, Gross Margin percent, Total Quantity, and Order Count highlighted" loading="lazy">
+
+                <p>The overview page came back with four KPI cards reading $23bn in Sales Amount, $13bn in Gross Margin, 55.9% Gross Margin, and 10M Order Count, a clustered column of Sales Amount and Total Cost by year, a bar of Sales Amount by category, a donut by continent, and a bar by country. Every chart was driven by the new measures, and the Direct Lake model picked them up on reload. When I looked at the window I had left empty, it was rendering a full report I had not clicked together.</p>
+
+                <img src="../images/blog/power-bi-desktop-bridge-claude-edit-verify/desktop-rendered-overview.png" alt="Power BI Desktop showing the rendered Contoso Sales Overview page with four KPI cards, a clustered column chart by year, bar charts by category and country, and a donut by continent, with the Order Count measure DAX in the formula bar" loading="lazy">
+
+                <img src="../images/blog/power-bi-desktop-bridge-claude-edit-verify/measures-and-overview-source-control.png" alt="The agent reporting six new measures and an Overview page, beside the Source Control panel listing the changed page.json, sales.tmdl, and nine new visual.json files on disk but not yet committed" loading="lazy">
+
+                <p>The reload here needed the override. My session still had the earlier unsaved state, so the agent reloaded with the force flag, which discards in-app changes in favor of the files. The page had been empty, so nothing of value was lost, but the guard made that a decision I saw rather than an accident I discovered later.</p>
+
+                <h2>6. Reading the Whole Session as a Diff</h2>
+
+                <p>The most satisfying screen of the whole experiment was not the rendered report. It was the Source Control panel next to it. Every change the agent made was sitting there as a file diff: <code>page.json</code> modified and renamed to Overview, <code>sales.tmdl</code> changed with its six new measures, and nine new <code>visual.json</code> files, one per visual, under the page's folder. The helper scripts and a project note the agent wrote showed up in the same list.</p>
+
+                <p>Nothing was committed. These were edits in my working tree, waiting for me to read them. That is the difference between an agent clicking around inside an opaque application and an agent editing the text that defines the application. One leaves you trusting that the right thing happened. The other hands you a diff you can review line by line before any of it becomes permanent.</p>
+
+                <h2>7. From a DevOps Standpoint: The Agent's Work Is a Reviewable Diff</h2>
+
+                <p>From a DevOps standpoint, this is foundational, because the bridge's refusal to offer a write API is what keeps the source of truth in the files, and files are what every DevOps practice is built on.</p>
+
+                <h3>Code Review</h3>
+
+                <p>When the agent authored six measures and a page, it did not mutate a hidden in-memory model. It changed <code>sales.tmdl</code> and a set of <code>visual.json</code> files, and because PBIP keeps each measure and each visual in its own readable text, the review is a normal pull request. I can read the DAX it wrote, see exactly which visuals were added, and approve or reject before the change reaches anyone. The agent proposes through the file system, and the human reviews through Git.</p>
+
+                <h3>Validation</h3>
+
+                <p>Reloading is also how I knew the edits were real. Editing TMDL or JSON, by hand or by agent, can produce a file that parses cleanly and still renders wrong. After the agent wrote the six measures and the page, the bridge reloaded the open session and the visuals rendered, which is the confirmation that the Direct Lake model actually picked up the new measures. The bridge also exposes <code>report.snapshot.capture/v1</code> to write out a PNG of a page, and in my run the agent exercised it once during the initial verification, capturing a small PNG of Page 1 to prove that path worked. The reload is the step I leaned on for every change; the snapshot is there when I want a saved image of the result.</p>
+
+                <h3>Automation</h3>
+
+                <p>Because the whole loop is edit a file, reload, screenshot, it is scriptable from end to end. The save-first guard means a script can reload without gambling on unsaved state, and the manifest call means a script can check what the current Desktop version supports before it tries anything. The bridge is local and synchronous, so one operation finishing before the next begins is handled for me rather than something I have to coordinate.</p>
+
+                <h2>A Note on Working with AI</h2>
+
+                <p>I gave Claude one instruction: read the bridge documentation, then get the project ready to author the open file. From that alone, it wrote the small script that connects to the bridge, turned the three methods into easy commands, and added a safety check that stops a reload from wiping out unsaved work. Then it wrote the six measures and built the report page.</p>
+
+                <p>The one thing it could not do was decide for me whether reloading was safe. The safety check can warn that I have unsaved changes, but choosing to reload anyway, because my page was empty and there was nothing to lose, was my call. The tool can tell me that changes exist. It cannot tell me whether they matter.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>This experience left me with a new mental model: <strong>the Desktop Bridge is small on purpose, because authoring belongs in the files, and the bridge only has to make the open window agree with what they say.</strong></p>
+
+                <p>The first instinct when you hear that an agent can drive Power BI Desktop is to imagine a remote control, a long list of commands for poking at the UI. The reality is the opposite and better. Three methods, no write API, and a loop that runs through the same PBIP files I already keep in Git. The agent never reached past the file system, and that is precisely why I could review everything it did.</p>
+
+                <p>I hope this helps having fun in exploring the Power BI Desktop Bridge, and embracing this new era where an agent authors your model and report as code you still get to read first!</p>
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="PBIR">PBIR</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+                <span class="tag" data-tag="AI">AI</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: Model Lenz, PBIP Lineage Explorer, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="fabric-app-rayfin-semantic-model-analyzer.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">Building My First Fabric App with the Rayfin CLI to Analyze a Semantic Model</span>
+                </a>
+                <a href="../index.html" class="post-nav-link post-nav-link--next">
+                    <span class="post-nav-label">Back to</span>
+                    <span class="post-nav-title">All posts</span>
+                </a>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-rHwBHAxVvWblRZOkJc6/fI+iHFQjWFFGPA6COtU+nGANyEshLN8k+5+rBFFKKDE+UZsEmLoGvcC4hT/xfAtxOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-35RBtvuCKWANuRid6RXP2gYm4D5RMieVLfsMSzPu0Ry0jJFOqGcgJ/MXbSeRso89H12VqAjSH7RLx3tZnQIYGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>
