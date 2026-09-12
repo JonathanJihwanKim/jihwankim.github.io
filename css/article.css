@@ -355,6 +355,34 @@
     font-size: 14px;
 }
 
+/* Keyboard and touch users never hover, so show the copy button for them too */
+.code-copy-btn:focus-visible {
+    opacity: 1;
+}
+
+@media (hover: none) {
+    .code-copy-btn {
+        opacity: 1;
+    }
+}
+
+/* Collapsed long code block (js/code-collapse.js) */
+.article-content pre.is-collapsed::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 72px;
+    background: linear-gradient(to bottom, rgba(30, 30, 46, 0), var(--bg-code));
+    pointer-events: none;
+    z-index: 1;
+}
+
+.code-collapse-toggle {
+    margin: calc(-1 * var(--space-3)) 0 var(--space-6);
+}
+
 /* ============================================
    Images (in article)
    ============================================ */

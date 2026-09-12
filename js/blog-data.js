@@ -8,6 +8,18 @@
     // Blog posts data - newest first
     var posts = [
         {
+            id: 23,
+            title: "Checking My Team's Rules Before the Pull Request, Starting With Hidden Visual Level Filters",
+            preview: "Every rule on my team's list was a sentence in a document, which made all of them preferences rather than rules, because nothing checked them. I took the most boring sentence I could find, that a report consumer must never see a visual level filter card, and turned it into a PowerShell check a pull request has to pass. I thought it would take an afternoon. It took much longer, and the three problems I ran into apply to every other rule on the list.",
+            date: "September 12, 2026",
+            sortDate: "2026-09-12",
+            tags: ["Power BI", "PBIR", "DevOps", "TMDL"],
+            url: "posts/team-rules-pull-request-check-pbir.html",
+            featuredImage: "images/blog/team-rules-pull-request-check-pbir/featured.png",
+            readingTime: "15 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 22,
             title: "Every PBIR Object Has Two Names: Renaming Pages and Visuals So Pull Requests Are Readable",
             preview: "PBIR names every page and visual folder with a twenty-character identifier, so a pull request full of hex tells a reviewer nothing. I renamed a page and a visual in three separate stages, changing the object name alone, the folder alone, and then both, to find out which one actually helps. Power BI accepts a folder and a name property that disagree, Copy object name keeps handing back the identifier until you fix the property, and Git logs the two edits as different kinds of change.",
