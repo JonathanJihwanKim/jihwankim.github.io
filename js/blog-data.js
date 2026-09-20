@@ -8,6 +8,18 @@
     // Blog posts data - newest first
     var posts = [
         {
+            id: 24,
+            title: "A Copied Page Folder Is Not a Page: Editing PBIP Files in VS Code and Watching Desktop Apply Them",
+            preview: "The August 2026 release lets Power BI Desktop notice when my project files change on disk and apply them without a restart, so I made three edits in VS Code and watched what happened to each. Renaming a page took one click, and changing a measure in TMDL needed a second click on a banner I had never seen before. Copying a page folder applied cleanly and created no page at all, because a copied folder is not a page until the folder name, the name inside page.json, and the entry in pages.json all agree.",
+            date: "September 20, 2026",
+            sortDate: "2026-09-20",
+            tags: ["Power BI", "PBIR", "TMDL", "DevOps"],
+            url: "posts/pbip-external-edits-apply-in-desktop.html",
+            featuredImage: "images/blog/pbip-external-edits-apply-in-desktop/featured.png",
+            readingTime: "11 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 23,
             title: "Checking My Team's Rules Before the Pull Request, Starting With Hidden Visual Level Filters",
             preview: "Every rule on my team's list was a sentence in a document, which made all of them preferences rather than rules, because nothing checked them. I took the most boring sentence I could find, that a report consumer must never see a visual level filter card, and turned it into a PowerShell check a pull request has to pass. I thought it would take an afternoon. It took much longer, and the three problems I ran into apply to every other rule on the list.",
@@ -64,7 +76,7 @@
             tags: ["Power BI", "Direct Lake", "TMDL", "DevOps", "AI"],
             url: "posts/direct-lake-calculated-columns-where-they-live.html",
             featuredImage: "images/blog/direct-lake-calculated-columns-where-they-live/featured.png",
-            readingTime: "12 min read",
+            readingTime: "11 min read",
             difficulty: "Intermediate"
         },
         {
@@ -250,7 +262,7 @@
             tags: ["Power BI", "PBIR", "DevOps"],
             url: "posts/pbir-edit-interactions.html",
             featuredImage: "images/blog/pbir-edit-interactions/featured.png",
-            readingTime: "12 min read",
+            readingTime: "11 min read",
             difficulty: "Intermediate"
         },
         {

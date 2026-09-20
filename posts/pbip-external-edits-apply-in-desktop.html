@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="I edited my Power BI project files in VS Code and let the August 2026 build of Power BI Desktop apply them while it stayed open. Two edits behaved. Copy-pasting a page folder applied cleanly and created no page at all, because three names have to agree before Desktop sees a new page.">
+    <meta name="keywords" content="Power BI, PBIP, PBIR, VS Code, TMDL, external editing, Git, DevOps, Power BI Desktop">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="A Copied Page Folder Is Not a Page: Editing PBIP Files in VS Code and Watching Desktop Apply Them | Jihwan Kim">
+    <meta property="og:description" content="Power BI Desktop now applies the edits I make to my project files in VS Code. Two edits behaved. A copy-pasted page folder applied cleanly and created no page.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/pbip-external-edits-apply-in-desktop.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/pbip-external-edits-apply-in-desktop/featured.png">
+    <meta property="og:image:alt" content="A Korean folk art illustration of two figures at a low wooden table, the sheet of paper on the left stamped with three red seals and the identical sheet on the right showing three empty outlines where its seals should be">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="A Copied Page Folder Is Not a Page">
+    <meta name="twitter:description" content="Power BI Desktop now applies the edits I make to my project files in VS Code. Two edits behaved. A copy-pasted page folder applied cleanly and created no page.">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/pbip-external-edits-apply-in-desktop/featured.png">
+    <meta name="twitter:image:alt" content="A Korean folk art illustration of two figures at a low wooden table, the sheet of paper on the left stamped with three red seals and the identical sheet on the right showing three empty outlines where its seals should be">
+
+    <title>A Copied Page Folder Is Not a Page: Editing PBIP Files in VS Code and Watching Desktop Apply Them | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 11 min read</span>
+                </div>
+                <h1 class="article-title">A Copied Page Folder Is Not a Page: Editing PBIP Files in VS Code and Watching Desktop Apply Them</h1>
+                <div class="article-meta">
+                    <time datetime="2026-09-20">
+                        <span class="material-symbols-outlined">calendar_month</span> September 20, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="PBIR">PBIR</span>
+                        <span class="tag" data-tag="TMDL">TMDL</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started September 20, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/pbip-external-edits-apply-in-desktop/featured.png" alt="A Korean folk art illustration of two figures at a low wooden table, the sheet of paper on the left stamped with three red seals and the identical sheet on the right showing three empty outlines where its seals should be">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how I edited my Power BI project files in VS Code, let Power BI Desktop apply them without closing anything, and found that a copy-pasted page folder is not a page.</p>
+
+                <p>The August 2026 release of Power BI Desktop added something I had been waiting for since I wrote about the Desktop Bridge. Desktop now notices when my project files change on disk and offers to apply them. My plan was simple: make three edits in VS Code, each one bigger than the last, and watch what Desktop did with each. A page name, then a measure, then a whole new page. The first two behaved. The third one looked like it behaved, which turned out to be the more interesting result.</p>
+
+                <h2>1. The August Build and the Switch That Has to Be On</h2>
+
+                <p>This only works on the August release or later.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/desktop-about-august-2026.png" alt="The Power BI Desktop About dialog showing version 2.157.1354.0 64-bit August 2026" loading="lazy">
+
+                <p>Two boxes under Preview features matter here. <strong>Power BI Project (.pbip) save option</strong> is the one that makes any of this possible, and it has been there for a while. I also ticked <strong>Enable external tool access to Power BI Desktop through secure local APIs</strong> myself. It was not on by default in my install.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/preview-features-pbip-external-tools.png" alt="The Preview features page in Power BI Desktop options with the Power BI Project pbip save option and the external tool access option both checked" loading="lazy">
+
+                <p>The <strong>Prerequisites for editing PBIP files externally</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-external-editing?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Edit Power BI Desktop project files in Visual Studio Code article</a> lists the August build and the PBIP preview switch as requirements, and asks for a restart after enabling it.</p>
+
+                <p>I ran everything against <code>contoso_project</code>, a report connected to <code>directlake_import_composite</code>. That is the composite model I built earlier, part Direct Lake and part import, and the status bar reads <code>Storage Mode: Mixed</code> in every screenshot below. I mention it now because it matters more than I expected in section 3.</p>
+
+                <h2>2. The Entry Point Opened the Report Folder, Not the Project</h2>
+
+                <p>Clicking the title bar opens the project flyout, and there is a new <strong>Open in</strong> section at the top with Visual Studio Code in it.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/title-flyout-open-in-vs-code.png" alt="The Power BI Desktop project flyout showing Open in Visual Studio Code above the report path, the semantic model path, and the remote semantic model name" loading="lazy">
+
+                <p>I clicked it, and VS Code opened on <code>contoso_project.Report</code>. Only that. The semantic model folder was nowhere in the tree.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/vscode-report-folder-only.png" alt="VS Code with contoso_project.Report as the only root folder, containing pbi, definition, StaticResources, platform, and definition.pbir" loading="lazy">
+
+                <p>This confused me for a minute, because the same flyout clearly lists a semantic model at <code>..\directlake_import_composite.SemanticModel</code>. The answer is one line in the <strong>Open the PBIP folder in VS Code</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-external-editing?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Edit Power BI Desktop project files in Visual Studio Code article</a>: VS Code launches the folder path of the opened file, which might be either the <code>.pbip</code> or the <code>.pbir</code>.</p>
+
+                <p>My file path in that flyout ends in <code>contoso_project.Report\definition.pbir</code>. I had opened the report, so Desktop handed VS Code the report folder. The semantic model is a separate folder that sits outside it, and the report only holds a pointer to it.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/definition-pbir-dataset-reference.png" alt="definition.pbir open in VS Code showing datasetReference byPath pointing at the directlake_import_composite.SemanticModel folder one level up" loading="lazy">
+
+                <p>So if you want both folders in front of you, do not open VS Code from Power BI Desktop. Open VS Code on its own, and go to the repository or the project folder where your Power BI project lives.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/vscode-project-root-both-artifacts.png" alt="VS Code opened on the repository root showing contoso_project.Report and directlake_import_composite.SemanticModel as sibling folders, with definition.pbir open on the datasetReference path" loading="lazy">
+
+                <p>Two reports and two semantic models live side by side in this repository, and opening VS Code myself puts all of them in front of me at once.</p>
+
+                <h2>3. One Page Name, One Banner, and Two Dialogs I Did Not Expect</h2>
+
+                <p>For the first edit I picked the smallest thing I could think of. My only page was called <code>test page</code>, so I opened its <code>page.json</code> and changed <code>displayName</code> to <code>Sales Overview</code>.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/page-json-display-name-edited.png" alt="page.json open in VS Code with the displayName property edited to Sales Overview" loading="lazy">
+
+                <p>I saved in VS Code, and without touching Desktop at all, a banner appeared across the top of it.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/desktop-banner-changed-externally.png" alt="Power BI Desktop showing a banner reading This project's files were changed externally, Apply to view the latest changes, with the VS Code window still open in front of it" loading="lazy">
+
+                <p><em>This project's files were changed externally. Apply to view the latest changes.</em> With an <strong>Apply external changes</strong> button on the right. I clicked it, and got a dialog I had been warned about.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/dialog-overwrite-unsaved-edits.png" alt="A dialog titled Overwrite your unsaved edits warning that applying external changes may overwrite unsaved edits in Power BI Desktop and cannot be undone" loading="lazy">
+
+                <p>That one is documented. The <strong>How Power BI Desktop detects and reloads external changes</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-external-editing?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Edit Power BI Desktop project files in Visual Studio Code article</a> says that when unsaved changes exist in Power BI Desktop, choosing Apply external changes replaces them with the contents of the files on disk, and that choosing Cancel keeps both the unsaved Desktop work and the unapplied external edits. That is the right warning to show.</p>
+
+                <p>Then came a second dialog that is not in the documentation at all.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/dialog-potential-security-risk.png" alt="A dialog titled Potential security risk saying this file uses multiple data sources and asking whether to open the file" loading="lazy">
+
+                <p><em>Potential security risk. This file uses multiple data sources.</em> This is the privacy prompt you normally see when opening a file, and it appears here because applying external changes reloads the whole model rather than patching it. Under <strong>Considerations and limitations</strong> in the <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-external-editing?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Edit Power BI Desktop project files in Visual Studio Code article</a>, Power BI Desktop reloads the entire report, semantic model, or both, and it doesn't reload individual files or visuals.</p>
+
+                <p>My model is composite, mixing Direct Lake and import, so it has multiple data sources and the prompt has something to warn me about. A model with a single source would have nothing to say here. It came up on the first apply of my session and I did not see it again on any of the later ones, so I cannot tell you exactly when it decides to appear. Only that it can, and that it stops the reload until you answer it.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/desktop-tab-sales-overview.png" alt="The Power BI Desktop page tab now reading Sales Overview after the external change was applied" loading="lazy">
+
+                <p>The tab at the bottom now reads <code>Sales Overview</code>. One edit in VS Code, then a banner and two dialogs in Desktop, and Desktop stayed open the whole time. I never closed it once during this experiment, and after the Desktop Bridge post, where I had to reopen the file every time I changed something on disk, that is the part I had been waiting for.</p>
+
+                <h2>4. A Measure in TMDL Needs a Second Click</h2>
+
+                <p>For the second edit I moved to the semantic model, which meant reopening VS Code on the project root so the TMDL files were in reach. I picked <code>Sales Amount</code> and scaled it down by a million, purely so the change would be impossible to miss on screen.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/tmdl-sales-amount-divide.png" alt="VS Code showing name_change_in_pbi_sales.tmdl with the Sales Amount measure wrapped in DIVIDE and divided by one million" loading="lazy">
+
+                <p>The same banner appeared, and I applied it. Then a second banner took its place, and this one I had not seen before.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/desktop-banner-refresh-calculated-objects.png" alt="Power BI Desktop showing a banner reading One or more calculated objects need to be manually refreshed with a Refresh now button" loading="lazy">
+
+                <p><em>One or more calculated objects need to be manually refreshed.</em> With a <strong>Refresh now</strong> button. Until I clicked that, the numbers on my canvas were the old ones while the model definition on disk was the new one. Only after the refresh did the table show what I had written.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/desktop-sales-amount-scaled.png" alt="The report table showing Sales Amount for 2016 as 660 dollars where it previously read 659,936,155 dollars" loading="lazy">
+
+                <p>2016 went from $659,936,155 to $660, which is what dividing by a million looks like. The other columns went strange at the same time, because Gross Margin subtracts an unscaled Total Cost from a scaled Sales Amount. That was my doing, not the feature's.</p>
+
+                <p>The rule I took away is short. <strong>Clicking the banner applies the files. A model edit then needs a second click, on a second banner in the same place, before the numbers on screen catch up.</strong> If you stop after the first one, the model definition on disk is already the new version while your canvas is still showing the old one.</p>
+
+                <h2>5. Copy, Paste, Apply, and Nothing Happened</h2>
+
+                <p>Now the third edit. If Desktop can pick up a renamed page and a rewritten measure, surely it can pick up a new page. In VS Code I right-clicked my page folder, chose Copy, and pasted it back into the same <code>pages</code> folder.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/vscode-page-folder-copy-created.png" alt="VS Code showing a new folder named 50c8d0d176e86ab83040 copy next to the original page folder, with the Apply external changes banner visible in Power BI Desktop behind it" loading="lazy">
+
+                <p>VS Code created <code>50c8d0d176e86ab83040 copy</code>, and Desktop put up the banner. So far so good.</p>
+
+                <p>I did not believe it would work, and I want to be honest about why before I clicked anything. I had copied a folder. That is the only thing I had done. <code>pages.json</code> still listed one page, because I had not opened <code>pages.json</code> and I had not written anything into it.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/pages-json-unchanged-one-page.png" alt="pages.json open in VS Code next to the copied page folder, with pageOrder still holding a single page entry" loading="lazy">
+
+                <p>Nothing was going to fill that in on my behalf, and I would not want it to. This is the part I actually wanted to test. It is very tempting to open VS Code, copy something that looks right, and expect Power BI to work out the rest. That was one thing I could already see missing, and there were others I could not see yet. So I clicked <strong>Apply external changes</strong> anyway, because I wanted to see what failing looked like.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/desktop-still-one-page.png" alt="Power BI Desktop after applying the external change, still showing a single Sales Overview tab and Page 1 of 1 in the status bar" loading="lazy">
+
+                <p>What failing looked like was success. No error. No warning. No red text anywhere. One tab at the bottom, and <code>Page 1 of 1</code> in the corner. The banner had told me the files changed, and the files had changed. It never told me the result would be a page, because it does not know.</p>
+
+                <h2>6. Three Names Have to Agree</h2>
+
+                <p>The reason sits inside the copied folder. Copying a folder copies what is in it, so the new <code>page.json</code> still carried the original page's <code>name</code>.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/vscode-copy-page-json-duplicate-name.png" alt="VS Code showing the copied page folder's page.json still holding name 50c8d0d176e86ab83040, the same identifier as the original page" loading="lazy">
+
+                <p>Two folders, two files, one identifier between them. Rather than hunt for the rest of it by hand and miss something, I asked AI what else needed changing, and gave it the two folder paths.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/ai-prompt-copy-paste-page.png" alt="A chat prompt in VS Code asking what else needs to change in VS Code to properly create the copy-pasted page, after the desktop did not show the new page" loading="lazy">
+
+                <p>The answer came back as a short list I could check one file at a time. First, the folder itself had to get a new twenty-character identifier of its own.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/vscode-page-folder-renamed.png" alt="VS Code showing the copied folder renamed from 50c8d0d176e86ab83040 copy to b7e41c9a0f2d68350a14" loading="lazy">
+
+                <p>Second, <code>pages.json</code> had to list it.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/pages-json-pageorder-two-entries.png" alt="pages.json in VS Code with the new page identifier added as a second entry under pageOrder" loading="lazy">
+
+                <p>Third, and this is the one my own notes forgot, the <code>name</code> inside the copied <code>page.json</code> had to match its new folder.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/page-json-copy-after-fix.png" alt="The copied page.json with name set to b7e41c9a0f2d68350a14 and displayName set to Sales Overview (Copy), inside the matching folder" loading="lazy">
+
+                <p>I wrote my working notes as I went, and when I read them back they recorded two changes, the folder and <code>pages.json</code>. There were three. The <code>name</code> property is easy to skip because the file is perfectly valid on its own. It is only wrong in relation to the folder around it, and nothing in VS Code, in the JSON schema, or in Desktop says so.</p>
+
+                <p>With all three agreeing, I applied again.</p>
+
+                <img src="../images/blog/pbip-external-edits-apply-in-desktop/desktop-two-pages.png" alt="Power BI Desktop showing two page tabs, Sales Overview and Sales Overview (Copy), with Page 2 of 2 in the status bar" loading="lazy">
+
+                <p><code>Page 2 of 2</code>. <strong>A copied page folder is not a page until the folder name, the <code>name</code> inside its <code>page.json</code>, and the entry in <code>pages.json</code> all say the same thing.</strong></p>
+
+                <p>Readers of <a href="pbir-object-names-renaming.html" target="_blank" rel="noopener">Every PBIR Object Has Two Names</a> will recognise the shape of this. That post found that the folder name and the <code>name</code> property are tracked independently, and that Power BI is perfectly happy when they disagree. This is what that independence costs when you are creating an object rather than renaming one. Renaming badly gives you a report that works and reviews poorly. Creating badly gives you nothing at all, quietly.</p>
+
+                <h2>7. From a DevOps Standpoint: The Banner Is a Reload, Not a Review</h2>
+
+                <p>From a DevOps standpoint, this feature closes a real gap and opens a smaller one, and the smaller one is the part a team has to plan for.</p>
+
+                <p><strong>Code review.</strong> My broken copy and paste would have passed review. A new folder, valid JSON, every file correctly formed, and nothing anywhere in it saying that the page will not exist. A reviewer reading only the changed files approves a page that Power BI quietly ignores.</p>
+
+                <p><strong>Version control.</strong> The three names live in three separate places, so one new page is one change to a folder and two changes to files. If only some of them are committed, the report still opens and still looks fine. The missing piece does not announce itself.</p>
+
+                <p><strong>Automation.</strong> A script can write these files just as easily as I can, and it will make exactly the same mistake, because the mistake is not a typo. It is not knowing that a new page needs three matching names. Anything that generates report files has to be told that rule, or it will keep producing folders that look correct and do nothing.</p>
+
+                <p><strong>Governance.</strong> The banner answers one question, which is whether the files on disk changed. It does not answer whether those files still add up to a working report, and it was never meant to. Something else has to ask that. Last time I turned one of the rules on my team list into a check that runs before a pull request can be merged, and a page name check would work the same way: read the folder names, read the <code>name</code> inside each <code>page.json</code>, read <code>pageOrder</code>, and fail when the three do not match.</p>
+
+                <p>One caution before you build anything on top of this. All of it is preview. The <strong>Considerations and limitations</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-external-editing?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Edit Power BI Desktop project files in Visual Studio Code article</a> lists four files you cannot edit outside Power BI Desktop at all during preview: <code>definition.pbir</code>, <code>report.json</code>, <code>mobileState.json</code>, and <code>semanticModelDiagramLayout.json</code>. The same section also says that reloading resets filters and some user interface elements, so do not be surprised when your slicers go back to where they started.</p>
+
+                <h2>A Note on Working with AI</h2>
+
+                <p>I want to be clear about the division of work. I ran every step myself, made every edit, clicked every button, and every screenshot comes from my own session. I knew before clicking that the copy-paste would not work and I knew one of the reasons, because I could see <code>pages.json</code> had not changed. What I did not know was the full list, and rather than edit four or five places by hand and miss one, I asked. AI told me where to look. It did not tell me what the three names were for, and if I had not understood that already I would not have been able to check its answer.</p>
+
+                <p>That is the honest version of what this new feature enables. Writing directly in VS Code to update a Power BI report looks impressive and it genuinely works. Without a real understanding of how the files are put together, it leads somewhere you did not intend, and nothing warns you when it does.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>This experiment left me with one sentence I keep repeating to myself. <strong>The Apply external changes banner tells me my files changed. It does not tell me my files still add up to a working report.</strong></p>
+
+                <p>That banner is the one across the top of Desktop, the one that says the project files were changed externally. Clicking it is a reload. Desktop reads what is on disk and rebuilds the report and the model from it. If what is on disk describes a working report, you get a working report. If it describes a folder that nothing points at, carrying an identifier that already belongs to another page, you get silence, and silence looks exactly like success until you check the page count in the corner.</p>
+
+                <p>There is plenty I did not test. My report has no bookmarks, so I never found out what a copied page does to bookmark references. I never edited a <code>visual.json</code> by hand, only whole visual folders carried along by the copy. And I only ever added a page, never deleted one, which I suspect has its own list of places to update.</p>
+
+                <p>The whole of it is three names, in three places, for one page.</p>
+
+                <p>I hope this helps having fun in exploring external edits to your Power BI project files and embracing this new era of reports you can author in a code editor!</p>
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="PBIR">PBIR</span>
+                <span class="tag" data-tag="TMDL">TMDL</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: Model Lenz, PBIP Lineage Explorer, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="team-rules-pull-request-check-pbir.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">Checking My Team's Rules Before the Pull Request, Starting With Hidden Visual Level Filters</span>
+                </a>
+                <a href="../index.html" class="post-nav-link post-nav-link--next">
+                    <span class="post-nav-label">Back to</span>
+                    <span class="post-nav-title">All posts</span>
+                </a>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-QXFMVAusM85vUYDaNgcYeU3rzSlc+bTV4JvkfJhjxSHlQEo+ig53BtnGkvFTiNJh8D+wv6uWAQ2vJaVmxe8d3w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>
