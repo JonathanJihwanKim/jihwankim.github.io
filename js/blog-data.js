@@ -8,6 +8,18 @@
     // Blog posts data - newest first
     var posts = [
         {
+            id: 25,
+            title: "Translating a Semantic Model in TMDL: Fixing the Field Parameter Labels Together with AI While I Govern Every Change",
+            preview: "I added Korean and Dutch to my Contoso semantic model by writing culture files in TMDL view, and once my browser asked for those languages, the Power BI service showed them without a single report file changing. The field parameter labels stayed in English, because they are values typed into DAX, not names in the model. Together with AI, I fixed them with a hidden culture column, one measure, and two hidden filters, and I checked each piece in Desktop before I committed it.",
+            date: "October 3, 2026",
+            sortDate: "2026-10-03",
+            tags: ["Power BI", "TMDL", "PBIR", "DevOps", "AI"],
+            url: "posts/translating-semantic-model-tmdl-korean.html",
+            featuredImage: "images/blog/translating-semantic-model-tmdl-korean/featured.png",
+            readingTime: "15 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 24,
             title: "A Copied Page Folder Is Not a Page: Editing PBIP Files in VS Code and Watching Desktop Apply Them",
             preview: "The August 2026 release lets Power BI Desktop notice when my project files change on disk and apply them without a restart, so I made three edits in VS Code and watched what happened to each. Renaming a page took one click, and changing a measure in TMDL needed a second click on a banner I had never seen before. Copying a page folder applied cleanly and created no page at all, because a copied folder is not a page until the folder name, the name inside page.json, and the entry in pages.json all agree.",

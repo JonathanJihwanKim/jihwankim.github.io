@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="I added Korean and Dutch to my Contoso semantic model by writing culture files in TMDL view, and the Power BI service showed both languages without a single report file changing. The field parameter labels stayed in English, because they are values typed into DAX, not names in the model. Together with AI, I fixed them with a hidden culture column, one measure, and two hidden filters, and I checked each piece in Desktop before I committed it.">
+    <meta name="keywords" content="Power BI, TMDL, translations, metadata translation, data translation, culture, cultureInfo, field parameters, USERCULTURE, PBIR, Git, DevOps, Claude Code">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="Translating a Semantic Model in TMDL: Fixing the Field Parameter Labels Together with AI While I Govern Every Change | Jihwan Kim">
+    <meta property="og:description" content="Korean and Dutch culture files translated my model's names in the Power BI service, but not the field parameter labels. I fixed those together with AI and checked each piece before I committed it.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/translating-semantic-model-tmdl-korean.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/translating-semantic-model-tmdl-korean/featured.png">
+    <meta property="og:image:alt" content="A Korean folk art illustration of a wooden bookshelf with a framed sign reading 'A culture file translates names, not values', three wrapped book cases labelled en-US, ko-KR, and nl-NL, and a locked wooden chest labelled values, suggesting that a culture file opens every name in the model while the values need a different key">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Translating a Semantic Model in TMDL: Fixing the Field Parameter Labels Together with AI While I Govern Every Change">
+    <meta name="twitter:description" content="Korean and Dutch culture files translated my model's names in the Power BI service, but not the field parameter labels. I fixed those together with AI and checked each piece before I committed it.">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/translating-semantic-model-tmdl-korean/featured.png">
+    <meta name="twitter:image:alt" content="A Korean folk art illustration of a wooden bookshelf with a framed sign reading 'A culture file translates names, not values', three wrapped book cases labelled en-US, ko-KR, and nl-NL, and a locked wooden chest labelled values, suggesting that a culture file opens every name in the model while the values need a different key">
+
+    <title>Translating a Semantic Model in TMDL: Fixing the Field Parameter Labels Together with AI While I Govern Every Change | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 15 min read</span>
+                </div>
+                <h1 class="article-title">Translating a Semantic Model in TMDL: Fixing the Field Parameter Labels Together with AI While I Govern Every Change</h1>
+                <div class="article-meta">
+                    <time datetime="2026-10-03">
+                        <span class="material-symbols-outlined">calendar_month</span> October 3, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="TMDL">TMDL</span>
+                        <span class="tag" data-tag="PBIR">PBIR</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                        <span class="tag" data-tag="AI">AI</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started October 3, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/translating-semantic-model-tmdl-korean/featured.png" alt="A Korean folk art illustration of a wooden bookshelf with a framed sign reading 'A culture file translates names, not values', three wrapped book cases labelled en-US, ko-KR, and nl-NL, and a locked wooden chest labelled values, suggesting that a culture file opens every name in the model while the values need a different key">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how I added Korean and Dutch to my Contoso semantic model by writing culture files in TMDL, and how one field parameter showed me where a culture file stops. I fixed that last part together with AI, and I checked every change it made before I committed it.</p>
+
+                <p>My plan was to keep this a model-only change: one culture per language, applied in TMDL view, then the report opened in the Power BI service in that language. I wanted to know which words on a report page come from the names in the model, and which come from somewhere a culture file cannot reach. The first two commits went as planned. The third one is the reason I am writing this.</p>
+
+                <h2>1. One Culture Already There, and Nine Captions to Write</h2>
+
+                <p>I ran everything against <code>directlake_import_composite</code>, the composite model behind my <code>contoso_project</code> report, part Direct Lake and part import. I was live editing it from Power BI Desktop with the project saved as a PBIP, and that detail comes back in section 3.</p>
+
+                <p>The model already had one culture. Model explorer listed <code>en-US</code> under <strong>Cultures</strong>, which I had added in an earlier commit.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/model-view-cultures-en-us.png" alt="Power BI Desktop Model view with the Live editing your model using Direct Lake banner across the top, and Model explorer on the right listing Cultures (1) with en-US underneath" loading="lazy">
+
+                <p>The <strong>Cultures</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/model-explorer?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use Model explorer in Power BI article</a> describes this area as the place to view all translated versions of the data model.</p>
+
+                <p>Then I picked what to translate. I started with the <code>sales</code> table and two of its measures, <code>Sales Amount</code> and <code>Gross Margin %</code>.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/model-explorer-sales-measures-picked.png" alt="Model explorer with the sales table expanded, its thirteen columns and six measures listed, and the Gross Margin % and Sales Amount measures underlined in red" loading="lazy">
+
+                <p>From each of the other tables I picked one column: <code>CategoryName</code> in <code>product</code>, <code>Birthday</code> in <code>customer</code>, and <code>Month</code> in <code>date</code>. With the four table names, that made nine captions, a set small enough to check by eye.</p>
+
+                <h2>2. Writing the Korean Culture in TMDL View</h2>
+
+                <p>Power BI Desktop has no dialog for translations. In the <strong>Common use cases for TMDL view</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-tmdl-view?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use Tabular Model Definition Language (TMDL) view in Power BI article</a>, the perspectives scenario ends by saying the same method works for other semantic model metadata that lack a graphical interface, such as translations. I asked AI for a starting script built from the objects I had highlighted, and pasted it into a new TMDL view tab.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/tmdl-view-ko-kr-script.png" alt="TMDL view in Power BI Desktop with a tab named Script 1 holding a createOrReplace script for cultureInfo ko-KR with translations and model Model, Korean captions for the sales, product, customer, and date tables, two sales measures, and three columns, and the Problems tab showing 0" loading="lazy">
+
+                <p>Under <code>cultureInfo ko-KR</code> come <code>translations</code>, <code>model Model</code>, and each table, with its measures and columns inside it, each carrying a <code>caption</code>. The <strong>Translations in TMDL</strong> section of the <a href="https://learn.microsoft.com/en-us/analysis-services/tmdl/tmdl-reference-tabular-object?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Object definitions in Tabular Model Definition Language (TMDL) article</a> explains that TMDL replicates the model hierarchy underneath each culture, and that three properties can be translated: <code>caption</code>, <code>description</code>, and <code>displayFolder</code>. I only needed the first.</p>
+
+                <p>Its example starts with <code>culture pt-PT</code>. The culture already in my model is written as <code>cultureInfo en-US</code>, as the preview below shows, so I used <code>cultureInfo</code> to match, and the Problems tab stayed at 0. I did not try the other spelling, so I can only tell you which one my files use.</p>
+
+                <p>Before applying, I clicked <strong>Preview</strong>.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/tmdl-view-preview-ko-kr-diff.png" alt="The TMDL view Preview pane comparing the model before and after the script, with cultureInfo en-US unchanged on both sides and a new cultureInfo ko-KR block added below it in green, listing sales with Sales Amount before Gross Margin %, then customer, product, and date" loading="lazy">
+
+                <p>The new block landed below <code>cultureInfo en-US</code>, which stayed untouched. The order inside it was not mine. My script had <code>Gross Margin %</code> before <code>Sales Amount</code> and <code>product</code> before <code>customer</code>, and the preview swapped both pairs. A note in the <strong>Preview changes to the semantic model</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-tmdl-view?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use Tabular Model Definition Language (TMDL) view in Power BI article</a> explains why: the preview compares the model before and after the script runs, not the script itself, so objects appear in the default TMDL order.</p>
+
+                <p>I applied it.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/tmdl-view-changes-applied.png" alt="TMDL view after Apply showing the notification Changes applied to the model, with Model explorer on the right now listing Cultures (2)" loading="lazy">
+
+                <p><em>Changes applied to the model.</em> Model explorer went from one culture to two. Then I switched to the report view to see whether Desktop would show any of it, and it did not.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/desktop-report-still-english.png" alt="The Sales Overview page in Power BI Desktop with a prm_dim slicer listing Gender, Year, and Brand, a table with Year, Sales Amount, Total Cost, Gross Margin, and Gross Margin % columns, and the Data pane, all in English" loading="lazy">
+
+                <p>This one is documented. In the <strong>Organize project for metadata translation</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/multiple-language-locale?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use Locale Values in Multiple-Language Power BI Reports article</a>, Power BI Desktop doesn't load metadata translations in its report designer, only semantic model object names. So the screen I spend most of my day in was the one place I could not check this work.</p>
+
+                <h2>3. Three Files in the Commit, and None of Them in the Report</h2>
+
+                <p>Saving the project wrote the change to disk, and VS Code showed where it went.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/vscode-cultures-ko-kr-tmdl.png" alt="VS Code with the directlake_import_composite.SemanticModel definition folder open, a new ko-KR.tmdl marked U next to en-US.tmdl in the cultures folder, model.tmdl and TMDLScripts Script 1.tmdl marked M, and ko-KR.tmdl open in the editor" loading="lazy">
+
+                <p>A new <code>ko-KR.tmdl</code> sits in the <code>cultures</code> folder next to <code>en-US.tmdl</code>, its contents in the same order the preview showed. The <strong>TMDL folder structure</strong> section of the <a href="https://learn.microsoft.com/en-us/analysis-services/tmdl/tmdl-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Tabular Model Definition Language (TMDL) article</a> lists one file for each culture linguistic schema, so a new language is a new file rather than an edit to an existing one.</p>
+
+                <p>The second change is one line in <code>model.tmdl</code>.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/vscode-model-tmdl-ref-culture-ko-kr.png" alt="The model.tmdl diff in VS Code with culture: en-US on line 2, the ref table lines from sales to _CalcGroup_Period, and one added line, ref cultureInfo ko-KR, below ref cultureInfo en-US" loading="lazy">
+
+                <p><code>ref cultureInfo ko-KR</code>, below the <code>en-US</code> one, with the model's own language, <code>culture: en-US</code>, still on line 2. The <strong>Deterministic collection ordering</strong> section of the <a href="https://learn.microsoft.com/en-us/analysis-services/tmdl/tmdl-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Tabular Model Definition Language (TMDL) article</a> explains that these <code>ref</code> lines keep the order of cultures stable between saves.</p>
+
+                <p>The third file is not part of the model at all.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/vscode-script-1-tmdl-diff.png" alt="The diff of TMDLScripts Script 1.tmdl in VS Code, empty on the left and holding the whole createOrReplace ko-KR script on the right" loading="lazy">
+
+                <p>My TMDL view tab was saved as a file too. The <strong>TMDL script tabs</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-tmdl-view?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use Tabular Model Definition Language (TMDL) view in Power BI article</a> says that in a Power BI Project, each script tab is saved as a <code>.tmdl</code> file in the <code>TMDLScripts</code> folder, so the script I ran went into the repository next to the file it produced.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/vscode-commit-ko-kr-three-files.png" alt="The VS Code Source Control pane with the commit message KR translate tmdl update and three staged files, model.tmdl, ko-KR.tmdl, and Script 1.tmdl, all under directlake_import_composite.SemanticModel" loading="lazy">
+
+                <p>Three files, all under the semantic model folder, and not one under <code>contoso_project.Report</code>. The <strong>Power BI support for metadata translation</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/multiple-language-translation?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Plan Translation for Multiple-Language Reports in Power BI article</a> describes a translated caption as an alternative name that appears when the report is rendered in a different language. The object keeps its own name, and the report keeps pointing at it.</p>
+
+                <p>One more thing, to be precise. The commit is not what put Korean into the service. The opening of the <a href="https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-power-bi-desktop?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Learn About Editing Semantic Models in Direct Lake in Power BI Desktop article</a> says there is no publish action when you live edit, because changes made in Power BI Desktop happen to the semantic model in the Fabric workspace. The captions arrived there when I clicked Apply. The commit was for my repository.</p>
+
+                <h2>4. The Service Followed My Browser</h2>
+
+                <p>I opened the report in the Power BI service, and it was in English.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/service-report-english.png" alt="The Sales Overview report in the Power BI service in English, with the same prm_dim slicer and table as in Desktop and an empty Filters pane" loading="lazy">
+
+                <p>That was correct, because my browser had asked for English. In the <strong>Load a report in Power BI</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/multiple-language-locale?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use Locale Values in Multiple-Language Power BI Reports article</a>, the browser sends an <code>Accept-Language</code> header with a culture name, the service uses it to set the language and locale of the report, and users control that value through their regional settings. In Edge, the <strong>Preferred languages</strong> list says websites will appear in the first language in the list that they support, so I moved Korean to the top.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/edge-languages-korean-first.png" alt="Edge settings on the Languages page with Korean moved to the top of Preferred languages, above English (United States) and English" loading="lazy">
+
+                <p>Then I reloaded the report.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/service-report-korean-two-headers.png" alt="The same report after the browser change, with the Power BI menus and Filters pane in Korean and two table headers, Sales Amount and Gross Margin %, showing Korean captions while Year, Total Cost, Gross Margin, and the slicer stay in English" loading="lazy">
+
+                <p>Two column headers turned Korean, exactly the two measures I had translated. <code>Total Cost</code>, <code>Gross Margin</code>, and the slicer stayed in English because they were never in my script. The menus, the Filters pane, and the <code>Total</code> under the last row changed as well, and those words come from Power BI, not from my model.</p>
+
+                <h2>5. Asking AI for the Rest of the Page, and for Dutch</h2>
+
+                <p>Nine captions were enough to learn the format. For the rest of the page I turned to Claude Code in VS Code, pointed it at my commit, and asked for every name shown on the Sales Overview page, plus a second language.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/claude-code-prompt-rest-of-page-dutch.png" alt="Claude Code in VS Code with a prompt asking it to check the last commit, apply the same kind of translation to what is shown on the Sales Overview page such as Gender, Year, Brand, and Total Cost, and add a Dutch translation, next to the commit details for KR translate tmdl update" loading="lazy">
+
+                <p>It extended the Korean file first.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/vscode-ko-kr-tmdl-ai-additions.png" alt="The ko-KR.tmdl diff in VS Code with added captions for the Total Cost and Gross Margin measures, the Gender, Brand, and Year columns, and a new prm_dim table block with a caption for the table and one for its prm_dim column" loading="lazy">
+
+                <p><code>Total Cost</code> and <code>Gross Margin</code>, as asked. <code>Gender</code> in <code>customer</code>, <code>Brand</code> in <code>product</code>, and <code>Year</code> in <code>date</code>, the three fields behind my slicer. And one block I had not asked for by name, for <code>prm_dim</code>, the field parameter table, with a caption for the table and one for its column.</p>
+
+                <p>That last block made me look twice. The field parameter got captions for itself, but nothing for <code>Gender</code>, <code>Year</code>, or <code>Brand</code> inside it. Those three were translated in their own tables instead. My guess was that the slicer would pick them up from there, and the next section is where that guess was tested.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/vscode-nl-nl-tmdl.png" alt="A new nl-NL.tmdl open in VS Code with Dutch captions such as Verkoop, Verkoopbedrag, Totale kosten, Brutomarge, Klant, Geslacht, Merk, Datum, Jaar, Maand, Dimensieselectie, and Dimensie" loading="lazy">
+
+                <p>The Dutch file covers the same objects, from <code>Verkoopbedrag</code> for Sales Amount to <code>Dimensie</code> for the field parameter's column, and <code>model.tmdl</code> gained one more line.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/vscode-model-tmdl-ref-culture-nl-nl.png" alt="The model.tmdl diff in VS Code with ref cultureInfo nl-NL added as line 27, below the en-US and ko-KR lines" loading="lazy">
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/vscode-commit-ko-kr-nl-nl.png" alt="The VS Code Source Control pane with the commit message update kr-KR and add nl-NL and three staged files, model.tmdl, ko-KR.tmdl, and nl-NL.tmdl" loading="lazy">
+
+                <p>Again three files, all in the semantic model. These edits were made on disk rather than in Desktop, so they reached the workspace through Git: I pushed, then updated the workspace from <strong>Source control</strong>. The <strong>Considerations and limitations</strong> section of the <a href="https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-power-bi-desktop?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Learn About Editing Semantic Models in Direct Lake in Power BI Desktop article</a> says a Power BI Project can't be published from Power BI Desktop, and names Fabric Git integration as one way to bring local PBIP files to a workspace. For Dutch I moved Dutch to the top of the same browser list.</p>
+
+                <h2>6. The Labels No Culture File Could Reach</h2>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/service-report-korean-field-parameter-english.png" alt="The report in Korean with the slicer header now in Korean but its three items still reading Gender, Year, and Brand, and the first column header of the table still reading Year while the four measure headers are in Korean" loading="lazy">
+
+                <p>The slicer header changed. That is the caption of the field parameter's column, the one the AI added. The three items under it did not change, and neither did the <code>Year</code> header on the table, whose first column comes from the same field parameter. My guess was wrong.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/service-report-dutch-field-parameter-english.png" alt="The report in Dutch with the slicer header Dimensie, its items still Gender, Year, and Brand, the table headers Year, Verkoopbedrag, Totale kosten, Brutomarge, and Brutomarge %, and numbers shown with dots for thousands and a comma for decimals" loading="lazy">
+
+                <p>Dutch gave the same result, with one difference that needed no work from me: the number format. In the 2016 row, the English report shows <code>$659,936,155</code> for <code>Sales Amount</code> and <code>56.3%</code> for <code>Gross Margin %</code>. The Dutch report shows the same two values as <code>$659.936.155</code> and <code>56,3%</code>, with a dot to group thousands and a comma for decimals. The <strong>Format dates and numbers with current user locale</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/multiple-language-locale?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use Locale Values in Multiple-Language Power BI Reports article</a> says Power BI visuals automatically handle locale-specific formatting behind the scenes.</p>
+
+                <p>The reason the labels stayed in English is in the <strong>Edit translated names</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/data-translation-implement-field?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Implement Data Translation Using Field Parameters article</a>: when Power BI Desktop creates a field parameter, the names it shows are hard-coded into the DAX expression. <code>Gender</code>, <code>Year</code>, and <code>Brand</code> on my slicer are not names of anything in the model. They are three text values typed into a table.</p>
+
+                <p>That puts them on the other side of a line Microsoft draws between two kinds of translation. The <strong>Metadata translation</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/multiple-language-translation?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Plan Translation for Multiple-Language Reports in Power BI article</a> covers tables, columns, measures, hierarchies, and hierarchy levels, and its <strong>Data translation</strong> section is about translated values for the data itself, naming field parameters as the feature that loads them. A culture file is metadata translation. My slicer needed data translation.</p>
+
+                <p>That answered the question I started with. <strong>A culture file translates the names in the model. A field parameter label is a value typed into DAX, and a value needs data translation.</strong></p>
+
+                <h2>7. Fixing the Field Parameter Together with AI, and Checking Each Part</h2>
+
+                <p>I sent the Korean screenshot back to Claude Code with one sentence: the table name is translated, the fields inside it are not, fix it, and do the same for Dutch.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/claude-code-prompt-field-parameter.png" alt="A Claude Code prompt with the Korean report screenshot attached, saying the field parameter table name is translated but the columns in the field parameter are not, and asking for a fix and the same for the Dutch translation" loading="lazy">
+
+                <p>The fix went into the field parameter itself.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/field-parameter-dax-culture-rows.png" alt="The prm_dim field parameter in Table view with a DAX expression of nine rows, Gender, Year, and Brand labelled in English, Korean, and Dutch, each with a fourth value naming its culture, and a hidden Culture column showing en-US, ko-KR, and nl-NL" loading="lazy">
+
+                <p>Three rows became nine. Every field now appears once per language, with its label in that language and a fourth value naming the culture, which shows up as a new hidden <code>Culture</code> column. To show one language at a time, the AI added a hidden measure, <code>Culture Match</code>. It reads the first two letters of <code>USERCULTURE()</code>, turns them into <code>ko-KR</code>, <code>nl-NL</code>, or by default <code>en-US</code>, and returns 1 when the culture on the row matches.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/culture-match-measure-slicer-filter.png" alt="Power BI Desktop with the Culture Match measure in the formula bar and prm_dim as its home table, and the slicer selected with a hidden visual-level filter, Culture Match is 1, in the Filters pane" loading="lazy">
+
+                <p>Then it wrote a visual-level filter into each of the two visuals that use the field parameter. The slicer keeps the rows where <code>Culture Match</code> is 1.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/table-culture-top-n-filter.png" alt="Power BI Desktop with the table selected and a hidden visual-level filter on Culture set to Top N, showing the top 1 by Culture Match" loading="lazy">
+
+                <p>The table got a different kind of filter, a Top N on the <code>Culture</code> column that keeps the one value ranked highest by <code>Culture Match</code>. The two filters differ because the two visuals list different things. The slicer lists the field parameter's own rows, so a filter on the measure can drop the rows for the other two languages. The table lists years or brands, so the same filter would be judged once per year or brand. The language is picked on the <code>Culture</code> column instead, where Top N keeps one culture for the whole table.</p>
+
+                <p>I checked both filter cards in Desktop before I committed, and both are hidden. The <strong>Lock or hide filters</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/create-reports/power-bi-report-filter?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Format filters in Power BI reports article</a> says consumers can't even see a hidden filter, which is what my team's rule from <a href="team-rules-pull-request-check-pbir.html" target="_blank" rel="noopener">Checking My Team's Rules Before the Pull Request</a> asks for. Then I committed <code>prm_dim.tmdl</code> and the two <code>visual.json</code> files, pushed, and updated the workspace from <strong>Source control</strong>, the same route as the second commit.</p>
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/service-report-korean-final.png" alt="The report in Korean with the slicer header and all three items in Korean, the Brand item selected, and the first column header of the table in Korean above brand names such as Adventure Works and Contoso" loading="lazy">
+
+                <img src="../images/blog/translating-semantic-model-tmdl-korean/service-report-dutch-final.png" alt="The report in Dutch with the slicer Dimensie listing Geslacht, Jaar, and Merk, Merk selected, and the table headers Merk, Verkoopbedrag, Totale kosten, Brutomarge, and Brutomarge %" loading="lazy">
+
+                <p>It worked in both languages. The brand names in the rows are data too, and I left them as they are, because a brand keeps its name in every language.</p>
+
+                <p>A result on screen was not enough for me. I wanted a documented reason for each part of the fix before I called it done, and Microsoft Learn has one for both the column and the measure.</p>
+
+                <p>The fourth value is a documented step. The <strong>Add a language ID column</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/data-translation-implement-field?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Implement Data Translation Using Field Parameters article</a> adds a fourth string to the row for each language in the field parameter's DAX to enable filtering by language, then hides the new column, since report authors never need to see a column used to select a language by filtering behind the scenes. My hidden <code>Culture</code> column follows that step, with full culture names such as <code>ko-KR</code> where the article uses two-character language identifiers such as <code>en</code>.</p>
+
+                <p>Choosing the language is where my report needed something different. In the <strong>Create a relationship</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/data-translation-add-language-table?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Add the Languages Table to Filter Field Parameters article</a>, a Languages table is related to the field parameter, and the language is switched with a filter in the Filter pane. My captions already followed the browser, so I wanted the labels to follow it too, with nothing for the reader to pick. That is the job of <code>Culture Match</code>. The <strong>Remarks</strong> in the <a href="https://learn.microsoft.com/en-us/dax/userculture-function-dax?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">USERCULTURE function reference</a> say that with field parameters, USERCULTURE can reliably translate dynamic titles and captions when it is used in a measure within the same model.</p>
+
+                <p>It had to be a measure. The <strong>Implement translations using measures and USERCULTURE</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/multiple-language-locale?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use Locale Values in Multiple-Language Power BI Reports article</a> says calculated tables are evaluated when the model loads, so in a calculated table USERCULTURE returns the culture name of the model's default language, not the reader's. <code>prm_dim</code> is a calculated table, which is how its partition is declared in <code>prm_dim.tmdl</code>, so the language check lives in the measure, and the measure reaches the two visuals through their hidden filters.</p>
+
+                <h2>8. From a DevOps Standpoint: What a Translation Pull Request Contains</h2>
+
+                <p>From a DevOps standpoint, this experiment changed what I look for when a translation arrives in a pull request.</p>
+
+                <p><strong>Code review.</strong> Metadata translation is the easy review: one culture file and one <code>ref</code> line per language, all in the semantic model folder, with captions to read against object names. Data translation is a different review. The field parameter rows, the measure, and the filters have to agree with each other, and the filters live with their visuals in the report, as I wrote about in <a href="pbir-filter-layer-order.html" target="_blank" rel="noopener">From Click-by-Click to Code</a>. A reviewer who only opens the culture files would approve a slicer that is still in English. My team's existing check would pass the change too, because both new filters are hidden.</p>
+
+                <p><strong>Version control.</strong> The script tab is committed next to its result, so my first commit holds the same nine captions twice, in <code>Script 1.tmdl</code> and in <code>ko-KR.tmdl</code>. Review the culture file. The script is only a record of what was run, and it stopped matching the model in the second commit, when the AI edited the culture file and left the script alone.</p>
+
+                <p><strong>Maintenance.</strong> Another language for this page now means four edits in three files: a culture file, a <code>ref</code> line in <code>model.tmdl</code>, three rows in the field parameter, and one more pair in the <code>SWITCH</code> of <code>Culture Match</code>. The last two both land in <code>prm_dim.tmdl</code>, because <code>prm_dim</code> is the measure's home table. Miss the <code>SWITCH</code> and the new language quietly gets English labels, because any culture it does not list falls through to <code>en-US</code>.</p>
+
+                <p>One caution before anyone copies this. I only ever sent the service two exact culture names, <code>ko-KR</code> and <code>nl-NL</code>. The <strong>Support multiple locales for a single language</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/multiple-language-locale?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use Locale Values in Multiple-Language Power BI Reports article</a> says tables and columns need an exact match between the requested culture and a translation, while measures look for the closest one. <code>Culture Match</code> only reads the first two letters, so a reader asking for <code>nl-BE</code> would get Dutch labels from the field parameter, and I cannot tell you what the captions around them would do, because I did not test it.</p>
+
+                <h2>A Note on Working with AI</h2>
+
+                <p>I want to be transparent about the division of work. The first Korean script was an AI suggestion built from the objects I had highlighted, and I previewed, applied, and committed it myself. The second and third commits are Claude Code's work from the two prompts above: the extra captions, the Dutch file, the nine field parameter rows, the measure, and both filters. I read its diff in VS Code before the second commit, and I checked the measure and both filters in Desktop before the third. I pushed every commit, updated the workspace, changed the browser, and checked every result in the service, and every screenshot comes from my own session.</p>
+
+                <p>What made the AI's work checkable was the slow first round. I had watched nine captions go from a script to a file to a column header, so I knew what a correct culture file looked like, and I could see that the field parameter fix was a different kind of change.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>I expected a model-only change, and for two commits it was: two culture files, two <code>ref</code> lines, and not one report file. Then a slicer showed me that field parameter labels are not names at all, and the fix had to reach into the data and the report.</p>
+
+                <p>My notes from that day end with one sentence, and I still agree with it. <strong>If I am clear about the steps that make a Power BI report translate correctly in the service, and I can validate how AI fixed the field parameter table and the visuals that use it, then I can work together with AI on the rest of the job and govern the process.</strong> Section 7 is what that validation looked like for me.</p>
+
+                <p>There is plenty I did not test. One browser and two exact culture names. No <code>language</code> parameter on the report URL, which the <strong>Load a report in Power BI</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/guidance/multiple-language-locale?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Use Locale Values in Multiple-Language Power BI Reports article</a> offers as a way to test without touching the browser.</p>
+
+                <p>The whole of it is two culture files, two <code>ref</code> lines, nine rows where there used to be three, one hidden column, one hidden measure, and two hidden filters.</p>
+
+                <p>I hope this helps having fun in exploring translations in TMDL and embracing this new era of Power BI reports that answer in the reader's language!</p>
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="TMDL">TMDL</span>
+                <span class="tag" data-tag="PBIR">PBIR</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+                <span class="tag" data-tag="AI">AI</span>
+            </div>
+
+            <div class="sponsor-cta">
+                <div class="sponsor-cta-icon"><span class="material-symbols-outlined">favorite</span></div>
+                <h3>Enjoyed this article?</h3>
+                <p>I build free, open-source Power BI tools: Model Lenz, PBIP Lineage Explorer, and PBIP Documenter. Your sponsorship keeps them maintained and free for everyone.</p>
+                <div class="sponsor-cta-buttons">
+                    <a href="https://github.com/sponsors/JonathanJihwanKim" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined">volunteer_activism</span> Become a Sponsor
+                    </a>
+                    <a href="https://buymeacoffee.com/jihwankim" target="_blank" rel="noopener" class="btn btn-outline">
+                        <span class="material-symbols-outlined">coffee</span> Buy me a coffee
+                    </a>
+                </div>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="pbip-external-edits-apply-in-desktop.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">A Copied Page Folder Is Not a Page: Editing PBIP Files in VS Code and Watching Desktop Apply Them</span>
+                </a>
+                <a href="../index.html" class="post-nav-link post-nav-link--next">
+                    <span class="post-nav-label">Back to</span>
+                    <span class="post-nav-title">All posts</span>
+                </a>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>
