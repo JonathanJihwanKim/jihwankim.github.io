@@ -3,21 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Jihwan Kim — Microsoft MVP, Power BI & Microsoft Fabric Community Super User, and Senior Architect at IKEA. Building enterprise-grade data solutions.">
+    <meta name="description" content="Jihwan Kim is a Microsoft MVP, Microsoft Fabric Community Super User, and Senior Power BI Architect at IKEA. He writes tested Power BI and Fabric experiments and builds free open-source tools.">
     <meta name="keywords" content="Jihwan Kim, Microsoft MVP, Power BI, Microsoft Fabric, IKEA, Data Architect">
     <meta name="author" content="Jihwan Kim">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:title" content="About Jihwan Kim — Power BI & Fabric Expert">
-    <meta property="og:description" content="Microsoft MVP, Power BI & Microsoft Fabric Community Super User, and Senior Architect at IKEA.">
+    <meta property="og:description" content="Microsoft MVP, Microsoft Fabric Community Super User, and Senior Power BI Architect at IKEA.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://powerbimvp.com/about.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/profile-1.jpg">
+    <meta name="twitter:card" content="summary">
     <title>About | Jihwan Kim — Power BI & Microsoft Fabric</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/article.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Jihwan Kim",
+        "url": "https://powerbimvp.com/about.html",
+        "image": "https://powerbimvp.com/images/profile-1.jpg",
+        "jobTitle": "Senior Power BI Architect",
+        "worksFor": {
+            "@type": "Organization",
+            "name": "IKEA"
+        },
+        "award": [
+            "Microsoft Most Valuable Professional (MVP), since 2022",
+            "Microsoft Fabric Community Super User, since 2021"
+        ],
+        "knowsAbout": ["Power BI", "Microsoft Fabric", "DAX", "TMDL", "PBIR", "Git"],
+        "sameAs": [
+            "https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333",
+            "https://www.linkedin.com/in/jihwankim1975/",
+            "https://github.com/JonathanJihwanKim",
+            "https://community.fabric.microsoft.com/users/jihwan_kim/291628"
+        ]
+    }
+    </script>
 </head>
 <body>
     <a href="#main" class="skip-link">Skip to content</a>
@@ -29,13 +56,27 @@
             <div class="about-content animate-in">
                 <h1>Jihwan Kim</h1>
                 <p class="about-role">Microsoft MVP &middot; Power BI & Microsoft Fabric Community Super User &middot; Senior Power BI Architect</p>
-                <p class="about-bio">I build enterprise-grade, AI-ready data solutions that deliver faster insights at IKEA. I write about Power BI, PBIR, DAX, TMDL, and Microsoft Fabric — sharing what I learn as I push these tools to their limits in production environments.</p>
+                <ul class="hero-facts about-facts">
+                    <li class="hero-fact">
+                        <span class="material-symbols-outlined" aria-hidden="true">military_tech</span>
+                        <span>Microsoft MVP since <strong>2022</strong></span>
+                    </li>
+                    <li class="hero-fact">
+                        <span class="material-symbols-outlined" aria-hidden="true">workspace_premium</span>
+                        <span>Community Super User since <strong>2021</strong></span>
+                    </li>
+                    <li class="hero-fact">
+                        <span class="material-symbols-outlined" aria-hidden="true">forum</span>
+                        <a href="https://community.fabric.microsoft.com/users/jihwan_kim/291628" target="_blank" rel="noopener"><strong>2,700+</strong> solutions in the Fabric Community</a>
+                    </li>
+                </ul>
+                <p class="about-bio">I'm a Senior Power BI Architect at IKEA, a Microsoft MVP, and a Microsoft Fabric Community Super User. At work I build enterprise-grade, AI-ready semantic models and reports. On this site I write up the experiments I run on my own Contoso model, with my own screenshots and the Microsoft Learn sections behind each result, so you can run them too. The tools I build along the way are free and open source.</p>
 
                 <div class="about-badges">
                     <a href="https://mvp.microsoft.com/en-US/mvp/profile/385eb34e-c755-ed11-9561-000d3a197333" target="_blank" rel="noopener" class="about-badge">
                         <img src="images/mvp-icon.png" alt="MVP"> Microsoft MVP
                     </a>
-                    <a href="https://community.fabric.microsoft.com/t5/user/viewprofilepage/user-id/291628" target="_blank" rel="noopener" class="about-badge">
+                    <a href="https://community.fabric.microsoft.com/users/jihwan_kim/291628" target="_blank" rel="noopener" class="about-badge">
                         <img src="images/powerbi-su.png" alt="Super User"> Community Super User
                     </a>
                 </div>
@@ -63,11 +104,87 @@
                 <img src="images/powerbi-su.png" alt="Power BI Community Super User" class="about-photo" style="object-fit:contain;background:white;padding:1rem;">
             </div>
         </div>
+
+        <div class="about-sections">
+            <!-- What I'm Good At -->
+            <section class="page-section animate-in">
+                <h2 class="page-section-title">What I'm good at</h2>
+                <div class="skill-grid">
+                    <div class="skill-card">
+                        <div class="skill-card-header">
+                            <div class="skill-card-icon" aria-hidden="true"><span class="material-symbols-outlined">data_object</span></div>
+                            <h3>PBIR and TMDL as code</h3>
+                        </div>
+                        <p>Reading report and model files as text: object names, field parameters, and what a diff really says.</p>
+                        <ul class="skill-card-posts" data-skill="pbir-tmdl">
+                            <li><a href="posts/pbip-lineage-explorer-tracing-visuals-to-source.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> Tracing Power BI Visuals Back to Source</a></li>
+                            <li><a href="posts/pbip-external-edits-apply-in-desktop.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> A Copied Page Folder Is Not a Page</a></li>
+                            <li><a href="posts/pbir-json-hidden-gaps-field-parameters.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> PBIR JSON Doesn't Tell the Full Story</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="skill-card">
+                        <div class="skill-card-header">
+                            <div class="skill-card-icon" aria-hidden="true"><span class="material-symbols-outlined">merge</span></div>
+                            <h3>Git and DevOps for Power BI and Fabric</h3>
+                        </div>
+                        <p>Branching, merging, and pull request checks that turn team rules into something a build can enforce.</p>
+                        <ul class="skill-card-posts" data-skill="git-devops">
+                            <li><a href="posts/team-rules-pull-request-check-pbir.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> Checking My Team's Rules Before the Pull Request, Starting With Hidden Visual Level Filters</a></li>
+                            <li><a href="posts/tmdl-merge-conflict-experiment.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> I Expected a Merge Conflict and Got a Clean PR Instead</a></li>
+                            <li><a href="posts/fabric-selective-branching-git-workspace.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> Selective Branching in Fabric: Feature Branches Without the Clutter</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="skill-card">
+                        <div class="skill-card-header">
+                            <div class="skill-card-icon" aria-hidden="true"><span class="material-symbols-outlined">fact_check</span></div>
+                            <h3>AI-assisted authoring I can check</h3>
+                        </div>
+                        <p>Letting AI edit TMDL and PBIR while I verify every change in Desktop before I commit it.</p>
+                        <ul class="skill-card-posts" data-skill="ai-authoring">
+                            <li><a href="posts/power-bi-desktop-bridge-claude-edit-verify.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> Letting AI Author a Live Power BI Desktop Report Through the Desktop Bridge</a></li>
+                            <li><a href="posts/fabric-app-rayfin-semantic-model-analyzer.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> Building My First Fabric App with the Rayfin CLI to Analyze a Semantic Model</a></li>
+                            <li><a href="posts/translating-semantic-model-tmdl-korean.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> Translating a Semantic Model in TMDL</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="skill-card">
+                        <div class="skill-card-header">
+                            <div class="skill-card-icon" aria-hidden="true"><span class="material-symbols-outlined">functions</span></div>
+                            <h3>DAX and semantic model design</h3>
+                        </div>
+                        <p>DAX user-defined functions, calendar-based time intelligence, and storage mode decisions tested side by side.</p>
+                        <ul class="skill-card-posts" data-skill="dax-modeling">
+                            <li><a href="posts/direct-lake-vs-import-decision.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> Direct Lake vs Import: Building the Same Semantic Model Twice to Decide for Myself</a></li>
+                            <li><a href="posts/info-userdefinedfunctions-ishidden-preview-gap.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> INFO.USERDEFINEDFUNCTIONS and the isHidden Gap in DAX UDF Governance</a></li>
+                            <li><a href="posts/user-context-aware-calculated-columns-tmdl-not-rls.html"><span class="material-symbols-outlined" aria-hidden="true">article</span> User-Context-Aware Calculated Columns: A Dynamic Calculated Column Pattern, Not Row-Level Security</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Let's Talk -->
+            <section class="page-section talk-panel animate-in">
+                <h2 class="page-section-title">Let's talk, free of charge</h2>
+                <p class="page-section-text">I work full time at IKEA, so I don't sell consulting. I'm happy to help with a Power BI problem, talk at a user group or podcast, or build a tool together, free of charge.</p>
+                <div class="page-actions">
+                    <a href="https://www.linkedin.com/in/jihwankim1975/" target="_blank" rel="noopener" class="btn btn-primary">
+                        <span class="material-symbols-outlined" aria-hidden="true">chat</span> Message me on LinkedIn
+                    </a>
+                    <a href="tools.html" class="btn btn-outline">
+                        <span class="material-symbols-outlined" aria-hidden="true">forum</span> Ask about a tool
+                    </a>
+                </div>
+            </section>
+        </div>
     </main>
 
     <footer class="site-footer" id="site-footer"></footer>
 
     <script src="js/nav.js"></script>
     <script src="js/theme.js"></script>
+    <script src="js/blog-data.js"></script>
+    <script src="js/skills.js"></script>
 </body>
 </html>

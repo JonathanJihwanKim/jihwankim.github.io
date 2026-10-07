@@ -403,6 +403,35 @@
     color: var(--accent-300);
 }
 
+.site-footer .footer-talk {
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.site-footer .footer-talk a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, 0.4);
+    text-underline-offset: 3px;
+    transition: color var(--duration-fast), text-decoration-color var(--duration-fast);
+}
+
+.site-footer .footer-talk a:hover {
+    color: var(--accent-300);
+    text-decoration-color: var(--accent-300);
+}
+
+/* Outline button needs light text and border on the navy surface */
+.site-footer .btn-sponsor-outline {
+    color: rgba(255, 255, 255, 0.85);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.site-footer .btn-sponsor-outline:hover {
+    color: #ffffff;
+    border-color: var(--accent-300);
+    background: rgba(236, 4, 183, 0.14);
+}
+
 .footer-inner {
     display: flex;
     align-items: center;
@@ -426,6 +455,11 @@
 }
 
 .footer-tagline {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+}
+
+.footer-talk {
     font-size: var(--text-xs);
     color: var(--text-tertiary);
 }

@@ -918,6 +918,434 @@
 }
 
 /* ============================================
+   Page Sections (About and Support pages)
+   ============================================ */
+.page-section {
+    margin-bottom: var(--space-12);
+}
+
+.page-section:last-child {
+    margin-bottom: 0;
+}
+
+.page-section-title {
+    position: relative;
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 400;
+    line-height: var(--leading-snug);
+    color: var(--text-primary);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-2);
+}
+
+/* Short accent rule under section titles, as on article h2 */
+.page-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 48px;
+    height: 2px;
+    background: var(--accent-500);
+}
+
+.page-section-text {
+    max-width: var(--article-max);
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: var(--stone-700);
+}
+
+.page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+}
+
+.talk-panel {
+    padding: var(--space-8);
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+/* ============================================
+   About Page: Skills and Contact
+   ============================================ */
+.about-sections {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+.skill-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
+}
+
+.skill-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent-500);
+    border-radius: var(--radius-lg);
+    transition: box-shadow var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+}
+
+.skill-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+}
+
+.skill-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.skill-card-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    background: var(--accent-50);
+    color: var(--accent-500);
+}
+
+.skill-card-icon .material-symbols-outlined {
+    font-size: 20px;
+}
+
+.skill-card h3 {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: var(--leading-snug);
+    color: var(--text-primary);
+}
+
+.skill-card p {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--text-secondary);
+}
+
+/* Post links sit at the bottom so the lists line up across a row */
+.skill-card-posts {
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--border);
+}
+
+.skill-card-posts a {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-2) 0;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: var(--leading-snug);
+    color: var(--link);
+}
+
+.skill-card-posts a:hover {
+    color: var(--accent-600);
+}
+
+.skill-card-posts .material-symbols-outlined {
+    flex-shrink: 0;
+    font-size: 16px;
+    margin-top: 1px;
+    color: var(--accent-500);
+}
+
+/* Filled in by js/skills.js: the two most-read posts plus the newest one */
+.skill-post-title {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.skill-post-tag {
+    flex-shrink: 0;
+    margin-top: 1px;
+    padding: 0 var(--space-2);
+    border-radius: 999px;
+    background: var(--stone-100);
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    line-height: 1.6;
+    white-space: nowrap;
+}
+
+.skill-post-tag--new {
+    background: var(--fabric-50);
+    color: var(--fabric-800);
+}
+
+/* ============================================
+   Support Page (sponsors.html)
+   ============================================ */
+
+/* Partner sections stay hidden until js/nav.js removes the attribute */
+[data-partner-section][hidden] {
+    display: none !important;
+}
+
+.main-content [data-partner-section] {
+    margin-top: var(--space-16);
+}
+
+.support-page {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+.support-page > * {
+    max-width: 56rem;
+}
+
+.support-note {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+    padding: var(--space-6);
+    background: var(--bg-alt);
+    border-left: 4px solid var(--accent-500);
+    border-radius: var(--radius-md);
+}
+
+.support-note-photo {
+    flex-shrink: 0;
+    display: block;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--stone-100);
+    border: 3px solid var(--bg-elevated);
+    box-shadow: var(--shadow-md);
+}
+
+/* Crops the wide profile-1.jpg (607x448) to the face, same as .support-box-photo */
+.support-note-photo img {
+    display: block;
+    width: 253%;
+    max-width: none;
+    height: auto;
+    margin-left: -75%;
+}
+
+.support-note-text {
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    color: var(--stone-700);
+}
+
+.support-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
+    margin-bottom: var(--space-12);
+}
+
+.support-option {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    transition: box-shadow var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+}
+
+.support-option:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+}
+
+.support-option--primary {
+    border-top-color: var(--accent-500);
+}
+
+.support-option-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: var(--leading-snug);
+    color: var(--text-primary);
+}
+
+.support-option-text {
+    flex: 1;
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--text-secondary);
+}
+
+.support-option .btn {
+    align-self: flex-start;
+    margin-top: var(--space-2);
+}
+
+.support-help-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+}
+
+.support-help-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: border-color var(--duration-fast);
+}
+
+.support-help-item:hover {
+    border-color: var(--border-strong);
+}
+
+.support-help-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--accent-50);
+    color: var(--accent-500);
+}
+
+.support-help-icon .material-symbols-outlined {
+    font-size: 20px;
+}
+
+.support-help-item p {
+    flex: 1;
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--text-secondary);
+}
+
+.support-help-link {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--accent-600);
+}
+
+.support-help-link:hover {
+    color: var(--accent-700);
+}
+
+.support-help-link .material-symbols-outlined {
+    font-size: 16px;
+    transition: transform var(--duration-fast);
+}
+
+.support-help-link:hover .material-symbols-outlined {
+    transform: translateX(2px);
+}
+
+/* ============================================
+   About and Support Responsive
+   ============================================ */
+@media (max-width: 1024px) {
+    .support-page {
+        padding: 0 var(--space-5);
+    }
+}
+
+@media (max-width: 768px) {
+    .about-sections,
+    .support-page {
+        padding: 0 var(--space-4);
+    }
+
+    .page-section {
+        margin-bottom: var(--space-10);
+    }
+
+    .skill-grid,
+    .support-options,
+    .support-help-list {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+
+    .support-options {
+        margin-bottom: var(--space-10);
+    }
+
+    .skill-card,
+    .support-option {
+        padding: var(--space-5);
+    }
+
+    .talk-panel {
+        padding: var(--space-6);
+    }
+
+    .page-section-title {
+        font-size: var(--text-xl);
+    }
+}
+
+@media (max-width: 480px) {
+    .support-note {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-4);
+        padding: var(--space-5);
+    }
+
+    .support-note-photo {
+        width: 72px;
+        height: 72px;
+    }
+
+    .support-note-text {
+        font-size: var(--text-base);
+    }
+
+    .talk-panel {
+        padding: var(--space-5);
+    }
+
+    .page-actions {
+        flex-direction: column;
+    }
+
+    .page-actions .btn,
+    .support-option .btn {
+        align-self: stretch;
+        width: 100%;
+    }
+}
+
+/* ============================================
    Tools Page Styles
    ============================================ */
 .tools-grid {
@@ -1063,13 +1491,13 @@
     }
 
     .sidebar-sponsor-btn--primary {
-        background: var(--accent-500);
+        background: var(--accent-600);
         color: white;
         margin-bottom: var(--space-2);
     }
 
     .sidebar-sponsor-btn--primary:hover {
-        background: var(--accent-600);
+        background: var(--accent-700);
     }
 
     .sidebar-sponsor-btn--outline {

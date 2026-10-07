@@ -1,6 +1,10 @@
 /**
  * blog-data.js - Posts data, rendering, search, pagination, and tag filtering
- * Used on the homepage (index.html) only.
+ * Used on the homepage (index.html). about.html also loads it for the post data
+ * (window.blogPosts), which js/skills.js reads.
+ *
+ * skill: the one "What I'm good at" category on about.html a post belongs to:
+ * "pbir-tmdl", "git-devops", "ai-authoring", or "dax-modeling". Guest posts have none.
  */
 (function () {
     'use strict';
@@ -15,6 +19,7 @@
             sortDate: "2026-10-03",
             tags: ["Power BI", "TMDL", "PBIR", "DevOps", "AI"],
             url: "posts/translating-semantic-model-tmdl-korean.html",
+            skill: "ai-authoring",
             featuredImage: "images/blog/translating-semantic-model-tmdl-korean/featured.png",
             readingTime: "15 min read",
             difficulty: "Intermediate"
@@ -27,6 +32,7 @@
             sortDate: "2026-09-20",
             tags: ["Power BI", "PBIR", "TMDL", "DevOps"],
             url: "posts/pbip-external-edits-apply-in-desktop.html",
+            skill: "pbir-tmdl",
             featuredImage: "images/blog/pbip-external-edits-apply-in-desktop/featured.png",
             readingTime: "11 min read",
             difficulty: "Intermediate"
@@ -39,6 +45,7 @@
             sortDate: "2026-09-12",
             tags: ["Power BI", "PBIR", "DevOps", "TMDL"],
             url: "posts/team-rules-pull-request-check-pbir.html",
+            skill: "git-devops",
             featuredImage: "images/blog/team-rules-pull-request-check-pbir/featured.png",
             readingTime: "15 min read",
             difficulty: "Intermediate"
@@ -51,6 +58,7 @@
             sortDate: "2026-08-09",
             tags: ["Power BI", "PBIR", "Git", "DevOps"],
             url: "posts/pbir-object-names-renaming.html",
+            skill: "pbir-tmdl",
             featuredImage: "images/blog/pbir-object-names-renaming/featured.png",
             readingTime: "8 min read",
             difficulty: "Intermediate"
@@ -63,6 +71,7 @@
             sortDate: "2026-07-25",
             tags: ["Power BI", "TMDL", "Git", "DevOps"],
             url: "posts/tmdl-view-on-the-web.html",
+            skill: "git-devops",
             featuredImage: "images/blog/tmdl-view-on-the-web/featured.png",
             readingTime: "7 min read",
             difficulty: "Intermediate"
@@ -75,6 +84,7 @@
             sortDate: "2026-07-19",
             tags: ["Power BI", "Direct Lake", "TMDL", "DAX", "DevOps"],
             url: "posts/direct-lake-vs-import-decision.html",
+            skill: "dax-modeling",
             featuredImage: "images/blog/direct-lake-vs-import-decision/featured.png",
             readingTime: "7 min read",
             difficulty: "Intermediate"
@@ -87,6 +97,7 @@
             sortDate: "2026-07-04",
             tags: ["Power BI", "Direct Lake", "TMDL", "DevOps", "AI"],
             url: "posts/direct-lake-calculated-columns-where-they-live.html",
+            skill: "ai-authoring",
             featuredImage: "images/blog/direct-lake-calculated-columns-where-they-live/featured.png",
             readingTime: "11 min read",
             difficulty: "Intermediate"
@@ -99,6 +110,7 @@
             sortDate: "2026-06-28",
             tags: ["Power BI", "PBIR", "DevOps", "AI"],
             url: "posts/power-bi-desktop-bridge-claude-edit-verify.html",
+            skill: "ai-authoring",
             featuredImage: "images/blog/power-bi-desktop-bridge-claude-edit-verify/featured.png",
             readingTime: "10 min read",
             difficulty: "Intermediate"
@@ -109,8 +121,9 @@
             preview: "Fabric Apps and the Rayfin CLI entered preview at Microsoft Build 2026. I built my first Fabric App, a Semantic Model Analyzer that reads the metadata, relationships, and DAX measures of a model in my workspace. Scaffolded with npm create rayfin, planned and coded with Claude, run locally on Vite, and shipped to the tenant with npx rayfin up, governed by Fabric SSO and OneLake from day one.",
             date: "June 14, 2026",
             sortDate: "2026-06-14",
-            tags: ["Microsoft Fabric", "Fabric Apps", "Power BI", "DevOps"],
+            tags: ["Fabric", "Fabric Apps", "Power BI", "DevOps"],
             url: "posts/fabric-app-rayfin-semantic-model-analyzer.html",
+            skill: "ai-authoring",
             featuredImage: "images/blog/fabric-app-rayfin-semantic-model-analyzer/featured.png",
             readingTime: "9 min read",
             difficulty: "Intermediate"
@@ -123,6 +136,7 @@
             sortDate: "2026-05-31",
             tags: ["Power BI", "PBIR", "TMDL", "DevOps"],
             url: "posts/exploration-perspectives-tmdl.html",
+            skill: "pbir-tmdl",
             featuredImage: "images/blog/exploration-perspectives-tmdl/featured.png",
             readingTime: "9 min read",
             difficulty: "Intermediate"
@@ -135,6 +149,7 @@
             sortDate: "2026-05-22",
             tags: ["Power BI", "PBIR", "DAX", "DevOps"],
             url: "posts/visual-calculations-ga-pbir.html",
+            skill: "pbir-tmdl",
             featuredImage: "images/blog/visual-calculations-ga-pbir/featured.png",
             readingTime: "10 min read",
             difficulty: "Intermediate"
@@ -165,6 +180,7 @@
             sortDate: "2026-05-09",
             tags: ["Power BI", "TMDL", "DAX", "DevOps"],
             url: "posts/user-context-aware-calculated-columns-tmdl-not-rls.html",
+            skill: "dax-modeling",
             featuredImage: "images/blog/user-context-aware-calculated-columns-tmdl-not-rls/featured.png",
             readingTime: "8 min read",
             difficulty: "Intermediate"
@@ -177,6 +193,7 @@
             sortDate: "2026-05-03",
             tags: ["PBIP", "TMDL", "Git", "DevOps", "Power BI"],
             url: "posts/tmdl-merge-conflict-experiment.html",
+            skill: "git-devops",
             featuredImage: "images/blog/tmdl-merge-conflict-experiment/featured.png",
             readingTime: "9 min read",
             difficulty: "Intermediate"
@@ -189,6 +206,7 @@
             sortDate: "2026-04-26",
             tags: ["DAX", "Power BI", "TMDL", "DevOps"],
             url: "posts/info-userdefinedfunctions-ishidden-preview-gap.html",
+            skill: "dax-modeling",
             featuredImage: "images/blog/info-userdefinedfunctions-ishidden-preview-gap/featured.png",
             readingTime: "6 min read",
             difficulty: "Intermediate"
@@ -201,6 +219,7 @@
             sortDate: "2026-04-13",
             tags: ["Power BI", "AI", "TMDL", "DevOps"],
             url: "posts/prep-data-for-ai-semantic-model-quality.html",
+            skill: "ai-authoring",
             featuredImage: "images/blog/prep-data-for-ai/prep-data-ai-cover.png",
             readingTime: "8 min read",
             difficulty: "Intermediate"
@@ -213,6 +232,7 @@
             sortDate: "2026-04-06",
             tags: ["DAX", "Power BI", "TMDL"],
             url: "posts/calendar-based-time-intelligence-year-week.html",
+            skill: "dax-modeling",
             featuredImage: "images/blog/calendar-time-intelligence/featured.png",
             readingTime: "10 min read",
             difficulty: "Intermediate"
@@ -225,6 +245,7 @@
             sortDate: "2026-03-29",
             tags: ["Fabric", "Git", "DevOps"],
             url: "posts/fabric-selective-branching-git-workspace.html",
+            skill: "git-devops",
             featuredImage: "images/blog/fabric-selective-branching/featured.png",
             readingTime: "7 min read",
             difficulty: "Intermediate"
@@ -237,6 +258,7 @@
             sortDate: "2026-03-21",
             tags: ["Power BI", "PBIR", "Open Source", "TMDL"],
             url: "posts/pbip-lineage-explorer-tracing-visuals-to-source.html",
+            skill: "pbir-tmdl",
             featuredImage: "images/blog/pbip-lineage-explorer/featured.png",
             readingTime: "14 min read",
             difficulty: "Advanced"
@@ -249,6 +271,7 @@
             sortDate: "2026-03-07",
             tags: ["Power BI", "PBIR", "AI", "Open Source"],
             url: "posts/pbir-json-hidden-gaps-field-parameters.html",
+            skill: "pbir-tmdl",
             featuredImage: "images/blog/pbir-json-hidden-gaps/featured.png",
             readingTime: "10 min read",
             difficulty: "Intermediate"
@@ -261,6 +284,7 @@
             sortDate: "2026-02-14",
             tags: ["Power BI", "PBIR", "DevOps", "TMDL"],
             url: "posts/pbir-visual-json-field-parameters.html",
+            skill: "pbir-tmdl",
             featuredImage: "images/blog/pbir-visual-json-field-parameters/featured.png",
             readingTime: "15 min read",
             difficulty: "Advanced"
@@ -273,6 +297,7 @@
             sortDate: "2026-02-01",
             tags: ["Power BI", "PBIR", "DevOps"],
             url: "posts/pbir-edit-interactions.html",
+            skill: "pbir-tmdl",
             featuredImage: "images/blog/pbir-edit-interactions/featured.png",
             readingTime: "11 min read",
             difficulty: "Intermediate"
@@ -285,6 +310,7 @@
             sortDate: "2026-01-25",
             tags: ["Power BI", "PBIR", "DevOps"],
             url: "posts/pbir-filter-layer-order.html",
+            skill: "pbir-tmdl",
             featuredImage: "images/blog/pbir-filter-layer-order/featured.png",
             readingTime: "10 min read",
             difficulty: "Intermediate"
@@ -297,6 +323,7 @@
             sortDate: "2026-01-17",
             tags: ["Power BI", "Fabric", "Direct Lake"],
             url: "posts/building-hybrid-semantic-models-tabular-editor.html",
+            skill: "dax-modeling",
             featuredImage: "images/blog/hybrid-semantic-models/featured.png",
             readingTime: "14 min read",
             difficulty: "Advanced"
@@ -309,6 +336,7 @@
             sortDate: "2026-01-11",
             tags: ["DAX", "Power BI", "UDF"],
             url: "posts/building-portable-time-intelligence-library-dax-udf.html",
+            skill: "dax-modeling",
             featuredImage: "images/blog/dax-udf/featured.png",
             readingTime: "11 min read",
             difficulty: "Intermediate"
@@ -317,6 +345,22 @@
 
     // Expose globally for search overlay (used by theme.js)
     window.blogPosts = posts;
+
+    // --- Hero: post count and latest post link ---
+    // Guest posts are not counted as my own tested write-ups
+    var statPosts = document.getElementById('stat-posts');
+    if (statPosts) {
+        var ownPostCount = posts.filter(function (post) {
+            return !(post.author && post.author.isGuest);
+        }).length;
+        statPosts.textContent = String(ownPostCount);
+    }
+
+    // posts[0] is the newest post
+    var ctaLatest = document.getElementById('cta-latest');
+    if (ctaLatest && posts.length > 0) {
+        ctaLatest.href = posts[0].url;
+    }
 
     var postsContainer = document.getElementById('posts-container');
     var noResults = document.getElementById('no-results');

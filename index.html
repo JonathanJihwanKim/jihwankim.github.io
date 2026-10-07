@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Deep technical writing on Power BI, PBIR, DAX, and Microsoft Fabric by Jihwan Kim — Microsoft MVP, Senior Power BI Architect.">
+    <meta name="description" content="Power BI as code, tested on a real model. PBIR, TMDL, DAX, Git, and AI experiments by Jihwan Kim, Microsoft MVP, plus five free open-source Power BI tools.">
     <meta name="keywords" content="Power BI, Microsoft Fabric, PBIR, DAX, TMDL, MVP, Data Analytics, DevOps">
     <meta name="author" content="Jihwan Kim">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:title" content="Jihwan Kim — Power BI & Fabric Technical Blog">
-    <meta property="og:description" content="Deep technical writing on Power BI, PBIR, DAX, and Microsoft Fabric for expert developers.">
+    <meta property="og:description" content="Power BI as code, tested on a real model. PBIR, TMDL, DAX, Git, and AI experiments by Jihwan Kim, Microsoft MVP, plus five free open-source Power BI tools.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://powerbimvp.com">
+    <meta property="og:image" content="https://powerbimvp.com/images/profile-1.jpg">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Jihwan Kim — Power BI & Fabric Technical Blog">
-    <meta name="twitter:description" content="Deep technical writing on Power BI, PBIR, DAX, and Microsoft Fabric for expert developers.">
+    <meta name="twitter:description" content="Power BI as code, tested on a real model. PBIR, TMDL, DAX, Git, and AI experiments by Jihwan Kim, Microsoft MVP, plus five free open-source Power BI tools.">
     <title>Jihwan Kim | Power BI & Microsoft Fabric Blog</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
@@ -28,14 +29,39 @@
 
     <main class="main-content" id="main">
         <!-- Blog Intro -->
-        <section class="blog-intro animate-in">
-            <h1 class="blog-tagline">Deep dives into <span class="brand-powerbi">Power BI</span>, PBIR, DAX, and <span class="brand-microsoft">Microsoft</span> <span class="brand-fabric">Fabric</span></h1>
-            <p class="blog-author-line">By <strong>Jihwan Kim</strong> &mdash; Microsoft MVP, Senior Power BI Architect, Microsoft Fabric Community Super User</p>
-            <p class="blog-visitor-count" id="site-visitor-count">
-                <span class="material-symbols-outlined">visibility</span>
-                <span id="visitor-count-number">&mdash;</span> visitors
-                <span class="counter-since">counter started Mar. 22, 2026</span>
-            </p>
+        <section class="blog-intro blog-intro--home animate-in">
+            <p class="hero-eyebrow">Microsoft MVP since 2022 &middot; Senior Power BI Architect at IKEA &middot; Microsoft Fabric Community Super User since 2021</p>
+            <h1 class="blog-tagline"><span class="brand-powerbi">Power BI</span> as code, tested on my own model</h1>
+            <p class="hero-sub">I run PBIR, TMDL, DAX, Git, and AI experiments on a real semantic model and write up what happened, screenshot by screenshot. The tools I build along the way are free and open source.</p>
+
+            <!-- Fact strip: blog-data.js keeps the post count current, counter.js fills the visitors -->
+            <ul class="hero-facts">
+                <li class="hero-fact">
+                    <span class="material-symbols-outlined" aria-hidden="true">article</span>
+                    <span><strong id="stat-posts">24</strong> tested write-ups</span>
+                </li>
+                <li class="hero-fact">
+                    <span class="material-symbols-outlined" aria-hidden="true">build</span>
+                    <a href="tools.html"><strong>5</strong> free open-source tools</a>
+                </li>
+                <li class="hero-fact">
+                    <span class="material-symbols-outlined" aria-hidden="true">forum</span>
+                    <a href="https://community.fabric.microsoft.com/users/jihwan_kim/291628" target="_blank" rel="noopener"><strong>2,700+</strong> community solutions</a>
+                </li>
+                <li class="hero-fact" id="site-visitor-count">
+                    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                    <span><strong id="visitor-count-number">&mdash;</strong> visitors</span>
+                    <span class="counter-since">counter started Mar. 22, 2026</span>
+                </li>
+            </ul>
+
+            <div class="hero-actions">
+                <a href="#posts-container" id="cta-latest" class="btn btn-primary">
+                    Read the latest post <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                </a>
+                <a href="tools.html" class="btn btn-outline">Try the free tools</a>
+            </div>
+            <p class="hero-talk">Free to talk: <a href="https://www.linkedin.com/in/jihwankim1975/" target="_blank" rel="noopener">message me on LinkedIn</a></p>
         </section>
 
         <!-- Tag Filter Bar -->
@@ -43,9 +69,13 @@
             <button class="tag-pill active" data-tag="all">All</button>
             <button class="tag-pill" data-tag="Power BI">Power BI</button>
             <button class="tag-pill" data-tag="PBIR">PBIR</button>
+            <button class="tag-pill" data-tag="TMDL">TMDL</button>
             <button class="tag-pill" data-tag="DAX">DAX</button>
             <button class="tag-pill" data-tag="Fabric">Fabric</button>
+            <button class="tag-pill" data-tag="Direct Lake">Direct Lake</button>
+            <button class="tag-pill" data-tag="Git">Git</button>
             <button class="tag-pill" data-tag="DevOps">DevOps</button>
+            <button class="tag-pill" data-tag="AI">AI</button>
         </div>
 
         <!-- Posts Grid -->
