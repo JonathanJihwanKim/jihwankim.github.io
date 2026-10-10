@@ -12,6 +12,19 @@
     // Blog posts data - newest first
     var posts = [
         {
+            id: 26,
+            title: "Three Slashes Write a Measure Description in DAX Query View, but Deleting Them Does Not Erase It",
+            preview: "Microsoft Learn now documents measure descriptions in DAX query view, so I added two lines starting with three slashes above one measure and watched Update model with changes write them into _Measures.tmdl. Then I deleted the lines, and later turned them into ordinary comments, and both times the button stayed greyed out and saving changed only a .dax query file. The description stayed in the model. AI then wrote descriptions for the rest of the measures through the TMDL file, and I read every line before I kept them.",
+            date: "October 10, 2026",
+            sortDate: "2026-10-10",
+            tags: ["Power BI", "TMDL", "DAX", "DevOps", "AI"],
+            url: "posts/dax-query-view-measure-descriptions.html",
+            skill: "pbir-tmdl",
+            featuredImage: "images/blog/dax-query-view-measure-descriptions/featured.png",
+            readingTime: "12 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 25,
             title: "Translating a Semantic Model in TMDL: Fixing the Field Parameter Labels Together with AI While I Govern Every Change",
             preview: "I added Korean and Dutch to my Contoso semantic model by writing culture files in TMDL view, and once my browser asked for those languages, the Power BI service showed them without a single report file changing. The field parameter labels stayed in English, because they are values typed into DAX, not names in the model. Together with AI, I fixed them with a hidden culture column, one measure, and two hidden filters, and I checked each piece in Desktop before I committed it.",

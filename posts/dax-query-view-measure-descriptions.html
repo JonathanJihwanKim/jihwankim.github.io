@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="I added two lines starting with three slashes above one measure in DAX query view, and Update model with changes wrote them into my semantic model as a description. Deleting those lines, or turning them into ordinary comments, changed only a .dax query file in my PBIP and left the description in _Measures.tmdl. Then AI described the rest of the measures through the TMDL file, and I checked every line.">
+    <meta name="keywords" content="Power BI, DAX query view, measure descriptions, triple slash, TMDL, INFO.MEASURES, PBIP, Direct Lake, remote modeling, Power BI Desktop Bridge, Git, DevOps, Claude Code">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="Three Slashes Write a Measure Description in DAX Query View, but Deleting Them Does Not Erase It | Jihwan Kim">
+    <meta property="og:description" content="Two lines with three slashes wrote a description into my model from DAX query view. Deleting them, or turning them into comments, changed only a .dax file in my PBIP, and the description stayed in _Measures.tmdl.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/dax-query-view-measure-descriptions.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/dax-query-view-measure-descriptions/featured.png">
+    <meta property="og:image:alt" content="A mosaic illustration in two panels. On the left, three solid cream slashes cross a field of dark blue tiles. On the right, the same three slashes remain only as orange outlines on teal tiles, suggesting that the description three slashes wrote stays in the model after the slashes themselves are gone">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Three Slashes Write a Measure Description in DAX Query View, but Deleting Them Does Not Erase It">
+    <meta name="twitter:description" content="Two lines with three slashes wrote a description into my model from DAX query view. Deleting them, or turning them into comments, changed only a .dax file in my PBIP, and the description stayed in _Measures.tmdl.">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/dax-query-view-measure-descriptions/featured.png">
+    <meta name="twitter:image:alt" content="A mosaic illustration in two panels. On the left, three solid cream slashes cross a field of dark blue tiles. On the right, the same three slashes remain only as orange outlines on teal tiles, suggesting that the description three slashes wrote stays in the model after the slashes themselves are gone">
+
+    <title>Three Slashes Write a Measure Description in DAX Query View, but Deleting Them Does Not Erase It | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 12 min read</span>
+                </div>
+                <h1 class="article-title">Three Slashes Write a Measure Description in DAX Query View, but Deleting Them Does Not Erase It</h1>
+                <div class="article-meta">
+                    <time datetime="2026-10-10">
+                        <span class="material-symbols-outlined">calendar_month</span> October 10, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="Power BI">Power BI</span>
+                        <span class="tag" data-tag="TMDL">TMDL</span>
+                        <span class="tag" data-tag="DAX">DAX</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                        <span class="tag" data-tag="AI">AI</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started October 10, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/dax-query-view-measure-descriptions/featured.png" alt="A mosaic illustration in two panels. On the left, three solid cream slashes cross a field of dark blue tiles. On the right, the same three slashes remain only as orange outlines on teal tiles, suggesting that the description three slashes wrote stays in the model after the slashes themselves are gone">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how two lines starting with three slashes wrote a description into a measure from DAX query view, and how deleting the same two lines left that description exactly where it was.</p>
+
+                <p>My plan was simple. Microsoft Learn now documents measure descriptions in DAX query view, and I expected the <code>///</code> lines to behave like a switch: type them to add a description, delete them to take it away. Fifteen of the sixteen measures in my model had no description at all, so I wanted to learn the syntax on one measure, follow it into the TMDL files and Git, and then let AI write the rest. Adding worked the first time. Taking it away did not work at all, and that is the part I want to write about.</p>
+
+                <h2>1. Fifteen Measures Without a Description</h2>
+
+                <p>I ran everything in Power BI Desktop version 2.158.1304.0, the September 2026 release.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/power-bi-desktop-version-september-2026.png" alt="The About dialog of Microsoft Power BI Desktop showing Version: 2.158.1304.0 64-bit (September 2026), with a red arrow pointing at the version line" loading="lazy">
+
+                <p>The model is <code>directlake_import_composite</code>, the composite model behind my <code>contoso_project</code> report, part Direct Lake and part import. As in my last post, I was live editing it from Power BI Desktop with the project saved as a PBIP, and VS Code and Git were open on the same folder. All sixteen measures live in one table, <code>_Measures</code>, in display folders named Base, Helpers, Prior Year, and YoY.</p>
+
+                <p>Before changing anything, I asked the model which measures had no description. <code>INFO.MEASURES()</code> returns one row per measure with a <code>[Description]</code> column, so a filter on that column is the whole query.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/info-measures-blank-description-fifteen.png" alt="DAX query view in Power BI Desktop running the FILTER over INFO.MEASURES query, with the Description column highlighted and empty for all 15 returned rows, from Sales Amount and Total Cost down to the last of the YoY measures, and the status bar reading 20 columns, 15 rows" loading="lazy">
+
+                <p>Fifteen rows, and every one of them has <code>False</code> in <code>[IsHidden]</code>. The sixteenth measure, <code>Last Sales Date</code>, is a hidden helper that already had a description, and it comes back later in this post. Every visible measure in the model had an empty description.</p>
+
+                <h2>2. What the Documentation Says About Three Slashes</h2>
+
+                <p>The <strong>Add measure descriptions</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/dax-query-view?wt.mc_id=DP-MVP-5004989#add-measure-descriptions" target="_blank" rel="noopener">DAX Query View article</a> describes the feature in three steps: add one or more <code>///</code> comment lines directly above the <code>MEASURE</code> definition, select <strong>Update model with changes</strong>, and the description is saved to the model along with the measure definition. The same section says the triple slash is the syntax TMDL already supports for measure and function descriptions.</p>
+
+                <p>That made it familiar. In the <strong>Descriptions</strong> section of the <a href="https://learn.microsoft.com/en-us/analysis-services/tmdl/tmdl-overview?wt.mc_id=DP-MVP-5004989#descriptions" target="_blank" rel="noopener">Tabular Model Definition Language (TMDL) article</a>, descriptions are written on top of each object declaration with triple slashes, and no whitespace is allowed between the end of the description block and the object type token. I had already put three slashes above a <code>FUNCTION</code> in DAX query view when I wrote <a href="building-portable-time-intelligence-library-dax-udf.html" target="_blank" rel="noopener">Building a Portable Time Intelligence Library with DAX User-Defined Functions</a>. This time the target was a measure.</p>
+
+                <h2>3. Two Lines Above Sales Amount</h2>
+
+                <p>I started from the Data pane. Right-clicking <code>Sales Amount</code> and choosing <strong>Quick queries</strong> and then <strong>Define and evaluate</strong> opened a new query tab with the measure's formula in a <code>DEFINE</code> block.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/quick-queries-define-and-evaluate-sales-amount.png" alt="The Data pane with the _Measures table and its Base folder expanded, the context menu of the Sales Amount measure open on Quick queries, and the submenu with Define and evaluate highlighted" loading="lazy">
+
+                <p>I added two lines above <code>MEASURE</code> and did not touch the formula. Two things changed on screen as soon as I typed them. A CodeLens line, <strong>Update model: Overwrite measure</strong>, appeared above <code>MEASURE</code>, and the button in the command bar became <strong>Update model with changes (1)</strong>.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/two-description-lines-codelens-overwrite.png" alt="DAX query view with a DEFINE block holding two new lines, this is the first line of description and this is the second line of description, each starting with three slashes, the CodeLens text Update model: Overwrite measure above the unchanged Sales Amount formula, and the Update model with changes (1) button highlighted" loading="lazy">
+
+                <p>That surprised me a little. The <strong>Update model measures using CodeLens</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/dax-query-view?wt.mc_id=DP-MVP-5004989#update-model-measures-using-codelens" target="_blank" rel="noopener">DAX Query View article</a> says the overwrite CodeLens appears for a measure already in the model when the formula in the query is different. My formula was exactly what Define and evaluate had generated. The two description lines alone were enough to count as a change.</p>
+
+                <p>I clicked the button, and Desktop asked me to confirm.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/update-model-are-you-sure-dialog.png" alt="An Are you sure? dialog over DAX query view saying This change can only be undone with additional edits (you can't use CTRL+Z), with the Update model button highlighted next to Cancel, and three query tabs named Query 1, Query 2, and Query 3 at the bottom" loading="lazy">
+
+                <p><em>This change can only be undone with additional edits (you can't use CTRL+Z).</em> That warning fits how I was working. In the <strong>Power BI Project (PBIP)</strong> section of the <a href="https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-power-bi-desktop?wt.mc_id=DP-MVP-5004989#power-bi-project-pbip" target="_blank" rel="noopener">Learn About Editing Semantic Models in Direct Lake in Power BI Desktop article</a>, remote modeling is live editing: every change is applied to the semantic model in the workspace immediately, and saving the local PBIP files is a separate step. The <strong>Saving</strong> section, two headings earlier in the same article, says there is no undo action as you make changes, and points to local Git techniques instead. So <strong>Update model</strong> wrote my two lines into the workspace model, and nothing had reached my disk yet.</p>
+
+                <p>The button went back to (0), and I saved the project.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/saved-after-update-model.png" alt="The Power BI Desktop title bar reading contoso_project, Last saved: Today at 5:15 AM (Power BI Project), above DAX query view with the two description lines still in the query and the Update model with changes (0) button greyed out" loading="lazy">
+
+                <h2>4. Six Changed Files for Two Lines of Text</h2>
+
+                <p>VS Code listed six changed files under the semantic model folder.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/vscode-six-changes-query-3-dax.png" alt="The VS Code Source Control pane with six changes: Query 1.dax, Query 2.dax, Query 3.dax, and daxQueries.json marked U, and model.tmdl and _Measures.tmdl marked M, with Query 3.dax open from the DAXQueries folder showing the same DEFINE block and two description lines" loading="lazy">
+
+                <p>Four were new and untracked: <code>Query 1.dax</code>, <code>Query 2.dax</code>, and <code>Query 3.dax</code> in a <code>DAXQueries</code> folder, plus a <code>daxQueries.json</code>. Each open query tab became a file, and <code>Query 3.dax</code> holds the tab I had just used, description lines included. This one is easy to miss in the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/dax-query-view?wt.mc_id=DP-MVP-5004989#saving-of-dax-queries" target="_blank" rel="noopener">DAX Query View article</a>, because it sits in a small heading, <strong>Saving of DAX queries</strong>, under <strong>Query tabs</strong> in the <strong>DAX query view layout</strong> section. It says that if you use developer mode to save a Power BI project, each query tab is included as a <code>.dax</code> file in the <code>DAXQueries</code> folder of the semantic model folder.</p>
+
+                <p>That took me a moment, because a banner across the top of DAX query view had said <em>DAX queries are discarded on close</em> the whole time. The <strong>DAX query view</strong> section of the <a href="https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-power-bi-desktop?wt.mc_id=DP-MVP-5004989#dax-query-view" target="_blank" rel="noopener">Learn About Editing Semantic Models in Direct Lake in Power BI Desktop article</a> settles it: the DAX queries aren't saved unless you're live editing with a Power BI Project (PBIP). I was, so they were.</p>
+
+                <p>The fifth file was <code>model.tmdl</code>, with one changed line.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/vscode-model-tmdl-daxqueryview-desktop.png" alt="The model.tmdl diff in VS Code where line 14, the PBI_ProTooling annotation listing DirectLakeOnOneLakeInWeb, WebModelingEdit, DevMode, RemoteModeling, CalcGroup, and TMDLView_Desktop, gains one more value at the end, DaxQueryView_Desktop, highlighted in orange" loading="lazy">
+
+                <p>The <code>PBI_ProTooling</code> annotation gained <code>"DaxQueryView_Desktop"</code> at the end of its list. In <a href="tmdl-view-on-the-web.html" target="_blank" rel="noopener">TMDL View on the Web</a> I watched the same annotation gain <code>"TMDLView_Desktop"</code>, and what I wrote then still holds: I have not found Microsoft documentation for this annotation, so I read it as a record of which tools have touched the model, not as a model change.</p>
+
+                <p>The sixth file carried the meaning. <code>_Measures.tmdl</code> gained exactly my two lines, directly above the measure they describe.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/vscode-measures-tmdl-two-description-lines.png" alt="The _Measures.tmdl diff in VS Code with two added lines, this is the first line of description and this is the second line of description, highlighted in green and marked with orange arrows directly above measure 'Sales Amount', which is boxed in orange" loading="lazy">
+
+                <h2>5. Deleting the Lines Changed Only the Query File</h2>
+
+                <p>Then I tried to take the description away. In the same query tab, I deleted both lines and left the formula as it was.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/description-lines-deleted-update-greyed.png" alt="DAX query view with lines 2 and 3 of the DEFINE block now empty above the Sales Amount measure, no CodeLens text, and the Update model with changes (0) button greyed out, marked with an orange arrow" loading="lazy">
+
+                <p>No CodeLens appeared, and <strong>Update model with changes (0)</strong> stayed greyed out. There was nothing to click, so I saved the project and looked at Git.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/vscode-query-3-dax-only-change-after-delete.png" alt="The VS Code Source Control pane with a single change, Query 3.dax marked M, and its diff showing the two description lines removed on the left and two empty lines on the right" loading="lazy">
+
+                <p>One changed file, <code>Query 3.dax</code>, where the two lines had become two empty lines. <code>_Measures.tmdl</code> was not in the list, and when I opened it, the description was still there.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/vscode-measures-tmdl-description-still-there.png" alt="_Measures.tmdl open in VS Code with the two description lines still above measure Sales Amount on lines 4 and 5, the Last Sales Date measure further down with its own description line, and the Timeline panel showing the commit add description to sales amount measure" loading="lazy">
+
+                <p>The <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/dax-query-view?wt.mc_id=DP-MVP-5004989#dax-queries" target="_blank" rel="noopener">DAX Query View article</a> explains this once I read three of its sections together. The <strong>DAX queries</strong> section, the first one in the article, says measures in a <code>DEFINE MEASURE</code> block are DAX query scoped measures, running only in the context of the query, and that they reach the model only through the CodeLens or the <strong>Update model with changes</strong> button. Further down, under <strong>DAX query editor</strong>, the <strong>Update model measures using CodeLens</strong> part ties the overwrite action to a formula that is different, and mine was the same. Right after it, <strong>Add measure descriptions</strong> describes adding <code>///</code> lines and says nothing about removing them.</p>
+
+                <p>So deleting the lines changed the query, not the model, and saving wrote the query to <code>Query 3.dax</code>, the same <strong>Saving of DAX queries</strong> behavior from section 4. My reading of the rest is that an empty space above <code>MEASURE</code> does not mean an empty description. Without <code>///</code>, the query says nothing about the description at all, so Desktop has nothing to compare. That is my interpretation of what I saw, not something the article states.</p>
+
+                <h2>6. Two Slashes Are Only a Comment</h2>
+
+                <p>I wanted to rule out one more possibility. Maybe Desktop needed some text above the measure before it would replace the old description, so I typed two new lines with two slashes instead of three.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/two-slash-lines-update-greyed.png" alt="DAX query view with two comment lines starting with two slashes, adding description again with two slashes and adding description again second line, above the Sales Amount measure, and the Update model with changes (0) button greyed out and highlighted" loading="lazy">
+
+                <p>The button stayed at (0). I saved again, and Git showed the same pattern: <code>Query 3.dax</code> went from two empty lines to two comment lines, and <code>_Measures.tmdl</code> still held the original description.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/vscode-query-3-dax-two-slash-diff.png" alt="The VS Code Source Control pane with only Query 3.dax changed, and its diff showing two empty lines on the left replaced by the two comment lines starting with two slashes on the right" loading="lazy">
+
+                <p>This one has a direct answer in the <strong>Comment and uncomment</strong> part of the <strong>Ribbon</strong> section in the <a href="https://learn.microsoft.com/en-us/power-bi/transform-model/dax-query-view?wt.mc_id=DP-MVP-5004989#comment-and-uncomment" target="_blank" rel="noopener">DAX Query View article</a>: two slashes comment out a line, and when the query runs, those lines are ignored. To DAX query view, my two new lines were not a description of anything.</p>
+
+                <p>That gave me the rule I took from the first half of the experiment. <strong>In DAX query view, three slashes can write a description, but taking them away is not an instruction to clear it.</strong></p>
+
+                <p>Running the first query again showed where the model stood: fourteen measures without a description, and <code>Sales Amount</code> no longer among them.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/info-measures-blank-description-fourteen.png" alt="The same FILTER over INFO.MEASURES query run again, now returning 14 rows starting with Total Cost, with Sales Amount gone from the list and the Description column still empty for every row" loading="lazy">
+
+                <h2>7. Letting AI Describe the Rest</h2>
+
+                <p>Writing fourteen descriptions in DAX query view would have meant fourteen <strong>Define and evaluate</strong> tabs, or one long one. I took the file route instead and asked Claude Code in VS Code. The text in the screenshot is small, so here is the prompt as I typed it:</p>
+
+                <p><em>In this project, check how I experimented adding descriptions to dax measures in the folder C:\01 Git Project\contoso_project\directlake_import_composite.SemanticModel</em></p>
+
+                <p><em>Plan to add brief and intuitive description to all measures in the folder C:\01 Git Project\contoso_project\directlake_import_composite.SemanticModel</em></p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/claude-code-prompt-describe-all-measures.png" alt="VS Code with _Measures.tmdl open next to a Claude Code panel whose prompt asks it to check how I experimented adding descriptions to DAX measures in the directlake_import_composite.SemanticModel folder and to plan brief and intuitive descriptions for all measures in that folder, with Plan mode selected" loading="lazy">
+
+                <p>It wrote the descriptions straight into <code>_Measures.tmdl</code>, one <code>///</code> line above each measure, without going through DAX query view at all.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/vscode-measures-tmdl-ai-descriptions.png" alt="_Measures.tmdl marked M in VS Code with new single description lines on lines 22, 28, 34, 47, and 59 above Gross Margin %, Total Quantity, Order Count, Sales Amount PY, and Gross Margin PY, each marked with a green change bar, while the Last Sales Date description on line 40 has no change bar" loading="lazy">
+
+                <p>I read the diff before anything else. Every added line started with three slashes, no formula line changed, and <code>Last Sales Date</code> kept its original text. It also replaced my two test lines on <code>Sales Amount</code> with a real sentence, so fifteen measures got new text, and the file was able to change a description that DAX query view could not clear. I kept every description as written.</p>
+
+                <p>A file edited on disk still has to reach the open Desktop session, and through it the workspace model. The <strong>Apply external changes by using the Power BI Desktop Bridge</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-external-editing?wt.mc_id=DP-MVP-5004989#apply-external-changes-by-using-the-power-bi-desktop-bridge" target="_blank" rel="noopener">Edit Power BI Desktop project files outside Power BI Desktop article</a> says external changes can also be applied programmatically by using the Power BI Desktop Bridge, and that is how these arrived. I wrote about the banner version of the same step in <a href="pbip-external-edits-apply-in-desktop.html" target="_blank" rel="noopener">A Copied Page Folder Is Not a Page</a>, and about the bridge itself in <a href="power-bi-desktop-bridge-claude-edit-verify.html" target="_blank" rel="noopener">Letting AI Author a Live Power BI Desktop Report Through the Desktop Bridge</a>.</p>
+
+                <p>Then I ran the first query once more, and it returned nothing.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/info-measures-blank-description-none.png" alt="The FILTER over INFO.MEASURES query run after the AI changes, with the title bar reading Last saved: Today at 5:51 AM and the results grid showing column headers but no rows" loading="lazy">
+
+                <p>Without the filter, all sixteen measures came back with a description.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/info-measures-sixteen-descriptions.png" alt="DAX query view running EVALUATE INFO.MEASURES() with 16 rows, and the highlighted Description column filled for every measure, from Net sales revenue for Sales Amount to the change in gross margin percent in percentage points for the last measure" loading="lazy">
+
+                <p>The descriptions are in the model, not only in the files. The <strong>Properties</strong> pane in Model view shows the new text in the <strong>Description</strong> box of <code>Sales Amount PY</code>.</p>
+
+                <img src="../images/blog/dax-query-view-measure-descriptions/properties-pane-description-sales-amount-py.png" alt="The Properties pane for the Sales Amount PY measure with its Description box highlighted, reading Sales for the same period one year earlier. Capped at the last sales date so a partial year compares like-for-like., a Create with Copilot button underneath, and the Data pane on the right with Sales Amount PY in the Prior Year folder" loading="lazy">
+
+                <p>The same pane has a <strong>Create with Copilot</strong> button under that box, which would be a third way to write these.</p>
+
+                <h2>8. From a DevOps Standpoint: The Same Two Lines in Two Files</h2>
+
+                <p>From a DevOps standpoint, the most useful thing this experiment showed me is that the same text can sit in two files of one project and mean two different things.</p>
+
+                <p><strong>Code review.</strong> If you are new to reviewing semantic model changes, descriptions are a good place to start, because they always have the same shape. In a table's <code>.tmdl</code> file, a description is the <code>///</code> line, or lines, directly above the <code>measure</code> line it belongs to. When a change only adds or rewrites descriptions, every changed line in that file starts with three slashes, and the formula, <code>formatString</code>, <code>displayFolder</code>, and <code>lineageTag</code> lines underneath stay exactly as they were. That gives you a one-step check for a large batch like the one AI wrote for me: look for any changed line that does not start with <code>///</code>. If you find one, the change did more than describe a measure, and that line needs a question before you approve.</p>
+
+                <p><strong>Version control.</strong> Saving a PBIP after using DAX query view writes every open query tab into the repository as a <code>.dax</code> file. After my deletion test, my working tree held <code>Query 3.dax</code> without the two lines and <code>_Measures.tmdl</code> with them, so a reviewer who reads <code>///</code> in a <code>.dax</code> file as a model change gets it wrong. Read the <code>.tmdl</code> files for the model.</p>
+
+                <p>That raises a question worth settling with your team before the folder fills up: should query tabs be committed at all? The <strong>DAXQueries\ folder</strong> section of the <a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-dataset?wt.mc_id=DP-MVP-5004989#daxqueries-folder" target="_blank" rel="noopener">Power BI Desktop project semantic model folder article</a> describes the folder as one file per DAX query view tab, saved as <code>[Tab name].dax</code>, and the list at the top of the same article marks only <code>definition.pbism</code> and, for TMDL, the <code>definition</code> folder as required. The way I would decide is by asking whether anyone will run the query again. The blank-description check from section 1 is worth committing, renamed from <code>Query 1</code> to something that says what it does, because the file takes the tab name. A scratch tab like my <code>Query 3.dax</code> only adds noise to every pull request.</p>
+
+                <p><strong>Automation.</strong> The blank-description query from section 1 is a check waiting to be automated. In <a href="team-rules-pull-request-check-pbir.html" target="_blank" rel="noopener">Checking My Team's Rules Before the Pull Request</a> I turned one sentence from my team's rules into a check that runs on the files, and the file version of this rule is easy to state: every <code>measure</code> line in a table file needs a <code>///</code> line above it. I have not written that check yet.</p>
+
+                <p><strong>Governance.</strong> Adding a description worked through both routes I tried, DAX query view and the TMDL file. Removing one did not work from DAX query view. So if your team ever cleans up descriptions, do not take a deleted <code>///</code> line in a query tab as proof that the job is done. Open the <code>.tmdl</code> file after you save. If the lines are still above the measure, the description is still in the model.</p>
+
+                <h2>A Note on Working with AI</h2>
+
+                <p>The division of work was simple. I ran every step in DAX query view and took every screenshot. Claude Code wrote fifteen descriptions into <code>_Measures.tmdl</code> and applied them through the Desktop Bridge. What I want to pass on is why its part was easy to trust, because it came from the order I worked in, not from the AI.</p>
+
+                <p>First, I did one measure by hand before asking for fifteen. Adding two lines to <code>Sales Amount</code> myself showed me what a correct change looks like in <code>_Measures.tmdl</code>: three slashes, directly above the measure, and nothing else moving. Without that, I would have been reviewing the AI's diff against a guess.</p>
+
+                <p>Second, my prompt pointed at that experiment instead of explaining the syntax. I did not describe TMDL descriptions at all. I asked it to check how I had added one, so my own change became the specification, and the result followed it: <code>///</code> lines above each measure, in the same file, with no formula touched.</p>
+
+                <p>Third, I measured the result with a check the AI did not write. The <code>INFO.MEASURES()</code> query from section 1 counted fifteen, then fourteen, then zero, and it reads the model, not the files. That difference matters. If the change had never been applied through the Bridge, the files would have looked perfect, and the query would still have said fourteen.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>I expected the three slashes to work like a switch, and they worked like a one-way write. The mental model I am keeping is about files: <strong>the <code>.tmdl</code> file says what the model contains, and the <code>.dax</code> file only says what I typed into a query tab.</strong></p>
+
+                <p>There is plenty I did not test. I never edited the text of an existing description in DAX query view, never tried the Properties pane or Copilot to clear or write one, and never left a blank line between <code>///</code> and <code>MEASURE</code>, which the TMDL article does not allow in a file.</p>
+
+                <p>The whole of it was two lines of text, six changed files after the first save, two saves that changed only a query file, and fifteen descriptions from AI, checked with one query.</p>
+
+                <p>I hope this helps having fun in writing measure descriptions with three slashes and embracing this new era of semantic models that carry their own documentation!</p>
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="Power BI">Power BI</span>
+                <span class="tag" data-tag="TMDL">TMDL</span>
+                <span class="tag" data-tag="DAX">DAX</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+                <span class="tag" data-tag="AI">AI</span>
+            </div>
+
+            <div class="support-box" data-tool="pbip-documenter"></div>
+
+            <nav class="post-navigation">
+                <a href="translating-semantic-model-tmdl-korean.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">Translating a Semantic Model in TMDL: Fixing the Field Parameter Labels Together with AI While I Govern Every Change</span>
+                </a>
+                <a href="../index.html" class="post-nav-link post-nav-link--next">
+                    <span class="post-nav-label">Back to</span>
+                    <span class="post-nav-title">All posts</span>
+                </a>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>
