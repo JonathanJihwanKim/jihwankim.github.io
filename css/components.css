@@ -108,6 +108,15 @@
     color: var(--text-tertiary);
 }
 
+/* Credential facts carry their program's color */
+.hero-fact--mvp .material-symbols-outlined {
+    color: var(--mvp-600);
+}
+
+.hero-fact--su .material-symbols-outlined {
+    color: var(--su-700);
+}
+
 .hero-fact a strong {
     color: inherit;
 }
@@ -239,7 +248,7 @@
     color: inherit;
 }
 
-/* Orange accent top border on hover */
+/* Build color top border — each card takes the next color (base.css) */
 .post-card::before {
     content: '';
     position: absolute;
@@ -247,17 +256,11 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--accent-500);
-    transform: scaleX(0);
-    transition: transform var(--duration-base) var(--ease-out);
+    background: var(--cycle, var(--accent-500));
 }
 
 .post-card {
     position: relative;
-}
-
-.post-card:hover::before {
-    transform: scaleX(1);
 }
 
 /* Card image */
@@ -420,8 +423,8 @@
 .tag[data-tag="DAX"],
 .tag[data-tag="UDF"],
 .tag--dax {
-    background: #f6e7fd;
-    color: #7d1aa8;
+    background: var(--build-purple-100);
+    color: var(--build-purple-700);
 }
 
 .tag[data-tag="Fabric"],
@@ -434,21 +437,27 @@
 .tag[data-tag="DevOps"],
 .tag[data-tag="Git"],
 .tag--devops {
-    background: #e2f3e0;
-    color: #1c6a17;
+    background: var(--build-green-100);
+    color: var(--build-green-700);
 }
 
 .tag[data-tag="TMDL"],
 .tag[data-tag="Tabular Editor"],
 .tag--tmdl {
-    background: #ffe6d9;
-    color: #b53d00;
+    background: var(--build-red-100);
+    color: var(--build-red-700);
 }
 
 .tag[data-tag="JSON"],
 .tag--json {
-    background: #ffe6d9;
-    color: #8a2f00;
+    background: var(--build-blue-100);
+    color: var(--build-blue-700);
+}
+
+.tag[data-tag="AI"],
+.tag--ai {
+    background: var(--build-cyan-100);
+    color: var(--build-cyan-700);
 }
 
 .tag--default {
@@ -480,27 +489,27 @@
 }
 
 .difficulty-badge--beginner {
-    background: #e2f3e0;
-    color: #1c6a17;
+    background: var(--build-green-100);
+    color: var(--build-green-700);
 }
 .difficulty-badge--beginner::before {
-    background: #2D8E27;
+    background: var(--build-green-500);
 }
 
 .difficulty-badge--intermediate {
-    background: #fde3c6;
-    color: #a55400;
+    background: var(--build-amber-100);
+    color: var(--build-amber-700);
 }
 .difficulty-badge--intermediate::before {
-    background: #FE8404;
+    background: var(--build-amber-500);
 }
 
 .difficulty-badge--advanced {
-    background: var(--accent-50);
-    color: var(--accent-700);
+    background: var(--build-red-100);
+    color: var(--build-red-700);
 }
 .difficulty-badge--advanced::before {
-    background: var(--accent-500);
+    background: var(--build-red-500);
 }
 
 /* Reading time */
@@ -1624,7 +1633,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--accent-500);
+    background: var(--cycle, var(--accent-500));
     transform: scaleX(0);
     transition: transform var(--duration-base) var(--ease-out);
 }
@@ -1654,8 +1663,8 @@
     align-items: center;
     justify-content: center;
     border-radius: var(--radius-md);
-    background: var(--accent-50);
-    color: var(--accent-500);
+    background: var(--cycle-tint, var(--accent-50));
+    color: var(--cycle-ink, var(--accent-500));
 }
 
 .tool-card-icon .material-symbols-outlined {

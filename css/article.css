@@ -12,7 +12,7 @@
     top: 0;
     left: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--accent-500), var(--fabric-500), var(--msblue-700));
+    background: var(--build-stripe);
     z-index: 1100;
     width: 0%;
     transition: width 80ms linear;
@@ -138,15 +138,15 @@
     position: relative;
 }
 
-/* Orange accent under h2 (partial underline) */
+/* Build pixel stripe under h2 (partial underline) */
 .article-content h2::after {
     content: '';
     position: absolute;
     bottom: -2px;
     left: 0;
-    width: 48px;
+    width: 56px;
     height: 2px;
-    background: var(--accent-500);
+    background: var(--build-stripe-short);
 }
 
 .article-content h3 {
@@ -671,7 +671,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--accent-500), var(--fabric-500), var(--accent-500));
+    background: var(--build-stripe);
 }
 
 .sponsor-cta-icon {
@@ -719,9 +719,9 @@
 }
 
 .sponsor-cta .btn-outline:hover {
-    border-color: var(--accent-500);
-    color: var(--accent-300);
-    background: rgba(236, 4, 183, 0.1);
+    border-color: var(--build-cyan-500);
+    color: var(--build-cyan-500);
+    background: rgba(56, 192, 240, 0.1);
 }
 
 /* ============================================
@@ -872,6 +872,18 @@
     color: var(--accent-700);
 }
 
+/* Super User chip takes the green from its badge */
+.about-badge--su {
+    background: var(--su-50);
+    color: var(--su-700);
+    border-color: var(--su-200);
+}
+
+.about-badge--su:hover {
+    background: var(--su-100);
+    color: var(--su-800);
+}
+
 .about-badge img {
     width: 20px;
     height: 20px;
@@ -939,15 +951,15 @@
     padding-bottom: var(--space-2);
 }
 
-/* Short accent rule under section titles, as on article h2 */
+/* Short Build pixel stripe under section titles, as on article h2 */
 .page-section-title::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 48px;
+    width: 56px;
     height: 2px;
-    background: var(--accent-500);
+    background: var(--build-stripe-short);
 }
 
 .page-section-text {
@@ -993,7 +1005,7 @@
     padding: var(--space-6);
     background: var(--bg-elevated);
     border: 1px solid var(--border);
-    border-top: 3px solid var(--accent-500);
+    border-top: 3px solid var(--cycle, var(--accent-500));
     border-radius: var(--radius-lg);
     transition: box-shadow var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
 }
@@ -1017,8 +1029,8 @@
     align-items: center;
     justify-content: center;
     border-radius: var(--radius-md);
-    background: var(--accent-50);
-    color: var(--accent-500);
+    background: var(--cycle-tint, var(--accent-50));
+    color: var(--cycle-ink, var(--accent-500));
 }
 
 .skill-card-icon .material-symbols-outlined {
@@ -1067,7 +1079,7 @@
     flex-shrink: 0;
     font-size: 16px;
     margin-top: 1px;
-    color: var(--accent-500);
+    color: var(--cycle-ink, var(--accent-500));
 }
 
 /* Filled in by js/skills.js: the two most-read posts plus the newest one */
@@ -1362,7 +1374,7 @@
     background: var(--bg-elevated);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    border-top: 3px solid var(--accent-500);
+    border-top: 3px solid var(--cycle, var(--accent-500));
     transition: all var(--duration-base);
 }
 
@@ -1373,7 +1385,7 @@
 
 .tool-card-icon {
     font-size: 32px;
-    color: var(--accent-500);
+    color: var(--cycle-ink, var(--accent-500));
     margin-bottom: var(--space-4);
 }
 

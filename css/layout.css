@@ -13,8 +13,19 @@
     background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
     height: var(--nav-height);
+}
+
+/* Build pixel stripe along the bottom edge of the header */
+.site-header::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--build-stripe);
+    pointer-events: none;
 }
 
 .site-nav {
@@ -383,14 +394,25 @@
    Site Footer
    ============================================ */
 .site-footer {
-    border-top: 3px solid var(--accent-500);
-    background: var(--msblue-900);
-    padding: var(--space-8) 0;
+    background: var(--build-black);
+    padding: calc(var(--space-8) + 3px) 0 var(--space-8);
 }
 
-/* Footer sits on a dark navy surface — lighten its text for contrast */
+/* Build pixel stripe along the top edge of the footer */
+.site-footer::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 3px;
+    background: var(--build-stripe);
+}
+
+/* Footer sits on a near-black surface — lighten its text for contrast.
+   The copyright line takes Build cyan, like the "MICROSOFT BUILD" line. */
 .site-footer .footer-copyright {
-    color: rgba(255, 255, 255, 0.82);
+    color: var(--build-cyan-500);
 }
 
 .site-footer .footer-tagline,
@@ -400,7 +422,7 @@
 }
 
 .site-footer .footer-partners .partner-footer-link:hover {
-    color: var(--accent-300);
+    color: var(--build-cyan-500);
 }
 
 .site-footer .footer-talk {
@@ -416,11 +438,11 @@
 }
 
 .site-footer .footer-talk a:hover {
-    color: var(--accent-300);
-    text-decoration-color: var(--accent-300);
+    color: var(--build-cyan-500);
+    text-decoration-color: var(--build-cyan-500);
 }
 
-/* Outline button needs light text and border on the navy surface */
+/* Outline button needs light text and border on the near-black surface */
 .site-footer .btn-sponsor-outline {
     color: rgba(255, 255, 255, 0.85);
     border-color: rgba(255, 255, 255, 0.35);
@@ -428,8 +450,8 @@
 
 .site-footer .btn-sponsor-outline:hover {
     color: #ffffff;
-    border-color: var(--accent-300);
-    background: rgba(236, 4, 183, 0.14);
+    border-color: var(--build-cyan-500);
+    background: rgba(56, 192, 240, 0.14);
 }
 
 .footer-inner {

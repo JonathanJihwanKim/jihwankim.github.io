@@ -2,8 +2,9 @@
    base.css — Design System: "Microsoft Technical"
    powerbimvp.com — Jihwan Kim
 
-   Microsoft-native palette: MVP red, Power BI yellow,
-   Fabric teal, Microsoft blue on Fluent grey.
+   Microsoft-native palette: MVP magenta, Power BI orange,
+   Fabric teal, Super User green, Microsoft blue on Fluent grey,
+   with the Microsoft Build pixel palette for stripes and cards.
    ============================================ */
 
 /* --- Google Fonts Import --- */
@@ -58,6 +59,78 @@
     --fabric-200: #a4f1ea;
     --fabric-100: #d2f8f4;
     --fabric-50:  #ecfdfb;
+
+    /* COLOR — Super User (green from the Community Super User badge) */
+    --su-800: #0A6553;
+    --su-700: #0C7862;
+    --su-200: #C2DDD8;
+    --su-100: #D8E9E6;
+    --su-50:  #ECF4F2;
+
+    /* COLOR — Build (pixel palette from the Microsoft Build logo)
+       500 is for stripes and borders only. Text and icons use 700,
+       on white or on the matching 50/100 tint. */
+    --build-red-500:    #D7182A;
+    --build-red-700:    #B3121F;
+    --build-red-200:    #F1AEB4;
+    --build-red-100:    #F9DADD;
+    --build-red-50:     #FCEDEE;
+
+    --build-orange-500: #E46A2A;
+    --build-orange-700: #A9460F;
+    --build-orange-200: #F6CBB4;
+    --build-orange-100: #FBE7DD;
+    --build-orange-50:  #FDF3EE;
+
+    --build-amber-500:  #E9A033;
+    --build-amber-700:  #8A5A00;
+    --build-amber-200:  #F7DEB8;
+    --build-amber-100:  #FBF0DE;
+    --build-amber-50:   #FDF7EF;
+
+    --build-green-500:  #6BC44F;
+    --build-green-700:  #2E7D1E;
+    --build-green-200:  #CBEAC1;
+    --build-green-100:  #E7F6E3;
+    --build-green-50:   #F3FAF1;
+
+    --build-cyan-500:   #38C0F0;
+    --build-cyan-700:   #0A6F95;
+    --build-cyan-200:   #B9E9FA;
+    --build-cyan-100:   #DFF5FD;
+    --build-cyan-50:    #EFFAFE;
+
+    --build-blue-500:   #3D8AC4;
+    --build-blue-700:   #1F5E95;
+    --build-blue-200:   #BBD6EA;
+    --build-blue-100:   #E0ECF6;
+    --build-blue-50:    #EFF6FA;
+
+    --build-purple-500: #6A4C8C;
+    --build-purple-700: #5B3F86;
+    --build-purple-200: #CBC0D7;
+    --build-purple-100: #E7E2ED;
+    --build-purple-50:  #F3F1F6;
+
+    --build-black:      #0B0B10;
+
+    /* Pixel stripes — hard stops so the colors read as blocks, not a blend */
+    --build-stripe: repeating-linear-gradient(90deg,
+        var(--build-red-500)    0     24px,
+        var(--build-orange-500) 24px  48px,
+        var(--build-amber-500)  48px  72px,
+        var(--build-green-500)  72px  96px,
+        var(--build-cyan-500)   96px  120px,
+        var(--build-blue-500)   120px 144px,
+        var(--build-purple-500) 144px 168px);
+    --build-stripe-short: linear-gradient(90deg,
+        var(--build-red-500)    0     8px,
+        var(--build-orange-500) 8px   16px,
+        var(--build-amber-500)  16px  24px,
+        var(--build-green-500)  24px  32px,
+        var(--build-cyan-500)   32px  40px,
+        var(--build-blue-500)   40px  48px,
+        var(--build-purple-500) 48px  56px);
 
     /* COLOR — Navy (links / blue) */
     --msblue-900: #1a2c46;
@@ -381,6 +454,68 @@ p {
     border-radius: 50%;
     background: var(--accent-500);
     flex-shrink: 0;
+}
+
+/* ============================================
+   Build color cycle — each card in a grid takes the next
+   Build color. Consumers read var(--cycle, ...) so anything
+   outside these grids falls back to the MVP accent.
+   Order keeps neighbours far apart on the color wheel.
+   ============================================ */
+.posts-grid > :nth-child(7n+1),
+.skill-grid > :nth-child(7n+1),
+.tools-grid > :nth-child(7n+1) {
+    --cycle: var(--build-red-500);
+    --cycle-ink: var(--build-red-700);
+    --cycle-tint: var(--build-red-50);
+}
+
+.posts-grid > :nth-child(7n+2),
+.skill-grid > :nth-child(7n+2),
+.tools-grid > :nth-child(7n+2) {
+    --cycle: var(--build-green-500);
+    --cycle-ink: var(--build-green-700);
+    --cycle-tint: var(--build-green-50);
+}
+
+.posts-grid > :nth-child(7n+3),
+.skill-grid > :nth-child(7n+3),
+.tools-grid > :nth-child(7n+3) {
+    --cycle: var(--build-blue-500);
+    --cycle-ink: var(--build-blue-700);
+    --cycle-tint: var(--build-blue-50);
+}
+
+.posts-grid > :nth-child(7n+4),
+.skill-grid > :nth-child(7n+4),
+.tools-grid > :nth-child(7n+4) {
+    --cycle: var(--build-amber-500);
+    --cycle-ink: var(--build-amber-700);
+    --cycle-tint: var(--build-amber-50);
+}
+
+.posts-grid > :nth-child(7n+5),
+.skill-grid > :nth-child(7n+5),
+.tools-grid > :nth-child(7n+5) {
+    --cycle: var(--build-purple-500);
+    --cycle-ink: var(--build-purple-700);
+    --cycle-tint: var(--build-purple-50);
+}
+
+.posts-grid > :nth-child(7n+6),
+.skill-grid > :nth-child(7n+6),
+.tools-grid > :nth-child(7n+6) {
+    --cycle: var(--build-cyan-500);
+    --cycle-ink: var(--build-cyan-700);
+    --cycle-tint: var(--build-cyan-50);
+}
+
+.posts-grid > :nth-child(7n+7),
+.skill-grid > :nth-child(7n+7),
+.tools-grid > :nth-child(7n+7) {
+    --cycle: var(--build-orange-500);
+    --cycle-ink: var(--build-orange-700);
+    --cycle-tint: var(--build-orange-50);
 }
 
 /* ============================================
