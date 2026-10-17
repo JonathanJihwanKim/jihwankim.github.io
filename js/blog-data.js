@@ -12,6 +12,19 @@
     // Blog posts data - newest first
     var posts = [
         {
+            id: 27,
+            title: "Nothing Broke When My Fact Table Lost Its Prefix: Adding a Second Rule Before the Pull Request",
+            preview: "My team's second rule says every fact table name starts with fact_, and when a Direct Lake fact table went back to its source name, nothing in the report broke and nothing warned me. TMDL has no property that says fact, so the check finds fact tables the way Microsoft's star schema guidance defines them, from the many side of each relationship. That definition also flagged a calculated table I would never have called a fact table. A pre-commit hook now runs the rule every time I click Commit in VS Code, and it stopped my own commit until every fact table had its prefix.",
+            date: "October 17, 2026",
+            sortDate: "2026-10-17",
+            tags: ["Power BI", "TMDL", "DevOps", "Git"],
+            url: "posts/team-rules-fact-table-prefix-tmdl.html",
+            skill: "git-devops",
+            featuredImage: "images/blog/team-rules-fact-table-prefix-tmdl/featured.png",
+            readingTime: "15 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 26,
             title: "Three Slashes Write a Measure Description in DAX Query View, but Deleting Them Does Not Erase It",
             preview: "Microsoft Learn now documents measure descriptions in DAX query view, so I added two lines starting with three slashes above one measure and watched Update model with changes write them into _Measures.tmdl. Then I deleted the lines, and later turned them into ordinary comments, and both times the button stayed greyed out and saving changed only a .dax query file. The description stayed in the model. AI then wrote descriptions for the rest of the measures through the TMDL file, and I read every line before I kept them.",
