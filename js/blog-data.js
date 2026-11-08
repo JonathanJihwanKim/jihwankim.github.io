@@ -12,6 +12,19 @@
     // Blog posts data - newest first
     var posts = [
         {
+            id: 28,
+            title: "My Semantic Model Moved to Prod and Kept Reading Dev: Rebinding Direct Lake with a Fabric Deployment Plan",
+            preview: "I deployed my SpaceParts semantic model from Dev to Prod with a Fabric deployment pipeline, and the Prod model kept reading the Dev lakehouse, because a Direct Lake on OneLake model carries its lakehouse IDs in expressions.tmdl and the deployment rule that could change them isn't supported. A rebind notebook fixed it by hand until the next deployment undid it, so I moved the notebook into a deployment plan as a post-deployment action. Getting there took a missing item reference, a failed deployment that still deployed the model, and an arrow drawn the wrong way round. The final plan works, and after every deployment I still map the connections and refresh the model in Prod by hand.",
+            date: "November 8, 2026",
+            sortDate: "2026-11-08",
+            tags: ["Fabric", "Direct Lake", "DevOps", "TMDL", "AI"],
+            url: "posts/deployment-plan-direct-lake-prod.html",
+            skill: "git-devops",
+            featuredImage: "images/blog/deployment-plan-direct-lake-prod/featured.png",
+            readingTime: "17 min read",
+            difficulty: "Intermediate"
+        },
+        {
             id: 27,
             title: "Nothing Broke When My Fact Table Lost Its Prefix: Adding a Second Rule Before the Pull Request",
             preview: "My team's second rule says every fact table name starts with fact_, and when a Direct Lake fact table went back to its source name, nothing in the report broke and nothing warned me. TMDL has no property that says fact, so the check finds fact tables the way Microsoft's star schema guidance defines them, from the many side of each relationship. That definition also flagged a calculated table I would never have called a fact table. A pre-commit hook now runs the rule every time I click Commit in VS Code, and it stopped my own commit until every fact table had its prefix.",

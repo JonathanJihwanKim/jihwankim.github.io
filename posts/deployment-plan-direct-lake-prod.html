@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="I deployed my SpaceParts semantic model from Dev to Prod with a Fabric deployment pipeline, and the Prod model kept reading the Dev lakehouse. A rebind notebook fixed it by hand until the next deployment undid it, so I moved the notebook into a deployment plan as a post-deployment action and learned how groups, dependsOn and actions really run.">
+    <meta name="keywords" content="Microsoft Fabric, Deployment plan, Deployment pipelines, Direct Lake, Direct Lake on OneLake, Semantic model, expressions.tmdl, plan.yml, Post-deployment action, Notebook, Semantic Link, TOM, Lineage view, Cloud connections, Git, DevOps">
+    <meta name="author" content="Jihwan Kim">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; frame-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="My Semantic Model Moved to Prod and Kept Reading Dev: Rebinding Direct Lake with a Fabric Deployment Plan | Jihwan Kim">
+    <meta property="og:description" content="A deployment pipeline copied my Direct Lake model to Prod with the Dev lakehouse IDs still inside. A deployment plan with one notebook as a post-deployment action pointed it at Prod, after a few failed attempts.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://powerbimvp.com/posts/deployment-plan-direct-lake-prod.html">
+    <meta property="og:image" content="https://powerbimvp.com/images/blog/deployment-plan-direct-lake-prod/featured.png">
+    <meta property="og:image:alt" content="A Korean folk painting under a swirling Van Gogh style sky, where porters carry a palanquin across a bridge from a pavilion marked DEV to one marked PROD, a red thread still trails back to the DEV pavilion, and a woman in hanbok on the shore draws a red thread toward PROD with a long pole, beside a Korean verse that reads: the bridge is crossed, yet the thread is still tied to the old lake">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="My Semantic Model Moved to Prod and Kept Reading Dev: Rebinding Direct Lake with a Fabric Deployment Plan">
+    <meta name="twitter:description" content="A deployment pipeline copied my Direct Lake model to Prod with the Dev lakehouse IDs still inside. A deployment plan with one notebook as a post-deployment action pointed it at Prod, after a few failed attempts.">
+    <meta name="twitter:image" content="https://powerbimvp.com/images/blog/deployment-plan-direct-lake-prod/featured.png">
+    <meta name="twitter:image:alt" content="A Korean folk painting under a swirling Van Gogh style sky, where porters carry a palanquin across a bridge from a pavilion marked DEV to one marked PROD, a red thread still trails back to the DEV pavilion, and a woman in hanbok on the shore draws a red thread toward PROD with a long pole, beside a Korean verse that reads: the bridge is crossed, yet the thread is still tied to the old lake">
+
+    <title>My Semantic Model Moved to Prod and Kept Reading Dev: Rebinding Direct Lake with a Fabric Deployment Plan | Jihwan Kim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/article.css">
+</head>
+<body>
+    <a href="#article" class="skip-link">Skip to content</a>
+    <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">
+            <span class="material-symbols-outlined">close</span> Close
+        </button>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <header class="site-header" id="site-header"></header>
+
+    <main class="article-layout" id="article">
+        <div class="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle">
+                On this page <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content">
+                <div id="toc-mobile-list"></div>
+            </div>
+        </div>
+
+        <article>
+            <a href="../index.html" class="back-link">
+                <span class="material-symbols-outlined">arrow_back</span> All posts
+            </a>
+
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="difficulty-badge difficulty-badge--intermediate">Intermediate</span>
+                    <span class="reading-time"><span class="material-symbols-outlined">schedule</span> 17 min read</span>
+                </div>
+                <h1 class="article-title">My Semantic Model Moved to Prod and Kept Reading Dev: Rebinding Direct Lake with a Fabric Deployment Plan</h1>
+                <div class="article-meta">
+                    <time datetime="2026-11-08">
+                        <span class="material-symbols-outlined">calendar_month</span> November 8, 2026
+                    </time>
+                    <span class="article-meta-separator"></span>
+                    <div class="article-meta-tags">
+                        <span class="tag" data-tag="Fabric">Fabric</span>
+                        <span class="tag" data-tag="Direct Lake">Direct Lake</span>
+                        <span class="tag" data-tag="DevOps">DevOps</span>
+                        <span class="tag" data-tag="TMDL">TMDL</span>
+                        <span class="tag" data-tag="AI">AI</span>
+                    </div>
+                    <span class="article-meta-separator"></span>
+                    <span class="article-readers" id="article-reader-count">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span id="reader-count-number">&mdash;</span> readers
+                        <span class="counter-since">counter started November 8, 2026</span>
+                    </span>
+                </div>
+            </header>
+
+            <img class="featured-image" src="../images/blog/deployment-plan-direct-lake-prod/featured.png" alt="A Korean folk painting under a swirling Van Gogh style sky, where porters carry a palanquin across a bridge from a pavilion marked DEV to one marked PROD, a red thread still trails back to the DEV pavilion, and a woman in hanbok on the shore draws a red thread toward PROD with a long pole, beside a Korean verse that reads: the bridge is crossed, yet the thread is still tied to the old lake">
+
+            <div class="article-content">
+
+                <p>In this writing, I want to share how a deployment pipeline moved my SpaceParts semantic model from Dev to Prod and left it reading the Dev lakehouse, and how a Fabric deployment plan, with one notebook as a post-deployment action, finally pointed it at Prod.</p>
+
+                <p>My plan was simple. Deployment plans are a new item in Fabric, in preview, that add an order and actions to a deployment, and my model needed exactly one action: something to point it at the Prod lakehouse after every deployment. I expected one plan, one action and one deployment. It took a notebook I first ran by hand, an error that told me exactly what was missing, a deployment that failed and still deployed the model, an arrow drawn the wrong way round, and a refresh I had to take out of the notebook. Each of those taught me something about how a plan runs, so I want to walk through them in the order they happened.</p>
+
+                <h2>1. Two IDs in One Line of expressions.tmdl</h2>
+
+                <p>The sample is SpaceParts. I have two workspaces, <code>SpaceParts</code> for Dev and <code>SpaceParts Production</code> for Prod, each connected to its own Git repository, and a deployment pipeline called <code>SpaceParts_deployment</code> with two stages, <strong>SpaceParts Dev</strong> and <strong>SpaceParts Prod</strong>. Before the first deployment, all four items in Dev were marked <strong>Only in source</strong>: the <code>SpaceParts</code> lakehouse, the <code>Load SpaceParts data</code> notebook that fills it, the semantic model <code>spaceparts_directlake_import_semanticmodel</code>, and the report <code>spaceparts_report</code>.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/pipeline-dev-prod-only-in-source.png" alt="The SpaceParts_deployment pipeline with the SpaceParts Dev stage linked to the SpaceParts workspace and the SpaceParts Prod stage linked to SpaceParts Production, both workspace names highlighted, and below them a semantic model, a report, a lakehouse and a notebook, each marked Only in source in the highlighted Compared to source column" loading="lazy">
+
+                <p>The semantic model is composite. Four tables, <code>orders</code>, <code>invoices</code>, <code>budget</code> and <code>forecast</code>, are Direct Lake on OneLake. Ten tables are Import, and the rest are calculated tables such as <code>Date</code>, <code>Reporting Currency</code> and the <code>Time Intelligence</code> calculation group. The Direct Lake tables and the Import tables both read from the same lakehouse, but they find it in two different ways, and both ways had to be repointed later.</p>
+
+                <p>The Direct Lake tables find it by ID. The Dev lakehouse opens at an address that carries two IDs, the workspace <code>1616f463-89fb-42c3-9cda-281809c16629</code> and the lakehouse <code>a9779aaf-d8a9-4b22-898e-108ae23fa0d6</code>.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/lakehouse-dev-url-ids.png" alt="The SpaceParts lakehouse open in the Dev workspace, with the workspace ID 1616f463-89fb-42c3-9cda-281809c16629 and the lakehouse ID a9779aaf-d8a9-4b22-898e-108ae23fa0d6 highlighted in the address bar, and the Explorer listing fourteen tables under the SpaceParts schema" loading="lazy">
+
+                <p>The same two IDs sit on line 3 of <code>expressions.tmdl</code>, inside the <code>AzureStorage.DataLake</code> URL of the shared expression <code>DirectLake - SpaceParts</code>. All four Direct Lake partitions name that expression as their source.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/vscode-dev-expressions-tmdl-onelake-ids.png" alt="expressions.tmdl open in VS Code from the spaceparts_project repository, with line 3 holding the AzureStorage.DataLake URL of the DirectLake - SpaceParts expression and the two IDs 1616f463-89fb-42c3-9cda-281809c16629 and a9779aaf-d8a9-4b22-898e-108ae23fa0d6 highlighted" loading="lazy">
+
+                <p>The Import tables find it by server and name. Each of the ten Import partitions starts the same way, with the lakehouse's SQL analytics endpoint and the database name <code>SpaceParts</code>. This is the <code>Brands</code> table:</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/vscode-brands-tmdl-sql-database.png" alt="Brands.tmdl open in VS Code from the spaceparts_project repository, with the semantic model folder and Brands.tmdl highlighted in the Explorer, and the source of the Brands partition, in import mode, highlighted: Sql.Database with the SQL analytics endpoint 77oajh3wezeejnmdlu54fth3om-mp2bmfx3rhbufhg2famatqlgfe.datawarehouse.fabric.microsoft.com and the database SpaceParts, then the brands table from the SpaceParts schema" loading="lazy">
+
+                <h2>2. A Successful Deployment That Still Read Dev</h2>
+
+                <p>I selected all four items and deployed. The confirmation dialog listed all four as new.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/pipeline-first-deploy-dialog-four-new.png" alt="The Deploy to this stage dialog for a deployment from SpaceParts Dev to SpaceParts Prod, listing New (4): the SpaceParts lakehouse, the Load SpaceParts data notebook, spaceparts_directlake_import_semanticmodel and spaceparts_report, with the Deploy button highlighted" loading="lazy">
+
+                <p>The pipeline reported <strong>Successful deployment</strong>, and every item in Prod was now <strong>Same as source</strong>.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/pipeline-first-deploy-same-as-source.png" alt="The pipeline after the first deployment, with the SpaceParts Prod stage showing Successful deployment, highlighted, and the notebook, lakehouse, semantic model and report all marked Same as source" loading="lazy">
+
+                <p>The Prod lakehouse had new IDs, <code>26172069-a0ed-4c4a-8c61-a15715c9139e</code> for the workspace and <code>0c495b60-7437-4a3b-a1f7-f3ab518bad6d</code> for the lakehouse.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/lakehouse-prod-url-ids-empty.png" alt="The SpaceParts lakehouse open in the SpaceParts Production workspace, with the new workspace ID 26172069-a0ed-4c4a-8c61-a15715c9139e and lakehouse ID 0c495b60-7437-4a3b-a1f7-f3ab518bad6d highlighted in the address bar, and the Explorer showing only an empty dbo schema under Tables" loading="lazy">
+
+                <p>It was also empty. A deployment creates a new, empty lakehouse in the target workspace, as the <a href="https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-git-deployment-pipelines?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Lakehouse git integration and deployment pipelines</a> article describes, and in a real project the production lakehouse already has its data. So I leave that part here, because what matters in this writing is where the model reads from.</p>
+
+                <p>The lineage view of the Prod workspace showed where the Prod model was reading from. Its two inputs, a SQL analytics endpoint and a lakehouse, both carry the tag <code>SpaceParts</code>, the name of the Dev workspace. The Prod lakehouse sits further down with its own SQL analytics endpoint and the copied notebook, and nothing connects it to the model.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/lineage-prod-model-reads-dev.png" alt="Lineage view of the SpaceParts Production workspace, where the semantic model's two inputs, a SpaceParts SQL analytics endpoint and a SpaceParts lakehouse, both carry a highlighted SpaceParts workspace tag, while the Prod lakehouse below feeds only its own SQL analytics endpoint and the Load SpaceParts data notebook" loading="lazy">
+
+                <p>VS Code agreed. With the Dev repository on the left and the Prod repository on the right, <code>expressions.tmdl</code> was the same file in both, Dev IDs included.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/vscode-dev-prod-expressions-same-ids.png" alt="Two VS Code windows side by side, spaceparts_project on the left and spaceparts_production on the right, each with expressions.tmdl open and the same two highlighted IDs, 1616f463-89fb-42c3-9cda-281809c16629 and a9779aaf-d8a9-4b22-898e-108ae23fa0d6, in the AzureStorage.DataLake URL" loading="lazy">
+
+                <p>This is how deployment is meant to work. The <strong>Semantic model limitations</strong> section of <a href="https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/understand-the-deployment-process?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">The Microsoft Fabric deployment pipelines process</a> says that when you deploy a Direct Lake semantic model, it doesn't automatically bind to items in the target stage, and that the model in the target stage still binds to the lakehouse in the source stage. The same paragraph suggests datasource rules to fix that. For my model, that route is closed. In the <strong>Considerations and limitations</strong> table of the <a href="https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Direct Lake overview</a>, the row <em>Deployment pipeline rules to rebind data source</em> says <strong>Not supported</strong> for Direct Lake on OneLake, and the <strong>Compare storage mode capabilities</strong> table in the same article allows composite models with Import tables only on OneLake. The Import tables are what keep SpaceParts on OneLake, and being on OneLake is what rules out the rule.</p>
+
+                <p>The <strong>Semantic models</strong> table in <a href="https://learn.microsoft.com/en-us/fabric/cicd/cross-workspace-dependency-binding?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Understand dependency binding in cross-workspace deployment</a> gives the reason at file level. The Direct Lake connection string in <code>expressions.tmdl</code> contains a workspace-specific endpoint URL and database GUID, and the article says you need to replace them for cross-workspace deployment. Something had to replace them.</p>
+
+                <h2>3. Rebinding by Hand Lasted Until the Next Deployment</h2>
+
+                <p>That something was a notebook, <code>rebind_lakehouse_semantic_model</code>, and I ran it by hand in Prod first. It opens the model with <a href="https://learn.microsoft.com/en-us/python/api/semantic-link-sempy/sempy.fabric?view=semantic-link-python&amp;wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">sempy.fabric</a>, replaces the Dev IDs in the Direct Lake URL with the Prod ones, points the <code>Sql.Database</code> lines of the Import tables to the Prod SQL analytics endpoint, and saves the model. This first version had the Prod workspace name typed into it.</p>
+
+                <p>The code came from AI. When I need to write a Fabric notebook like this, I sometimes ask AI to learn from <a href="https://github.com/microsoft/semantic-link-labs" target="_blank" rel="noopener">semantic-link-labs</a>, the open-source repository in Microsoft's GitHub organization that gives early access to new features for Semantic Link, and then suggest the code. That is how this notebook started.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/github-semantic-link-labs.png" alt="The microsoft/semantic-link-labs repository on GitHub, with the repository name highlighted and the About panel describing it as early access to new features for Microsoft Fabric's Semantic Link" loading="lazy">
+
+                <p>The rebind worked. The lineage view showed the Prod model reading the Prod SQL analytics endpoint, without the Dev tag.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/lineage-prod-after-manual-rebind.png" alt="Lineage view of SpaceParts Production after the hand-run rebind, with the semantic model now fed by the Prod SpaceParts SQL analytics endpoint, the highlighted Prod lakehouse in the middle, the Dev SpaceParts lakehouse with its SpaceParts tag on the far left, and the semantic model card highlighted" loading="lazy">
+
+                <p>The Prod repository showed the same thing. In VS Code, <code>expressions.tmdl</code> on the Prod side now carried <code>26172069-a0ed-4c4a-8c61-a15715c9139e</code> and <code>0c495b60-7437-4a3b-a1f7-f3ab518bad6d</code>, the IDs from the Prod lakehouse's address bar.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/vscode-dev-prod-expressions-after-rebind.png" alt="The same two VS Code windows after the rebind, with expressions.tmdl in spaceparts_project still holding the Dev IDs and expressions.tmdl in spaceparts_production now holding 26172069-a0ed-4c4a-8c61-a15715c9139e and 0c495b60-7437-4a3b-a1f7-f3ab518bad6d, both highlighted" loading="lazy">
+
+                <p>Then I deployed from Dev again, without a plan, and the lineage went straight back to the Dev workspace.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/lineage-prod-after-redeploy-without-plan.png" alt="Lineage view of SpaceParts Production after a second deployment without a plan, with the semantic model's two inputs once again tagged with the SpaceParts Dev workspace, highlighted in green" loading="lazy">
+
+                <p>That settled what I needed. <strong>A rebind done by hand in Prod lasts only until the next deployment.</strong> The step has to run inside every deployment, and running a step inside a deployment is what deployment plans are for.</p>
+
+                <h2>4. Building the Plan, and a Notebook Prod Did Not Have</h2>
+
+                <p>Deployment plans sit behind a tenant setting. In the Admin portal, <strong>Users can create deployment plan (preview) items</strong> was listed under Microsoft Fabric with a <strong>New</strong> badge, and I enabled it for the entire organization. The <strong>Enable deployment-plan creation for your tenant</strong> section of <a href="https://learn.microsoft.com/en-us/fabric/cicd/deployment-plan/how-to-create-deployment-plan?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Create a deployment plan in Microsoft Fabric</a> walks through the same setting.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/admin-portal-deployment-plan-tenant-setting.png" alt="The Admin portal tenant settings with Users can create deployment plan (preview) items under Microsoft Fabric marked New, its toggle set to Enabled for the entire organization, and the Apply button highlighted" loading="lazy">
+
+                <p>A plan is a workspace item, so I created one in the Dev workspace from <strong>New item</strong>, where searching for <em>deploy</em> shows <strong>Deployment Plan (preview)</strong>.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/workspace-new-item-deployment-plan.png" alt="The Dev workspace SpaceParts, highlighted, with its items Synced, and the New item panel searched for deploy, showing Deployment Plan (preview), highlighted, described as a plan to define dependencies and actions that run before and after each item deploys" loading="lazy">
+
+                <p>I named it <code>DeploymentPlan_SpaceParts</code> and kept it in the <code>SpaceParts</code> workspace.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/new-deployment-plan-name-dialog.png" alt="The New Deployment Plan dialog over the SpaceParts workspace, with the name DeploymentPlan_SpaceParts, the location SpaceParts, and the Create button highlighted" loading="lazy">
+
+                <p>The canvas lists the workspace items on the left, and each one has <strong>Add to canvas</strong> in its menu.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/deployment-plan-canvas-add-to-canvas.png" alt="The empty DeploymentPlan_SpaceParts canvas, with Build your deployment plan listing the workspace items on the left, and the semantic model highlighted with its menu open on Add to canvas" loading="lazy">
+
+                <p>I added the semantic model, which became a deployment group with a <strong>Deploy</strong> box in the middle and two empty slots around it, <strong>Actions before</strong> and <strong>Actions after</strong>. Selecting <strong>Actions after</strong> opened a panel where <strong>Add action</strong> offered only the two notebooks, and I picked <code>rebind_lakehouse_semantic_model</code>.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/deployment-plan-canvas-actions-after.png" alt="The DeploymentPlan_SpaceParts canvas with one group for the semantic model, a Deploy box between empty Actions before and Actions after slots, and the Actions after panel open with Add action listing two notebooks, Load SpaceParts data and the highlighted rebind_lakehouse_semantic_model" loading="lazy">
+
+                <p>Only notebooks showed up because a plan can run only a few item types. The <strong>Item types you can run as an action</strong> section of <a href="https://learn.microsoft.com/en-us/fabric/cicd/deployment-plan/deployment-plan-actions?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Deployment plan actions in Microsoft Fabric</a> lists notebooks, data pipelines, Dataflow Gen2, copy jobs and user data functions, all with the job type <code>Execute</code>. A plan can deploy the lakehouse, the model and the report, but it can't run them.</p>
+
+                <p>I saved the plan and went to the pipeline, where a new <strong>with plan</strong> picker now sits next to <strong>Deploy from</strong>. I chose <code>DeploymentPlan_SpaceParts</code>. In the list, the lakehouse and the model were <strong>Same as source</strong>, and the plan and the rebind notebook were <strong>Only in source</strong>, because neither existed in Prod yet. I had selected the lakehouse and the model, but not the notebook.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/pipeline-deploy-with-plan-notebook-unselected.png" alt="The pipeline with the with plan picker open and DeploymentPlan_SpaceParts highlighted, the SpaceParts lakehouse and the semantic model selected and marked Same as source, and the deployment plan and the rebind_lakehouse_semantic_model notebook unselected and marked Only in source" loading="lazy">
+
+                <p>The confirmation dialog listed one new item, the plan.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/deploy-with-plan-dialog-one-new-item.png" alt="The Deploy with plan dialog for DeploymentPlan_SpaceParts, Copied from source, with New (1) listing only DeploymentPlan_SpaceParts, highlighted, over the pipeline list where the rebind_lakehouse_semantic_model notebook is Only in source" loading="lazy">
+
+                <p>When I clicked <strong>Deploy</strong>, I got this instead of a deployment.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/deployment-plan-missing-item-reference.png" alt="A dialog titled Deployment plan has a missing item reference, saying the action rebind_lakehouse_semantic_model_SynapseNotebook references an item, 9dcc4ee5-91a5-4d4b-bc8f-5f7e629a456a, that doesn't exist, over the pipeline item list" loading="lazy">
+
+                <p><em>The action "rebind_lakehouse_semantic_model_SynapseNotebook" references an item ("9dcc4ee5-91a5-4d4b-bc8f-5f7e629a456a") that doesn't exist.</em> This one is fair, and it is documented. The <strong>Determine the deployment scope</strong> section of <a href="https://learn.microsoft.com/en-us/fabric/cicd/deployment-plan/deployment-plan-overview?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">What is a deployment plan in Microsoft Fabric?</a> says that attaching a plan doesn't automatically select the items it references, and that the items the plan's actions need must be available in the target workspace when those actions run. My action wanted to run a notebook Prod did not have, and I had not asked the pipeline to bring it.</p>
+
+                <p>I selected the notebook too.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/pipeline-deploy-with-plan-notebook-selected.png" alt="The pipeline with the SpaceParts lakehouse, the semantic model and the rebind_lakehouse_semantic_model notebook selected, their checkboxes highlighted, the notebook still Only in source with its source item name highlighted, and the Deploy button showing 4" loading="lazy">
+
+                <p>The dialog now said the plan was <strong>Copied from source</strong> and listed two new items, the plan and the notebook.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/deploy-with-plan-dialog-two-new-items.png" alt="The Deploy with plan dialog for DeploymentPlan_SpaceParts, Copied from source, listing New (2), DeploymentPlan_SpaceParts and rebind_lakehouse_semantic_model, highlighted, with the rebind notebook now selected in the list behind it" loading="lazy">
+
+                <h2>5. Same as Source, Then a Failed Deployment That Still Deployed the Model</h2>
+
+                <p>That deployment succeeded. The plan and the rebind notebook arrived in Prod, and the model still read Dev.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/lineage-prod-after-first-plan-deploy.png" alt="Lineage view of SpaceParts Production after the first deployment with the plan, with DeploymentPlan_SpaceParts and rebind_lakehouse_semantic_model now in the workspace, and the semantic model still fed by the SQL analytics endpoint and lakehouse tagged SpaceParts" loading="lazy">
+
+                <p>Looking back at the dialog, the model was never in it. It was selected, but it was <strong>Same as source</strong>, and the dialog listed only the two new items. My reading is that the model's group had nothing to deploy, so its post-deployment action never ran. The <strong>Execute deployment groups and actions</strong> part of the plan overview describes the order inside a group, pre-deploy actions first, then the item, then post-deploy actions, but it doesn't say what happens to a group whose item has nothing to deploy. So that part is my interpretation of what I saw, not something the article states.</p>
+
+                <p>To give the group something to do, I changed a small thing in the Dev model, and the pipeline marked it <strong>Different from source</strong>.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/pipeline-model-different-from-source.png" alt="The pipeline with DeploymentPlan_SpaceParts selected in the with plan picker, every item Same as source except the semantic model, which is selected and marked Different from source, and the Deploy button showing 1" loading="lazy">
+
+                <p>This deployment failed with <em>Something went wrong. Deployment couldn't be completed.</em></p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/pipeline-something-went-wrong.png" alt="A Something went wrong dialog saying Deployment couldn't be completed, with a See details link and a Close button, over the pipeline where the SpaceParts Prod stage card shows Failed deployment" loading="lazy">
+
+                <p>The stage card said <strong>Failed deployment</strong>. Yet the model in the list had turned to <strong>Same as source</strong>, which means it was deployed.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/pipeline-failed-deployment-model-deployed.png" alt="The SpaceParts Prod stage card showing Failed deployment, highlighted, while the semantic model in the list below is now marked Same as source, also highlighted" loading="lazy">
+
+                <p>Both halves of that are documented. The <strong>If an operation fails</strong> section of the plan overview says the operation stops when an item or action fails and doesn't roll back completed work, and the <strong>Limitations during a deployment</strong> list adds that items already deployed stay in the target workspace while later items don't deploy. The pipeline view shows that the failure came after the model was deployed, not which step it was. The <strong>An action failed</strong> section of <a href="https://learn.microsoft.com/en-us/fabric/cicd/deployment-plan/deployment-plan-troubleshoot?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Troubleshoot deployment plans in Microsoft Fabric</a> explains where to look: an action is a normal Fabric item run, so its failure details are in that item's run history, not in the deployment.</p>
+
+                <p>The lineage view still showed the Dev workspace on both of the model's inputs.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/lineage-prod-after-failed-deploy.png" alt="Lineage view of SpaceParts Production after the failed deployment, with the semantic model's two inputs, a SQL analytics endpoint and a lakehouse, both still carrying a highlighted SpaceParts workspace tag, and DeploymentPlan_SpaceParts in the workspace" loading="lazy">
+
+                <p>That is the state a deployment without rollback can leave behind: a new model definition in Prod, still pointing at Dev. At this point I thought the plan itself was not right.</p>
+
+                <h2>6. Which Way the Arrow Points</h2>
+
+                <p>Next I gave the notebook a deployment group of its own, so that the plan would deploy it too. On the canvas, a line from the bottom of one group to the top of another means the second group depends on the first. My first attempt put the model on top and the notebook underneath.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/deployment-plan-canvas-model-before-notebook.png" alt="The plan canvas with the semantic model group on top and the rebind_lakehouse_semantic_model group underneath, joined by a highlighted arrow from the bottom of the model group to the top of the notebook group, and both Actions after slots empty" loading="lazy">
+
+                <p>That arrow says the notebook group waits for the model group. In <code>plan.yml</code> it becomes a <code>dependsOn</code> entry on the notebook's group that names the model's group, and the <strong>Understand the plan.yml structure</strong> section of <a href="https://learn.microsoft.com/en-us/fabric/cicd/deployment-plan/deployment-plan-sample-plans?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Deployment plan examples in Microsoft Fabric</a> is clear that group order comes from <code>dependsOn</code>, not from where a group sits in the file. So this plan deploys the model first and the notebook second, which is backwards for what I needed, and the same article gives two reasons. The <strong>Validate before anything deploys</strong> section says an action can only run an item that's already deployed, so the item an action runs has to be deployed by an earlier group. And the <strong>Refresh content after it deploys</strong> section says a deployment updates item definitions and doesn't run anything, so deploying the notebook after the model doesn't run it either.</p>
+
+                <p>I changed the Dev model once more and deployed with this plan. Because the plan had changed too, the pipeline marked both the plan and the model <strong>Different from source</strong>, and I selected both.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/pipeline-plan-and-model-different-from-source.png" alt="The pipeline with DeploymentPlan_SpaceParts in the with plan picker, highlighted, and the deployment plan and the semantic model both selected and marked Different from source, highlighted, with the Deploy button showing 2 and the Prod stage card still showing the earlier Failed deployment" loading="lazy">
+
+                <p>It took a few more rounds with AI before the design settled. The final canvas turns the arrows the other way.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/deployment-plan-canvas-final-four-groups.png" alt="The final plan canvas, with the SpaceParts lakehouse group and the rebind_lakehouse_semantic_model group side by side at the top, both arrows leading into the semantic model group, whose Actions after slot holds Run action on rebind_lakehouse_semantic_model, and the spaceparts_report group at the bottom" loading="lazy">
+
+                <p>The lakehouse and the notebook each get a group at the top, and neither depends on the other. Both arrows lead into the model's group, so the model deploys only after both of them, and its <strong>Actions after</strong> slot holds <strong>Run action</strong> on <code>rebind_lakehouse_semantic_model</code>. The report's group waits for the model's. This is the same plan as it sits in my Dev repository, in <code>DeploymentPlan_SpaceParts.DeploymentPlan/plan.yml</code>:</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/vscode-plan-yml-final.png" alt="plan.yml of DeploymentPlan_SpaceParts.DeploymentPlan open in VS Code, with the folder and plan.yml highlighted in the Explorer, listing four groups: SpaceParts_Lakehouse, rebind_lakehouse_semantic_model_SynapseNotebook, spaceparts_directlake_import_semanticmodel_dataset with dependsOn on the first two and a postActions entry that runs the notebook with job type Execute and logicalId 39b282de-db91-4e27-86b4-610786a48ace, and spaceparts_report_Report depending on the model's group" loading="lazy">
+
+                <p>Three details in this file are easy to miss. The canvas gave each group the item's name plus a type suffix, so the notebook's group is <code>rebind_lakehouse_semantic_model_SynapseNotebook</code> and the model's is <code>spaceparts_directlake_import_semanticmodel_dataset</code>, old type names included. The notebook's logical ID, <code>39b282de-db91-4e27-86b4-610786a48ace</code>, appears twice: once as its own group, which deploys it, and once under <code>postActions</code>, which runs it. It is the same <code>logicalId</code> as in the notebook's <code>.platform</code> file, and the <a href="https://learn.microsoft.com/en-us/rest/api/fabric/articles/item-management/definitions/deployment-plan-definition?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Deployment plan definition article</a> describes <code>job.logicalId</code> as the logical ID of the item whose job is run. And although the lakehouse and notebook groups don't depend on each other, the <strong>Limitations during a deployment</strong> list in the plan overview says independent groups can't deploy in parallel, so Fabric still takes them one at a time.</p>
+
+                <h2>7. A Notebook That Only Knows Its Own Workspace, and No Refresh</h2>
+
+                <p>The plan was half of the redesign. The other half was the notebook, and it took several iterations and trials with AI before it was ready to run inside a deployment. I won't walk through the code here. What I want to share is what I had to ask AI to check and fix, because those points matter more than the code itself:</p>
+
+                <ul>
+                    <li><strong>No hard-coded workspace.</strong> The first version had the Prod workspace name typed into it. The notebook now asks the runtime which workspace it is running in, and finds the lakehouse by name in that same workspace. That makes it the same notebook in every stage: in Dev it finds nothing to change and saves nothing, and in Prod it finds the Dev IDs and replaces them.</li>
+                    <li><strong>Both kinds of tables.</strong> The Direct Lake URL in <code>expressions.tmdl</code> and the <code>Sql.Database</code> lines of the Import tables both have to point to Prod, or the model ends up reading from two workspaces.</li>
+                    <li><strong>Nothing to install.</strong> I removed a <code>%pip install semantic-link-labs</code> line. Everything the notebook uses is in <code>sempy</code>, which ships with Fabric, so the action doesn't install a library while a deployment waits for it.</li>
+                    <li><strong>Stop before saving.</strong> The notebook runs inside a deployment with nobody watching it. If a table is missing in the target lakehouse, or a source would still point to another lakehouse after the rebind, it raises an error and saves nothing.</li>
+                    <li><strong>No parameters.</strong> The <strong>Pass parameters to an action</strong> section of the actions article says a plan passes parameter values through to the item and points to each item type's documentation for which parameters it accepts. I didn't find how a notebook action receives them, so the notebook needs none.</li>
+                    <li><strong>No refresh.</strong> This one took the longest, so it gets the rest of this section.</li>
+                </ul>
+
+                <p>The first deployment with the redesigned plan failed anyway. The rebind succeeded and the refresh at the end of the notebook did not, which failed the action, and a failed action failed the whole deployment, so the report's group never ran.</p>
+
+                <p>The refresh failed with <code>Premium_ASWL_Error</code>, and the message said the model <em>uses a default data connection without explicit connection credentials</em>. When I first saw it, the notebook was refreshing over XMLA, so I blamed XMLA and switched the refresh to the REST API. The error stayed exactly the same, so the transport was never the problem. Rebinding and refreshing are different kinds of work. A rebind edits the model definition, and saving a definition needs no credentials for the data. A refresh reads the sources, and in Prod they were on the default single sign-on connection.</p>
+
+                <p>The <strong>Key concepts and terminology</strong> and <strong>Connection configuration</strong> sections of <a href="https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-security-integration?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Integrate Direct Lake security</a> describe both options: the default SSO configuration usually works, and you can also bind a Direct Lake model to an explicit cloud connection to provide a fixed identity. Mapping the Prod model's data sources to explicit cloud connections, in the model's <strong>Settings</strong> under <strong>Gateway and cloud connections</strong>, is what made the hand-run refresh succeed. A deployment does not carry that mapping. The <strong>Item properties that are not copied</strong> section of the deployment pipelines process article lists data source credentials among the semantic model properties that aren't copied, and the plan overview says a plan doesn't deploy workspace-level configuration such as connections and gateway bindings.</p>
+
+                <p>What I did not expect, and found no documentation for, is that each deployment also reset the connection mapping I had made in Prod. During a deployment the model briefly pointed back at Dev, then the notebook pointed it at Prod again, and the refresh inside the notebook met the same missing connections as before.</p>
+
+                <p>So I took the refresh out of the notebook. The next deployment succeeded, and after it I mapped the connections in Prod and refreshed the model by hand. The lineage view finally showed what I had wanted since the first deployment: the Prod model reading the Prod lakehouse and its SQL analytics endpoint, with nothing from the Dev workspace in the picture.</p>
+
+                <img src="../images/blog/deployment-plan-direct-lake-prod/lineage-prod-success-reads-prod.png" alt="Lineage view of SpaceParts Production after the successful deployment, with the highlighted Prod SpaceParts lakehouse feeding the SpaceParts SQL analytics endpoint and the highlighted semantic model, then spaceparts_report, and no item from the Dev workspace in the picture" loading="lazy">
+
+                <h2>8. From a DevOps Standpoint: Three Kinds of Work in One Deployment</h2>
+
+                <p>From a DevOps standpoint, this experiment split one deployment into three kinds of work: what the pipeline copies, what the plan runs, and what someone still does by hand in Prod.</p>
+
+                <p><strong>Code review.</strong> <code>plan.yml</code> is short enough to review line by line, and two checks would have caught both of my mistakes. First, read <code>dependsOn</code> as "waits for". Every item an action runs has to be in the target workspace before the action starts, either because a group that the action's group waits for deployed it, or because it is already there from an earlier deployment. Second, compare the action's <code>job.logicalId</code> with the <code>logicalId</code> in that notebook's <code>.platform</code> file. If they match, the action runs the notebook you think it runs. A changed plan also shows up in the pipeline as <strong>Different from source</strong>, like any other item, so it can be reviewed before it reaches Prod.</p>
+
+                <p><strong>Version control.</strong> Each workspace has its own repository, and after a successful run the two disagree on purpose. <code>expressions.tmdl</code> holds the Prod IDs in the Prod repository and the Dev IDs in the Dev repository, so any comparison between the two will always show that file, and that difference is correct. The plan lives in the Dev repository as <code>DeploymentPlan_SpaceParts.DeploymentPlan/plan.yml</code> and reaches Prod as an item, the same way the notebook does. One thing I have not settled: the rebind is a change made in the Prod workspace, and the <strong>Source control</strong> button in the last lineage screenshot shows two changes waiting. I have not checked which two items they are, and whether the Prod repository should receive the rebound model as a commit after every deployment is a decision I still have to make with my team.</p>
+
+                <p><strong>Automation.</strong> The manual step left is the connection mapping, and it is also the step that would let the refresh go back into the notebook. The <a href="https://learn.microsoft.com/en-us/rest/api/fabric/semanticmodel/items/bind-semantic-model-connection?wt.mc_id=DP-MVP-5004989" target="_blank" rel="noopener">Items - Bind Semantic Model Connection</a> REST API binds a semantic model data source reference to a data connection. Its <strong>Limitations</strong> section says it doesn't support bulk operations, so SpaceParts, with a OneLake source and a SQL analytics endpoint, would need a request for each, and its <strong>Permissions</strong> section says the caller must be the owner of the semantic model. I have not tried it yet, and it is the follow-up I want to write next.</p>
+
+                <p>Two questions stay open, and both matter before you run this on a model people depend on. The documentation doesn't say which identity runs a post-deployment action, and my notebook needs to read the old lakehouse and write to the target model. It also doesn't say what happens to a group whose item is in the plan but has nothing to deploy, which is the situation behind section 5. I would test both on workspaces nobody uses before trusting a plan with production.</p>
+
+                <h2>A Note on Working with AI</h2>
+
+                <p>The division of work was the usual one. AI wrote the notebook code, first from what it learned in semantic-link-labs and then through the iterations in section 7. I ran every deployment, built the plan on the canvas, and took every screenshot. AI was quick to write a rebind. Making it safe to run inside a deployment took the points in the section 7 list, and I had to ask for each of them.</p>
+
+                <p>What made the result trustworthy was not the AI but the evidence around it: the lineage view, the two repositories side by side in VS Code, and the pipeline's own comparison column, none of which the AI produced. The one time those disagreed, a lineage view that looked rebound next to a refresh that kept failing, was the moment I learned the difference between a rebind and a refresh.</p>
+
+                <h2>Closing Thoughts</h2>
+
+                <p>I expected a deployment plan to make Direct Lake follow the model to Prod. It doesn't do that, and it was never meant to. The mental model I am keeping is this: <strong>a deployment pipeline copies the model exactly as it is, and a deployment plan is the place inside every deployment where I run the step that points the copy at Prod.</strong></p>
+
+                <p>There is a lot I did not test. I only went from Dev to Prod, with one model, one lakehouse and two stages. I never tried a pre-deployment action, a Variable Library reference, or a plan attached through Git integration instead of a pipeline. And the connection mapping is still a manual step after every deployment, so this setup is working, but it is not finished.</p>
+
+                <p>The cost so far is four deployment groups, one post-deployment action, one notebook that knows only its own workspace, and two steps by hand after every deployment: map the connections, then refresh.</p>
+
+                <p>I hope this helps having fun in exploring deployment plans and embracing this new era of Fabric deployments that can do more than copy!</p>
+            </div>
+
+            <div class="article-tags-section">
+                <span class="tag" data-tag="Fabric">Fabric</span>
+                <span class="tag" data-tag="Direct Lake">Direct Lake</span>
+                <span class="tag" data-tag="DevOps">DevOps</span>
+                <span class="tag" data-tag="TMDL">TMDL</span>
+                <span class="tag" data-tag="AI">AI</span>
+            </div>
+
+            <div class="support-box" data-tool="pbi-lineage-lenz"></div>
+
+            <nav class="post-navigation">
+                <a href="team-rules-fact-table-prefix-tmdl.html" class="post-nav-link">
+                    <span class="post-nav-label">Previous</span>
+                    <span class="post-nav-title">Nothing Broke When My Fact Table Lost Its Prefix: Adding a Second Rule Before the Pull Request</span>
+                </a>
+                <a href="../index.html" class="post-nav-link post-nav-link--next">
+                    <span class="post-nav-label">Back to</span>
+                    <span class="post-nav-title">All posts</span>
+                </a>
+            </nav>
+        </article>
+
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <div class="toc-list" id="toc-list"></div>
+        </aside>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/lightbox.js"></script>
+    <script src="../js/reading-progress.js"></script>
+    <script src="../js/toc.js"></script>
+    <script src="../js/counter.js"></script>
+</body>
+</html>
